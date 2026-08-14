@@ -1,0 +1,56 @@
+@prefix persona: <http://purl.obolibrary.org/obo/persona#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+# ── QUAN HE (Object Properties) ──────────────────────────────
+persona:lien_quan_mat_thiet a owl:ObjectProperty ; rdfs:label "liên quan mật thiết" .
+persona:uu_tien_hon        a owl:ObjectProperty ; rdfs:label "ưu tiên hơn" .
+
+# ── NHANH GOC: NGANH CONG VU ──────────────────────────────────
+persona:nganh_cong_vu a owl:Class ; rdfs:label "Ngành công vụ" .
+
+persona:TaiChinh_NganSach       a owl:Class ; rdfs:subClassOf persona:nganh_cong_vu ; rdfs:label "Tài chính - Ngân sách" .
+persona:TuPhap_PhapLuat         a owl:Class ; rdfs:subClassOf persona:nganh_cong_vu ; rdfs:label "Tư pháp - Pháp luật" .
+persona:CongAn_CanhSat          a owl:Class ; rdfs:subClassOf persona:nganh_cong_vu ; rdfs:label "Công an / Cảnh sát" .
+persona:NgoaiGiao               a owl:Class ; rdfs:subClassOf persona:nganh_cong_vu ; rdfs:label "Ngoại giao" .
+persona:YTe                     a owl:Class ; rdfs:subClassOf persona:nganh_cong_vu ; rdfs:label "Y tế" .
+persona:QuanDoi                 a owl:Class ; rdfs:subClassOf persona:nganh_cong_vu ; rdfs:label "Quân đội" .
+persona:NganHang_TienTe         a owl:Class ; rdfs:subClassOf persona:nganh_cong_vu ; rdfs:label "Ngân hàng - Tiền tệ" .
+persona:CongChucHanhChinh       a owl:Class ; rdfs:subClassOf persona:nganh_cong_vu ; rdfs:label "Công chức hành chính nhà nước" .
+persona:NongNghiep_TaiNguyen    a owl:Class ; rdfs:subClassOf persona:nganh_cong_vu ; rdfs:label "Nông nghiệp - Tài nguyên - Môi trường" .
+persona:AnNinh_QuocPhong        a owl:Class ; rdfs:subClassOf persona:nganh_cong_vu ; rdfs:label "An ninh - Quốc phòng (hoạch định chính sách)" .
+persona:GiaoDuc_DaoTao          a owl:Class ; rdfs:subClassOf persona:nganh_cong_vu ; rdfs:label "Giáo dục - Đào tạo" .
+persona:KhoaHoc_CongNghe_TTTT   a owl:Class ; rdfs:subClassOf persona:nganh_cong_vu ; rdfs:label "Khoa học - Công nghệ - TT&TT" .
+
+# ── NHANH GOC: CHU DE CHINH SACH (tai dung dung nhan tu article_genres.json) ──
+persona:chu_de_chinh_sach a owl:Class ; rdfs:label "Chủ đề chính sách" .
+
+persona:ChuDe_TaiChinh    a owl:Class ; rdfs:subClassOf persona:chu_de_chinh_sach ; rdfs:label "Tài chính / Kế toán" .
+persona:ChuDe_ChinhTri    a owl:Class ; rdfs:subClassOf persona:chu_de_chinh_sach ; rdfs:label "Chính trị / Pháp luật" .
+persona:ChuDe_ThoiSu      a owl:Class ; rdfs:subClassOf persona:chu_de_chinh_sach ; rdfs:label "Thời sự / Xã hội" .
+persona:ChuDe_QuocPhong   a owl:Class ; rdfs:subClassOf persona:chu_de_chinh_sach ; rdfs:label "Quốc phòng / An ninh" .
+persona:ChuDe_NgoaiGiao   a owl:Class ; rdfs:subClassOf persona:chu_de_chinh_sach ; rdfs:label "Ngoại giao / Quan hệ quốc tế" .
+persona:ChuDe_YTe         a owl:Class ; rdfs:subClassOf persona:chu_de_chinh_sach ; rdfs:label "Y tế / Chăm sóc" .
+persona:ChuDe_MoiTruong   a owl:Class ; rdfs:subClassOf persona:chu_de_chinh_sach ; rdfs:label "Môi trường" .
+persona:ChuDe_CongNghe    a owl:Class ; rdfs:subClassOf persona:chu_de_chinh_sach ; rdfs:label "Công nghệ / Kỹ thuật số" .
+persona:ChuDe_GiaoDuc     a owl:Class ; rdfs:subClassOf persona:chu_de_chinh_sach ; rdfs:label "Giáo dục" .
+
+# ── QUAN HE: nganh_to <-> chu_de lien quan mat thiet ──────────
+persona:TaiChinh_NganSach    persona:lien_quan_mat_thiet persona:ChuDe_TaiChinh .
+persona:TuPhap_PhapLuat      persona:lien_quan_mat_thiet persona:ChuDe_ChinhTri .
+persona:CongAn_CanhSat       persona:lien_quan_mat_thiet persona:ChuDe_QuocPhong .
+persona:NgoaiGiao            persona:lien_quan_mat_thiet persona:ChuDe_NgoaiGiao .
+persona:YTe                  persona:lien_quan_mat_thiet persona:ChuDe_YTe .
+persona:QuanDoi               persona:lien_quan_mat_thiet persona:ChuDe_QuocPhong .
+persona:NganHang_TienTe      persona:lien_quan_mat_thiet persona:ChuDe_TaiChinh .
+persona:NganHang_TienTe      persona:lien_quan_mat_thiet persona:ChuDe_CongNghe .
+persona:CongChucHanhChinh    persona:lien_quan_mat_thiet persona:ChuDe_ChinhTri .
+persona:NongNghiep_TaiNguyen persona:lien_quan_mat_thiet persona:ChuDe_MoiTruong .
+persona:AnNinh_QuocPhong     persona:lien_quan_mat_thiet persona:ChuDe_QuocPhong .
+persona:AnNinh_QuocPhong     persona:lien_quan_mat_thiet persona:ChuDe_NgoaiGiao .
+
+# ── QUAN HE: uu tien giua cac chu de khi bang diem (dung chung tinh than voi genre_priority) ──
+persona:ChuDe_TaiChinh  persona:uu_tien_hon persona:ChuDe_ThoiSu .
+persona:ChuDe_ChinhTri  persona:uu_tien_hon persona:ChuDe_ThoiSu .
+persona:ChuDe_QuocPhong persona:uu_tien_hon persona:ChuDe_ThoiSu .
+persona:ChuDe_YTe       persona:uu_tien_hon persona:ChuDe_ThoiSu .

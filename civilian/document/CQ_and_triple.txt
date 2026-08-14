@@ -1,0 +1,362 @@
+CQ1: Sub-class của cultural_background ảnh hưởng thế nào đến sub-class của culinary_persona?
+
+(boi_canh_xa_hoi_truyen_thong, định hình, khau_vi_ca_nhan)
+(phong_tuc_tap_quan_gia_dinh, định hình, che_do_an_uong_ca_nhan)
+(le_hoi_va_su_kien_van_hoa_gan_bo, ảnh hưởng đến, gu_trai_nghiem_van_hoa_am_thuc)
+(di_san_nghe_thuat_va_am_nhac_truyen_thong, củng cố, muc_do_quan_tam_am_thuc_truyen_thong)
+(muc_do_tiep_nhan_van_hoa_ben_ngoai, thúc đẩy, su_coi_mo_voi_am_thuc_quoc_te)
+(dia_danh_va_moi_truong_song_thuo_nho, định hình, nhom_thuc_pham_uu_tien)
+
+CQ2: Sub-class của cultural_background ảnh hưởng thế nào đến sub-class của travel_persona?
+
+(nguon_goc_hoac_nen_tang_van_hoa, định hình, so_thich_diem_den)
+(muc_do_tu_hao_ban_sac_van_hoa, củng cố, muc_do_hoa_nhap_van_hoa_ban_dia)
+(muc_do_tiep_nhan_van_hoa_ben_ngoai, thúc đẩy, muc_do_kham_pha_tu_phat)
+(boi_canh_xa_hoi_truyen_thong, ảnh hưởng đến, hinh_thuc_to_chuc_hanh_trinh)
+(hanh_vi_tham_gia_cong_dong, tương quan với, quy_mo_nhom_du_lich)
+
+CQ3: Sub-class của cultural_background ảnh hưởng thế nào đến sub-class của arts_persona?
+
+(di_san_nghe_thuat_va_am_nhac_truyen_thong, định hình, loai_hinh_nghe_thuat_thuc_hanh)
+(nguon_goc_hoac_nen_tang_van_hoa, định hình, dong_luc_sang_tao_nghe_thuat)
+(boi_canh_xa_hoi_truyen_thong, định hình, anh_huong_nghe_thuat_den_the_gioi_quan)
+(muc_do_tu_hao_ban_sac_van_hoa, củng cố, ban_sac_ca_nhan)
+(hanh_vi_ca_nhan_van_hoa, tương quan với, phuong_tien_bieu_dat_nghe_thuat)
+
+CQ4: Sub-class của cultural_background ảnh hưởng thế nào đến sub-class của persona?
+
+(boi_canh_xa_hoi_truyen_thong, định hình, gia_tri_cot_loi)
+(anh_huong_ton_giao_va_tin_nguong, định hình, the_gioi_quan)
+(chuan_muc_cong_dong_dia_phuong, định hình, tieu_chuan_dao_duc_ca_nhan)
+(moi_truong_kinh_te_xa_hoi_xuat_than, ảnh hưởng đến, nhan_sinh_quan)
+(dia_danh_va_moi_truong_song_thuo_nho, định hình, nguyen_tac_song_nen_tang)
+(dinh_kien_va_quan_diem_tiem_an, tương quan với, niem_tin_ve_su_thay_doi)
+
+CQ5: Sub-class của persona ảnh hưởng thế nào đến sub-class của career_goals_and_ambitions?
+
+(gia_tri_cot_loi, định hướng, khat_vong_nghe_nghiep)
+(nguyen_tac_song_nen_tang, định hướng, muc_tieu_vi_tri_nghe_nghiep)
+(quan_niem_y_nghia_cuoc_song, thúc đẩy, khat_vong_dong_gop_xa_hoi)
+(muc_do_chu_dong_vs_bi_dong, tương quan với, dong_luc_phat_trien_su_nghiep)
+(dinh_huong_thuc_te_vs_ly_tuong, ảnh hưởng đến, muc_tieu_tai_chinh_ca_nhan)
+(phuong_thuc_ra_quyet_dinh_ca_nhan, định hình, moc_thoi_gian_muc_tieu)
+
+CQ6: Sub-class của persona ảnh hưởng thế nào đến sub-class của hobbies_and_interests?
+
+(gia_tri_song_ca_nhan, định hình, loai_hinh_so_thich)
+(quan_niem_hanh_phuc, thúc đẩy, hoat_dong_giai_tri_cu_the)
+(xu_huong_lac_quan_vs_bi_quan, tương quan với, muc_do_kien_tri_dam_me)
+(the_gioi_quan, định hình, nguon_goc_hinh_thanh_so_thich)
+(cach_thuc_tiep_can_cuoc_song, ảnh hưởng đến, chuc_nang_giai_tri_doi_voi_ca_nhan)
+
+CQ7: Sub-class của persona ảnh hưởng thế nào đến sub-class của sports_persona?
+
+(gia_tri_cot_loi, định hướng, muc_dich_van_dong)
+(quan_niem_hanh_phuc, thúc đẩy, muc_dich_giai_tri_tinh_than)
+(muc_do_chu_dong_vs_bi_dong, tương quan với, tinh_trang_tham_gia_the_thao)
+(thu_tu_uu_tien_gia_tri, ảnh hưởng đến, muc_do_dau_tu_vao_so_thich)
+(dinh_huong_thuc_te_vs_ly_tuong, ảnh hưởng đến, muc_tieu_the_thao_trong_ke_hoach)
+
+CQ8: Sub-class của career_goals_and_ambitions ảnh hưởng thế nào đến sub-class của professional_persona?
+
+(khat_vong_nghe_nghiep, định hướng, linh_vuc_lam_viec_chinh)
+(muc_tieu_vi_tri_nghe_nghiep, thúc đẩy, phat_trien_su_nghiep)
+(dong_luc_phat_trien_su_nghiep, thúc đẩy, muc_do_dau_tu_thoi_gian_va_nguon_luc)
+(ke_hoach_hoc_tap_nang_cao, củng cố, he_thong_ky_nang_chuyen_mon_cot_loi)
+(nang_luc_can_phat_trien, tương quan với, tap_hop_nang_luc)
+(muc_tieu_kinh_doanh_hoac_su_nghiep_cu_the, định hình, pham_vi_chuyen_mon_hoa)
+
+CQ9: Sub-class của professional_persona ảnh hưởng thế nào đến sub-class của hobbies_and_interests?
+
+(moi_truong_lam_viec, ảnh hưởng đến, boi_canh_giai_tri)
+(thoi_quen_lam_viec, tương quan với, loai_hinh_so_thich)
+(muc_do_dau_tu_thoi_gian_va_nguon_luc, ảnh hưởng đến, muc_do_dau_tu_vao_so_thich)
+(van_hoa_doanh_nghiep, định hình, gia_tri_phong_cach_song_an_hien)
+(dac_diem_va_hanh_vi_dac_trung_cong_viec, định hình, hinh_anh_phong_cach_song_dac_trung)
+
+CQ10: Sub-class của professional_persona ảnh hưởng thế nào đến sub-class của travel_persona?
+
+(moi_truong_lam_viec, ảnh hưởng đến, hinh_thuc_to_chuc_hanh_trinh)
+(muc_do_dau_tu_thoi_gian_va_nguon_luc, ảnh hưởng đến, nhip_do_hanh_trinh)
+(van_hoa_doanh_nghiep, định hình, kieu_trai_nghiem_uu_tien)
+(moi_quan_he_xa_hoi_nghe_nghiep, thúc đẩy, muc_tieu_chuyen_di)
+
+CQ11: Sub-class của skills_and_expertise ảnh hưởng thế nào đến sub-class của professional_persona?
+
+(ky_nang_ky_thuat_chuyen_nganh, củng cố, nang_luc_ky_thuat)
+(ky_nang_quan_ly_va_to_chuc, củng cố, dieu_kien_to_chuc)
+(ky_nang_giao_tiep_va_ung_xu, định hình, phong_cach_giao_tiep_nghe_nghiep)
+(kinh_nghiem_thuc_te, ảnh hưởng đến, ky_nang_thuc_hanh_nghe_nghiep)
+(ket_qua_do_luong_duoc_tu_kinh_nghiem, tương quan với, hieu_qua_thuc_hien_cong_viec)
+(ky_nang_giai_quyet_van_de_thuc_te, củng cố, phuong_phap_xu_ly_van_de)
+
+CQ12: Sub-class của skills_and_expertise ảnh hưởng thế nào đến sub-class của career_goals_and_ambitions?
+
+(ky_nang_chuyen_mon_cot_loi, thúc đẩy, muc_tieu_vi_tri_nghe_nghiep)
+(kinh_nghiem_thuc_te, định hình, muc_tieu_kinh_doanh_hoac_su_nghiep_cu_the)
+(ket_qua_do_luong_duoc_tu_kinh_nghiem, củng cố, dong_luc_phat_trien_su_nghiep)
+(linh_vuc_kinh_nghiem_tich_luy, định hướng, dinh_huong_phat_trien_ban_than)
+
+CQ13: Sub-class của hobbies_and_interests ảnh hưởng thế nào đến sub-class của sports_persona?
+
+(dam_me_ca_nhan, thúc đẩy, muc_do_hung_thu_van_dong)
+(loai_hinh_so_thich, tương quan với, mon_the_thao_yeu_thich)
+(muc_do_dau_tu_vao_so_thich, tương quan với, tan_suat_tham_gia_the_thao)
+(boi_canh_giai_tri, định hình, boi_canh_tham_gia_the_thao)
+(muc_do_kien_tri_dam_me, củng cố, muc_do_cam_ket_nghe_nghiep)
+
+CQ14: Sub-class của hobbies_and_interests ảnh hưởng thế nào đến sub-class của arts_persona?
+
+(dam_me_ca_nhan, thúc đẩy, dong_luc_sang_tao_nghe_thuat)
+(loai_hinh_so_thich, tương quan với, loai_hinh_nghe_thuat_thuc_hanh)
+(muc_do_dau_tu_vao_so_thich, tương quan với, muc_do_thuan_thuc_sang_tao)
+(hoat_dong_giai_tri_cu_the, định hình, tan_suat_tiep_xuc_nghe_thuat)
+(gia_tri_phong_cach_song_an_hien, tương quan với, muc_do_chu_tam_nghe_thuat)
+
+CQ15: Sub-class của hobbies_and_interests ảnh hưởng thế nào đến sub-class của travel_persona?
+
+(loai_hinh_so_thich, định hình, kieu_trai_nghiem_uu_tien)
+(dam_me_ca_nhan, thúc đẩy, muc_tieu_chuyen_di)
+(hoat_dong_giai_tri_cu_the, tương quan với, hoat_dong_giai_tri_khi_du_lich)
+(muc_do_kien_tri_dam_me, củng cố, muc_do_kham_pha_tu_phat)
+(hinh_anh_phong_cach_song_dac_trung, định hình, phong_cach_dich_chuyen)
+
+CQ16: Sub-class của travel_persona ảnh hưởng thế nào đến sub-class của culinary_persona?
+
+(so_thich_am_thuc_dia_phuong, ảnh hưởng đến, gu_trai_nghiem_van_hoa_am_thuc)
+(muc_do_hoa_nhap_van_hoa_ban_dia, thúc đẩy, su_coi_mo_voi_am_thuc_quoc_te)
+(kieu_trai_nghiem_uu_tien, định hình, tieu_chuan_lua_chon_quan_an)
+(muc_do_kham_pha_tu_phat, thúc đẩy, muc_do_chap_nhan_vi_la)
+(hoat_dong_giai_tri_khi_du_lich, tương quan với, hanh_vi_chia_se_am_thuc)
+
+CQ17: Sub-class của sports_persona ảnh hưởng thế nào đến sub-class của persona?
+
+(muc_dich_van_dong, tương quan với, quan_niem_hanh_phuc)
+(muc_dich_ket_noi_xa_hoi, củng cố, vi_tri_ca_nhan_trong_the_gioi)
+(che_do_giu_gin_voc_dang, tương quan với, nhan_sinh_quan)
+(tinh_nhat_quan_hanh_vi, củng cố, muc_do_chu_dong_vs_bi_dong)
+(muc_dich_thi_dau_canh_tranh, định hình, xu_huong_lac_quan_vs_bi_quan)
+
+CQ18: Sub-class của arts_persona ảnh hưởng thế nào đến sub-class của persona?
+
+(anh_huong_nghe_thuat_den_the_gioi_quan, củng cố, the_gioi_quan)
+(ban_sac_ca_nhan, định hình, nhan_sinh_quan)
+
+CQ19: Sub-class của arts_persona ảnh hưởng thế nào đến sub-class của travel_persona?
+
+(ban_sac_ca_nhan, định hình, phong_cach_dich_chuyen)
+
+CQ20: Sub-class của arts_persona ảnh hưởng thế nào đến sub-class của culinary_persona?
+
+(ban_sac_ca_nhan, định hình, gu_trai_nghiem_van_hoa_am_thuc)
+
+CQ21: Sub-class của arts_persona ảnh hưởng thế nào đến sub-class của hobbies_and_interests?
+
+(gia_tri_song_ca_nhan, định hình, loai_hinh_so_thich)
+
+CQ22: Sub-class của arts_persona ảnh hưởng thế nào đến sub-class của sports_persona?
+
+(co_che_khoi_goi_cam_xuc, tương quan với, muc_dich_giai_tri_tinh_than)
+
+CQ23: Sub-class của arts_persona ảnh hưởng thế nào đến sub-class của skills_and_expertise?
+
+(muc_do_thuan_thuc_sang_tao, tương quan với, ky_nang_thu_cong_va_nghe_truyen_thong)
+
+CQ24: Sub-class của arts_persona ảnh hưởng thế nào đến sub-class của cultural_background?
+
+(anh_huong_nghe_thuat_den_the_gioi_quan, định hình, nhan_thuc_ca_nhan_van_hoa)
+(ban_sac_ca_nhan, tương quan với, muc_do_tu_hao_ban_sac_van_hoa)
+
+CQ25: Sub-class của arts_persona ảnh hưởng thế nào đến sub-class của career_goals_and_ambitions?
+
+(dong_luc_sang_tao_nghe_thuat, thúc đẩy, khat_vong_dong_gop_xa_hoi)
+
+CQ26: Sub-class của career_goals_and_ambitions ảnh hưởng thế nào đến sub-class của persona?
+
+(khat_vong_nghe_nghiep, định hình, quan_niem_y_nghia_cuoc_song)
+
+CQ27: Sub-class của career_goals_and_ambitions ảnh hưởng thế nào đến sub-class của hobbies_and_interests?
+
+(dong_luc_phat_trien_su_nghiep, tương quan với, muc_do_kien_tri_dam_me)
+(muc_tieu_tai_chinh_ca_nhan, tương quan với, muc_do_dau_tu_vao_so_thich)
+
+CQ28: Sub-class của career_goals_and_ambitions ảnh hưởng thế nào đến sub-class của sports_persona?
+
+(dong_luc_phat_trien_su_nghiep, tương quan với, muc_dich_thi_dau_canh_tranh)
+
+CQ29: Sub-class của career_goals_and_ambitions ảnh hưởng thế nào đến sub-class của arts_persona?
+
+(y_nghia_ca_nhan_cua_su_nghiep, tương quan với, ban_sac_ca_nhan)
+
+CQ30: Sub-class của culinary_persona ảnh hưởng thế nào đến sub-class của travel_persona?
+
+(gu_trai_nghiem_van_hoa_am_thuc, định hình, kieu_trai_nghiem_uu_tien)
+
+CQ31: Sub-class của culinary_persona ảnh hưởng thế nào đến sub-class của hobbies_and_interests?
+
+(nang_luc_nau_nuong, định hình, loai_hinh_so_thich)
+
+CQ32: Sub-class của culinary_persona ảnh hưởng thế nào đến sub-class của sports_persona?
+
+(che_do_an_uong_ca_nhan, tương quan với, che_do_giu_gin_voc_dang)
+
+CQ33: Sub-class của culinary_persona ảnh hưởng thế nào đến sub-class của persona?
+
+(gu_trai_nghiem_van_hoa_am_thuc, làm phong phú thêm, the_gioi_quan)
+
+CQ34: Sub-class của culinary_persona ảnh hưởng thế nào đến sub-class của skills_and_expertise?
+
+(nang_luc_nau_nuong, tương quan với, ky_nang_thu_cong_va_nghe_truyen_thong)
+
+CQ35: Sub-class của culinary_persona ảnh hưởng thế nào đến sub-class của cultural_background?
+
+(che_do_an_uong_ca_nhan, tương quan với, phong_tuc_tap_quan_gia_dinh)
+
+CQ36: Sub-class của cultural_background ảnh hưởng thế nào đến sub-class của career_goals_and_ambitions?
+
+(moi_truong_kinh_te_xa_hoi_xuat_than, định hình, khat_vong_nghe_nghiep)
+
+CQ37: Sub-class của cultural_background ảnh hưởng thế nào đến sub-class của hobbies_and_interests?
+
+(le_hoi_va_su_kien_van_hoa_gan_bo, định hình, nguon_goc_hinh_thanh_so_thich)
+
+CQ38: Sub-class của cultural_background ảnh hưởng thế nào đến sub-class của professional_persona?
+
+(moi_truong_kinh_te_xa_hoi_xuat_than, ảnh hưởng đến, linh_vuc_lam_viec_chinh)
+
+CQ39: Sub-class của cultural_background ảnh hưởng thế nào đến sub-class của skills_and_expertise?
+
+(moi_truong_kinh_te_xa_hoi_xuat_than, định hình, ky_nang_thu_cong_va_nghe_truyen_thong)
+
+CQ40: Sub-class của hobbies_and_interests ảnh hưởng thế nào đến sub-class của career_goals_and_ambitions?
+
+(dam_me_ca_nhan, thúc đẩy, khat_vong_dong_gop_xa_hoi)
+
+CQ41: Sub-class của hobbies_and_interests ảnh hưởng thế nào đến sub-class của professional_persona?
+
+(muc_do_kien_tri_dam_me, củng cố, muc_do_cam_ket_nghe_nghiep)
+
+CQ42: Sub-class của persona ảnh hưởng thế nào đến sub-class của professional_persona?
+
+(the_gioi_quan, định hình, pham_vi_chuyen_mon_hoa)
+(muc_do_chu_dong_voi_bi_dong, tương quan với, tinh_nhat_quan_hanh_vi)
+(dinh_huong_thuc_te_voi_ly_tuong, ảnh hưởng đến, phuong_phap_xu_ly_van_de)
+
+CQ43: Sub-class của persona ảnh hưởng thế nào đến sub-class của skills_and_expertise?
+
+(muc_do_chu_dong_voi_bi_dong, định hình, hinh_thuc_tich_luy_kinh_nghiem)
+
+CQ44: Sub-class của professional_persona ảnh hưởng thế nào đến sub-class của arts_persona?
+
+(muc_do_dau_tu_thoi_gian_va_nguon_luc, ảnh hưởng đến, tan_suat_tiep_xuc_nghe_thuat)
+(moi_quan_he_xa_hoi_nghe_nghiep, tương quan với, dong_luc_ket_noi_cong_dong_sang_tao)
+
+CQ45: Sub-class của professional_persona ảnh hưởng thế nào đến sub-class của career_goals_and_ambitions?
+
+(linh_vuc_lam_viec_chinh, định hình, dinh_huong_phat_trien_ban_than)
+(nganh_nghe, định hình, muc_tieu_kinh_doanh_hoac_su_nghiep_cu_the)
+(muc_do_dau_tu_thoi_gian_va_nguon_luc, tương quan với, moc_thoi_gian_muc_tieu)
+(phat_trien_su_nghiep, định hình, muc_tieu_vi_tri_nghe_nghiep)
+(tap_hop_nang_luc, tương quan với, nang_luc_can_phat_trien)
+(hieu_qua_thuc_hien_cong_viec, thúc đẩy, dong_luc_phat_trien_su_nghiep)
+
+CQ46: Sub-class của professional_persona ảnh hưởng thế nào đến sub-class của culinary_persona?
+
+(cuong_do_lam_viec, ảnh hưởng đến, che_do_an_uong_ca_nhan)
+(moi_quan_he_xa_hoi_nghe_nghiep, thúc đẩy, hanh_vi_chia_se_am_thuc)
+
+CQ47: Sub-class của professional_persona ảnh hưởng thế nào đến sub-class của cultural_background?
+
+(moi_truong_lam_viec, ảnh hưởng đến, thoi_quen_sinh_hoat_hang_ngay)
+(van_hoa_doanh_nghiep, định hình, nhan_thuc_ca_nhan_van_hoa)
+(moi_quan_he_xa_hoi_nghe_nghiep, tương quan với, hanh_vi_tham_gia_cong_dong)
+
+CQ48: Sub-class của professional_persona ảnh hưởng thế nào đến sub-class của persona?
+
+(tinh_nhat_quan_hanh_vi, củng cố, muc_do_chu_dong_voi_bi_dong)
+
+CQ49: Sub-class của professional_persona ảnh hưởng thế nào đến sub-class của skills_and_expertise?
+
+(phat_trien_su_nghiep, định hình, hinh_thuc_tich_luy_kinh_nghiem)
+(nang_luc_ky_thuat, củng cố, ky_nang_ky_thuat_chuyen_nganh)
+(hieu_qua_thuc_hien_cong_viec, tương quan với, ket_qua_do_luong_duoc_tu_kinh_nghiem)
+(tac_vu_dac_thu_cong_viec, định hình, linh_vuc_kinh_nghiem_tich_luy)
+(phong_cach_giao_tiep_nghe_nghiep, tương quan với, ky_nang_giao_tiep_va_ung_xu)
+(phuong_phap_xu_ly_van_de, củng cố, ky_nang_giai_quyet_van_de_thuc_te)
+(moi_truong_lam_viec, ảnh hưởng đến, ky_nang_cong_nghe_va_cong_cu_so)
+
+CQ50: Sub-class của professional_persona ảnh hưởng thế nào đến sub-class của sports_persona?
+
+(muc_do_dau_tu_thoi_gian_va_nguon_luc, ảnh hưởng đến, tan_suat_tham_gia_the_thao)
+(cuong_do_lam_viec, ảnh hưởng đến, muc_do_hung_thu_van_dong)
+(thoi_quen_lam_viec, tương quan với, lich_trinh_tap_luyen)
+(khong_gian_vat_ly_lam_viec, ảnh hưởng đến, boi_canh_tham_gia_the_thao)
+(moi_quan_he_xa_hoi_nghe_nghiep, thúc đẩy, muc_dich_ket_noi_xa_hoi)
+(dieu_kien_to_chuc, ảnh hưởng đến, tinh_trang_tham_gia_the_thao)
+(nhiem_vu_nghe_nghiep, tương quan với, hinh_thuc_tham_gia_the_thao)
+
+CQ51: Sub-class của skills_and_expertise ảnh hưởng thế nào đến sub-class của arts_persona?
+
+(ky_nang_thu_cong_va_nghe_truyen_thong, định hình, loai_hinh_nghe_thuat_thuc_hanh)
+(ky_nang_cong_nghe_va_cong_cu_so, tương quan với, phuong_tien_ky_thuat_so)
+(kinh_nghiem_thuc_te, củng cố, muc_do_thuan_thuc_sang_tao)
+
+CQ52: Sub-class của skills_and_expertise ảnh hưởng thế nào đến sub-class của cultural_background?
+
+(ky_nang_giao_tiep_va_ung_xu, định hình, cach_bieu_dat_ngon_ngu_va_giao_tiep_van_hoa)
+(ky_nang_thu_cong_va_nghe_truyen_thong, củng cố, di_san_nghe_thuat_va_am_nhac_truyen_thong)
+
+CQ53: Sub-class của skills_and_expertise ảnh hưởng thế nào đến sub-class của hobbies_and_interests?
+
+(ky_nang_thu_cong_va_nghe_truyen_thong, định hình, loai_hinh_so_thich)
+
+CQ54: Sub-class của skills_and_expertise ảnh hưởng thế nào đến sub-class của persona?
+
+(kinh_nghiem_thuc_te, củng cố, the_gioi_quan)
+
+CQ55: Sub-class của skills_and_expertise ảnh hưởng thế nào đến sub-class của sports_persona?
+
+(ky_nang_quan_ly_va_to_chuc, định hình, hinh_thuc_tham_gia_the_thao)
+
+CQ56: Sub-class của skills_and_expertise ảnh hưởng thế nào đến sub-class của travel_persona?
+
+(ky_nang_giai_quyet_van_de_thuc_te, tương quan với, muc_do_linh_hoat_ke_hoach)
+
+CQ57: Sub-class của sports_persona ảnh hưởng thế nào đến sub-class của arts_persona?
+
+(muc_dich_ket_noi_xa_hoi, tương quan với, dong_luc_ket_noi_cong_dong_sang_tao)
+
+CQ58: Sub-class của sports_persona ảnh hưởng thế nào đến sub-class của career_goals_and_ambitions?
+
+(muc_tieu_the_thao_trong_ke_hoach, tương quan với, moc_thoi_gian_muc_tieu)
+
+CQ59: Sub-class của sports_persona ảnh hưởng thế nào đến sub-class của culinary_persona?
+
+(thoi_quen_dinh_duong, định hình, che_do_an_uong_ca_nhan)
+
+CQ60: Sub-class của sports_persona ảnh hưởng thế nào đến sub-class của cultural_background?
+
+(muc_dich_ket_noi_xa_hoi, củng cố, hanh_vi_tham_gia_cong_dong)
+
+CQ61: Sub-class của sports_persona ảnh hưởng thế nào đến sub-class của hobbies_and_interests?
+
+(mon_the_thao_yeu_thich, tương quan với, loai_hinh_so_thich)
+(boi_canh_tham_gia_the_thao, định hình, boi_canh_giai_tri)
+(muc_dich_giai_tri_tinh_than, tương quan với, chuc_nang_giai_tri_doi_voi_ca_nhan)
+(muc_dich_giai_tri_tinh_than, định hình, hoat_dong_giai_tri_cu_the)
+
+CQ62: Sub-class của sports_persona ảnh hưởng thế nào đến sub-class của professional_persona?
+
+(muc_dich_ket_noi_xa_hoi, thúc đẩy, moi_quan_he_xa_hoi_nghe_nghiep)
+
+CQ63: Sub-class của travel_persona ảnh hưởng thế nào đến sub-class của career_goals_and_ambitions?
+
+(muc_do_kham_pha_tu_phat, mở rộng, dinh_huong_phat_trien_ban_than)
+
+CQ64: Sub-class của travel_persona ảnh hưởng thế nào đến sub-class của persona?
+
+(muc_do_hoa_nhap_van_hoa_ban_dia, làm phong phú thêm, the_gioi_quan)
+
+CQ65: Sub-class của travel_persona ảnh hưởng thế nào đến sub-class của skills_and_expertise?
+
+(muc_do_hoa_nhap_van_hoa_ban_dia, tương quan với, ky_nang_giao_tiep_va_ung_xu)

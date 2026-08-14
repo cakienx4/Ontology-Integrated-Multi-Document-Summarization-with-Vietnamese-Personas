@@ -1,0 +1,20 @@
+professional_persona: Oanh là một người tổ chức các sự kiện văn hóa và giáo dục trong cộng đồng, tận dụng kiến thức và kỹ năng quản lý để hỗ trợ các hoạt động xã hội.
+sports_persona: Oanh tham gia các buổi tập yoga và đi bộ thường xuyên, và cô cũng thích các môn thể thao nhẹ nhàng khác như đạp xe. Cô không theo dõi một đội bóng cụ thể, nhưng cô thích các hoạt động thể thao cộng đồng.
+arts_persona: Oanh tham gia các buổi lễ hội địa phương và thích xem các buổi ca nhạc truyền thống. Cô cũng có niềm đam mê với các nghệ sĩ như Trịnh Công Sơn và Hoàng Lệ Nhân.
+travel_persona: Oanh thích khám phá các khu du lịch mới và thưởng thức ẩm thực địa phương. Cô từng visit Vườn quốc gia Cát Tiên và muốn khám phá các vùng miền khác trong nước.
+culinary_persona: Oanh yêu thích các món ăn truyền thống, đặc biệt là bánh bèo và bánh xèo. Cô cũng có thói quen tự nấu ăn tại nhà và thử nghiệm các công thức mới khi có thời gian.
+persona: Oanh là một phụ nữ trưởng thành, tận tụy với gia đình và cộng đồng, với đam mê văn hóa và nghệ thuật. Cô có sự cân bằng giữa tính cách và mối quan hệ trong cuộc sống.
+cultural_background: Sống trong một khu đô thị trẻ trung, sôi động, nhưng vẫn giữ được không khí ấm cúng của làng quê. Người dân nơi đây có thói quen tổ chức các buổi xem phim miễn phí, các buổi ca nhạc địa phương vào cuối tuần, tạo nên một không gian giao lưu văn hóa độc đáo. Những lễ hội như lễ hội đèn lồng và lễ hội hoa đăng trở thành một phần không thể thiếu trong cuộc sống hàng ngày, giúp kết nối cộng đồng và truyền bá các giá trị văn hóa truyền thống.
+skills_and_expertise: Với học vấn đại học và thu nhập ổn định, cô có thể sử dụng các kỹ năng quản lý tài chính cá nhân, tổ chức sự kiện, hỗ trợ các hoạt động cộng đồng, thiết lập các mối quan hệ giao tiếp hiệu quả và tổ chức các buổi sinh hoạt văn hóa tại khu vực.
+skills_and_expertise_list: ['Quản lý tài chính cá nhân', 'Tổ chức sự kiện', 'Hỗ trợ hoạt động cộng đồng', 'Thiết lập mối quan hệ giao tiếp', 'Tổ chức sinh hoạt văn hóa']
+hobbies_and_interests: Cô yêu thích các hoạt động thể thao nhẹ nhàng như đi bộ, đạp xe, và tham gia các lớp tập yoga. Ngoài ra, cô cũng có niềm đam mê với các món ăn truyền thống, đặc biệt là các món ăn từ bánh bèo và bánh xèo, và thích tham gia các buổi tiệc gia đình.
+hobbies_and_interests_list: ['Đi bộ', 'Đạp xe', 'Tập yoga', 'Tham gia tiệc gia đình', 'Tham gia lễ hội']
+career_goals_and_ambitions: Cô muốn đóng góp vào sự phát triển cộng đồng, tổ chức các buổi hội thảo về văn hóa và giáo dục, đồng thời tìm kiếm các cơ hội để phát triển chính bản thân trong lĩnh vực từ thiện và hỗ trợ cộng đồng.
+sex: Nữ
+age: 64
+marital_status: Đã kết hôn
+education_level: Đại học
+occupation: Khác / không rõ
+zone: Đô Thị
+region: Tỉnh Đồng Nai
+country: Việt Nam

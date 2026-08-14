@@ -1,0 +1,360 @@
+{
+  "_meta": {
+    "description": "Test cases để validate 20 Competency Questions (CQ) của ontology persona. Mỗi case loại 'pair_comparison' chạy pipeline 2 lần (person A, person B) trên cùng 1 văn bản gốc rồi so sánh 2 bản tóm tắt theo expected_effect. Case loại 'single_constraint' chạy pipeline 1 lần và kiểm tra một ràng buộc cụ thể trên output (không cần so sánh cặp).",
+    "row_index": "Chỉ số dòng (0-based) trong sample50.csv, đã được xác minh thủ công khớp với mô tả person.",
+    "text_pool": "Các văn bản gốc dùng chung, tham chiếu qua text_id."
+  },
+  "texts": {
+    "TXT_NEWS_GENERAL": "Siêu bão Ba Vì có thể ảnh hưởng đến Biển Đông\nSiêu bão xuất hiện ở tây bắc Thái Bình Dương, ít khả năng đi vào Biển Đông nhưng hoàn lưu vẫn có thể gây gió mạnh, sóng lớn cho vùng biển này.\n\nTrung tâm Dự báo Khí tượng Thủy văn quốc gia cho biết lúc 16h ngày 5/7, tâm siêu bão Ba Vì cách miền Trung Philippines khoảng 2.500 km về phía đông. Bão mạnh cấp 17, giật trên cấp 17, là siêu bão thứ ba hoạt động trên khu vực tây bắc Thái Bình Dương trong năm nay.\n\nTrong 24 giờ tới, bão theo hướng tây tây bắc với tốc độ khoảng 20 km/h. Từ ngày 6-9/7, Ba Vì được dự báo tiếp tục duy trì cường độ siêu bão và giữ hướng di chuyển chủ đạo là tây tây bắc. Từ khoảng ngày 10/7, bão có khả năng chuyển hướng tây bắc, tiến về khu vực đảo Đài Loan (Trung Quốc).\n\nĐài khí tượng Nhật Bản cho biết bão Ba Vì đang có sức gió 200 km/h và duy trì cường độ này trong những ngày tới. Đài hải quân Mỹ cho rằng bão đang mạnh gần 280 km/h và sẽ duy trì cường độ này hết ngày mai. Các đài khí tượng quốc tế đều nhận định siêu bão sẽ không đi vào Biển Đông.\n\nTheo cơ quan khí tượng Việt Nam, khả năng Ba Vì đi vào Biển Đông hiện không cao, với xác suất dưới 10%. Tuy nhiên, do cường độ rất mạnh, hoàn lưu bão có thể ảnh hưởng đến vùng biển phía đông bắc khu vực Bắc Biển Đông từ ngày 9 đến 11/7.\n\nNgoài ra, hiệu ứng hút gió của siêu bão được dự báo làm gió mùa tây nam trên Biển Đông mạnh lên từ ngày 9/7. Trong các ngày 9-11/7, gió ở bắc, giữa và nam Biển Đông, bao gồm vùng biển quần đảo Hoàng Sa và Trường Sa, có thể mạnh cấp 6-7, sóng cao 3-5 m, biển động rất mạnh.\n\nTrung tâm Dự báo Khí tượng Thủy văn quốc gia cho biết đang theo dõi chặt chẽ diễn biến của bão Ba Vì và sẽ cập nhật các bản tin dự báo khi có diễn biến mới.\n\nTrước đó, bão Maysak không gây thiệt hại về người nhưng đã ảnh hưởng đến Móng Cái và đặc khu Cô Tô (Quảng Ninh). Bão làm 96 ngôi nhà bị tốc mái, hư hỏng 3 ôtô, 13 tàu thuyền và bè mảng bị trôi dạt hoặc chìm, làm đổ 16 cột điện, ảnh hưởng khoảng 1.100 ha nuôi trồng thủy sản, 40 ha lúa, 5,2 ha cây công nghiệp và làm gãy đổ khoảng 1.620 cây xanh. Để bảo đảm an toàn, ngành điện đã cắt điện tại một số khu vực ở Móng Cái và Cô Tô trong thời gian bão đổ bộ. Tổng thiệt hại vật chất ước tính 20 tỷ đồng.\n\nMùa mưa bão năm 2026 được dự báo có số lượng bão, áp thấp nhiệt đới hoạt động trên Biển Đông và ảnh hưởng trực tiếp đến đất liền Việt Nam thấp hơn trung bình nhiều năm và ít hơn năm 2025. Tuy nhiên, các cơ quan chuyên môn cảnh báo diễn biến bão vẫn rất khó lường do tác động của biến đổi khí hậu, quỹ đạo và cường độ có thể thay đổi nhanh, đặc biệt trong giai đoạn cuối mùa.",
+    "TXT_BUSINESS_MARKET": "Chuyển đổi số mở ra hướng tiêu thụ mới cho nông sản Việt Nam, nhưng kênh truyền thống vẫn giữ vai trò quan trọng\n\nTrong những năm gần đây, hoạt động tiêu thụ nông sản tại Việt Nam đang thay đổi mạnh mẽ dưới tác động của chuyển đổi số, sự phát triển của hạ tầng logistics và nhu cầu mua sắm trực tuyến của người tiêu dùng. Tuy nhiên, các chuyên gia nhận định rằng sự phát triển này không thay thế hoàn toàn phương thức phân phối truyền thống mà đang tạo ra mô hình kết hợp giữa chợ đầu mối, thương lái, hợp tác xã và các nền tảng thương mại điện tử.\n\nTại nhiều vùng sản xuất nông nghiệp, đặc biệt là các khu vực nông thôn, nông dân vẫn chủ yếu tiêu thụ nông sản thông qua thương lái, hợp tác xã hoặc các chợ đầu mối. Những kênh này giúp thu mua sản phẩm ngay sau khi thu hoạch, giảm chi phí vận chuyển ban đầu và đảm bảo đầu ra ổn định cho các loại rau củ, trái cây và nông sản theo mùa. Nhiều hợp tác xã còn hỗ trợ nông dân trong việc phân loại, sơ chế, đóng gói và kết nối với các doanh nghiệp thu mua hoặc xuất khẩu.\n\nTheo đại diện một số hợp tác xã nông nghiệp, mạng lưới phân phối truyền thống vẫn đặc biệt phù hợp với các hộ sản xuất nhỏ lẻ vì quy trình giao dịch đơn giản, chi phí thấp và ít yêu cầu về công nghệ. Trong nhiều trường hợp, thương lái có thể đến tận nơi thu mua, giúp người dân giảm thời gian bảo quản và hạn chế thất thoát sau thu hoạch.\n\nBên cạnh đó, các địa phương cũng đang đầu tư nâng cấp hệ thống chợ đầu mối và trung tâm thu gom nông sản nhằm nâng cao năng lực bảo quản và phân phối. Một số mô hình liên kết giữa nông dân, hợp tác xã và doanh nghiệp đã góp phần ổn định giá cả, giảm tình trạng được mùa mất giá và mở rộng thị trường tiêu thụ trong nước.\n\nTrong khi đó, tại các đô thị lớn, hành vi mua sắm của người tiêu dùng đang thay đổi nhanh chóng. Nhiều khách hàng ưu tiên đặt mua thực phẩm và nông sản thông qua các sàn thương mại điện tử hoặc ứng dụng bán lẻ trực tuyến thay vì đến chợ truyền thống. Chỉ với vài thao tác trên điện thoại, người mua có thể lựa chọn sản phẩm, thanh toán không dùng tiền mặt và theo dõi trạng thái giao hàng theo thời gian thực.\n\nSự phát triển của thương mại điện tử kéo theo nhu cầu đầu tư mạnh vào hệ thống logistics. Các doanh nghiệp xây dựng thêm kho lạnh, trung tâm phân phối và mạng lưới giao hàng nhanh nhằm đảm bảo chất lượng nông sản trong suốt quá trình vận chuyển. Nhiều đơn vị cũng áp dụng công nghệ truy xuất nguồn gốc bằng mã QR, giúp người tiêu dùng dễ dàng kiểm tra nơi sản xuất, quy trình canh tác và thời gian thu hoạch của từng sản phẩm.\n\nNgoài ra, các nền tảng số còn cung cấp công cụ phân tích nhu cầu thị trường, dự báo sức mua và quản lý đơn hàng theo thời gian thực. Điều này giúp doanh nghiệp tối ưu lượng hàng tồn kho, giảm chi phí vận hành và nâng cao hiệu quả phân phối. Đối với các hộ sản xuất có quy mô lớn hoặc các hợp tác xã đã được số hóa, việc bán hàng trực tiếp trên các nền tảng trực tuyến còn mở ra cơ hội tiếp cận khách hàng trên phạm vi toàn quốc.\n\nMặc dù vậy, việc ứng dụng thương mại điện tử trong lĩnh vực nông nghiệp vẫn gặp nhiều thách thức. Không phải hộ nông dân nào cũng có kỹ năng sử dụng nền tảng số hoặc đáp ứng các yêu cầu về đóng gói, bảo quản và vận chuyển. Ở nhiều vùng nông thôn, hạ tầng internet và dịch vụ logistics vẫn chưa đồng đều, khiến chi phí giao hàng tăng cao và thời gian vận chuyển kéo dài.\n\nCác chuyên gia cho rằng trong giai đoạn hiện nay, mô hình kết hợp giữa kênh phân phối truyền thống và thương mại điện tử là hướng đi phù hợp nhất. Hợp tác xã và thương lái tiếp tục đóng vai trò thu gom, sơ chế và tập trung nguồn hàng tại vùng sản xuất, trong khi doanh nghiệp logistics và các sàn thương mại điện tử đảm nhận việc phân phối đến người tiêu dùng ở các đô thị.\n\nNhiều chương trình hỗ trợ của địa phương cũng đang khuyến khích nông dân tham gia đào tạo kỹ năng số, xây dựng thương hiệu sản phẩm và áp dụng truy xuất nguồn gốc. Song song với đó, các doanh nghiệp logistics mở rộng mạng lưới kho lạnh và điểm trung chuyển nhằm rút ngắn thời gian giao hàng giữa vùng sản xuất và các thành phố lớn.\n\nTheo các chuyên gia kinh tế nông nghiệp, sự kết hợp giữa hệ thống thu mua truyền thống, hợp tác xã, thương mại điện tử và logistics hiện đại sẽ giúp nâng cao giá trị nông sản, mở rộng thị trường tiêu thụ và tăng thu nhập cho người sản xuất. Trong tương lai, thay vì cạnh tranh, các kênh phân phối truyền thống và nền tảng số được kỳ vọng sẽ bổ sung cho nhau, tạo nên chuỗi cung ứng linh hoạt, bền vững và đáp ứng tốt hơn nhu cầu của cả người bán lẫn người tiêu dùng.\n",
+    "TXT_TECH_DESIGN": "Thiết kế UX/UI không ngừng phát triển để đáp ứng nhu cầu ngày càng cao của người dùng. Năm 2025, xu hướng UX/UI tiếp tục chứng kiến những thay đổi mạnh mẽ với sự lên ngôi của công nghệ AI, thiết kế tương tác thông minh và trải nghiệm cá nhân hóa.\n\nĐối với người mới bắt đầu tìm hiểu thiết kế, bước đầu tiên là làm quen với các công cụ phổ biến như Figma hoặc Sketch: cách tạo file mới, sử dụng thanh công cụ cơ bản, vẽ khung wireframe đơn giản và nắm các phím tắt thông dụng. Sau khi quen giao diện phần mềm, người mới nên luyện tập dựng layout cơ bản gồm header, nội dung chính và footer trước khi tìm hiểu sâu hơn.\n\nAI đã và đang thay đổi cách thiết kế giao diện người dùng. Các hệ thống thông minh có thể tự động phân tích hành vi người dùng và đề xuất giao diện phù hợp nhất, bao gồm thiết kế cá nhân hóa, chatbot thông minh xử lý ngôn ngữ tự nhiên, và tự động tối ưu hóa bố cục dựa trên dữ liệu hành vi.\n\nỞ cấp độ nâng cao, các designer giàu kinh nghiệm năm 2025 đang chú trọng vào typography động — kết hợp biến thể font theo ngữ cảnh tương tác để tăng khả năng truyền đạt cảm xúc. Motion design cũng trở thành yếu tố cốt lõi: các chuyển động vi mô (micro-interactions) được thiết kế có chủ đích về easing curve và timing để tạo cảm giác phản hồi tự nhiên, thay vì chỉ là hiệu ứng trang trí. Việc phối hợp giữa hệ thống thiết kế (design system) với animation token đang được nhiều studio lớn áp dụng để đảm bảo tính nhất quán khi mở rộng sản phẩm.\n\nNhìn chung, năm 2025 là giai đoạn giao thoa giữa việc phổ cập công cụ thiết kế cho người mới và việc nâng cao chiều sâu kỹ thuật cho các nhà thiết kế chuyên nghiệp.",
+    "TXT_HEALTH_SPORT": "Tại một hội thảo khoa học về chăm sóc sức khỏe người trung niên với sự tham gia của các chuyên gia từ nhiều bệnh viện và trường đại học y, các diễn giả nhấn mạnh rằng giai đoạn từ khoảng 40–60 tuổi là thời điểm quan trọng để phát hiện sớm các bệnh mạn tính và điều chỉnh lối sống nhằm giảm nguy cơ biến chứng lâu dài. Các khuyến nghị đều hướng đến việc kết hợp khám sức khỏe định kỳ, dinh dưỡng hợp lý, vận động thường xuyên và theo dõi các yếu tố nguy cơ theo từng chuyên khoa thay vì chỉ tập trung vào một bệnh cụ thể.\n\nỞ lĩnh vực tim mạch, các chuyên gia lưu ý rằng tăng huyết áp, rối loạn mỡ máu và bệnh động mạch vành vẫn là những nguyên nhân hàng đầu dẫn đến biến cố tim mạch. Nam giới thường có nguy cơ mắc bệnh tim mạch sớm hơn, trong khi nguy cơ ở nữ giới tăng đáng kể sau giai đoạn mãn kinh do sự thay đổi nội tiết. Vì vậy, việc kiểm tra huyết áp, cholesterol, đường huyết và duy trì hoạt động thể lực ít nhất 150 phút mỗi tuần được xem là những biện pháp phòng ngừa có hiệu quả cho cả hai giới.\n\nĐối với chuyên khoa xương khớp, hội thảo nhấn mạnh tình trạng thoái hóa khớp và loãng xương ngày càng phổ biến ở người trung niên. Mặc dù loãng xương được ghi nhận với tỷ lệ cao hơn ở nữ giới sau mãn kinh, nam giới lớn tuổi cũng không nên chủ quan vì nguy cơ gãy xương do giảm mật độ xương vẫn tăng theo tuổi. Các chuyên gia khuyến nghị bổ sung đầy đủ canxi, vitamin D, kết hợp các bài tập chịu trọng lượng và luyện tập sức mạnh để duy trì khối cơ và sức khỏe hệ vận động.\n\nỞ lĩnh vực ung bướu, các báo cáo đều thống nhất rằng tầm soát sớm có ý nghĩa quyết định trong việc cải thiện tiên lượng điều trị. Một số loại ung thư có sự khác biệt về tỷ lệ mắc giữa hai giới, chẳng hạn ung thư phổi và ung thư gan vẫn gặp nhiều hơn ở nam giới, trong khi ung thư vú phổ biến hơn ở nữ giới. Tuy nhiên, các chuyên gia cho rằng mọi người đều cần tuân thủ lịch tầm soát phù hợp với độ tuổi, tiền sử gia đình và các yếu tố nguy cơ cá nhân thay vì chỉ dựa vào giới tính.\n\nVề các bệnh chuyển hóa, tỷ lệ thừa cân, béo phì, đái tháo đường típ 2 và gan nhiễm mỡ không do rượu đang gia tăng ở cả nam và nữ. Một số nghiên cứu được trình bày tại hội thảo cho thấy nam giới có xu hướng mắc hội chứng chuyển hóa ở độ tuổi sớm hơn, trong khi tỷ lệ ở nữ giới tăng dần sau tuổi trung niên. Các chuyên gia khuyến nghị duy trì chế độ ăn cân đối, hạn chế thực phẩm chế biến sẵn và đồ uống nhiều đường, ngủ đủ giấc, kiểm soát cân nặng và tái khám định kỳ để phát hiện sớm các bất thường về chuyển hóa trước khi xuất hiện biến chứng.\n",
+    "TXT_TRAVEL_CULTURE": "48 giờ trải nghiệm hai bờ Hòn Gai - Bãi Cháy\nHạ Long không chỉ có vịnh di sản, mà còn là điểm đến phù hợp cho kỳ nghỉ cuối tuần nhờ sự hòa trộn giữa nhịp sống sôi động của Bãi Cháy và nét bình dị ở Hòn Gai.\n\nCách Hà Nội hơn hai giờ di chuyển qua cao tốc, Hạ Long là lựa chọn hàng đầu cho những chuyến đi ngắn ngày. Điểm thú vị khi đến đây là du khách có thể trải nghiệm hai không gian đa dạng cách nhau cây cầu Bãi Cháy.\n\nNếu Bãi Cháy đại diện cho sự hiện đại với hệ thống resort, bãi tắm và khu vui chơi, Hòn Gai lại níu chân du khách bởi những góc phố ẩm thực lâu đời, các công trình tâm linh và nhịp sống đời thường của người dân vùng biển.\n\nHai khu vực cách nhau khoảng 5-7 km, tương đương 10-15 phút di chuyển bằng ôtô. Du khách dễ dàng kết hợp tham quan, ăn uống và nghỉ dưỡng trong cùng một hành trình bằng xe cá nhân, taxi hoặc xe điện.\n\nNguyễn Thanh Tuấn, hướng dẫn viên tại Hạ Long, gợi ý lịch trình khám phá Hòn Gai - Bãi Cháy trong 48 giờ.",
+    "TXT_ARTS_CULTURE": "Không khí tại Bảo tàng Mỹ thuật Việt Nam những ngày cuối tuần trở nên sôi động khi triển lãm hội họa với chủ đề **\"Sắc màu và Ký ức\"** chính thức mở cửa đón công chúng. Sự kiện quy tụ **82 tác phẩm của 27 họa sĩ** đến từ nhiều địa phương trên cả nước, mang đến góc nhìn đa dạng về thiên nhiên, đô thị, con người và những khoảnh khắc đời sống thường nhật. Ngay từ buổi sáng, nhiều nhóm học sinh, sinh viên, gia đình và du khách quốc tế đã có mặt để tham quan, tạo nên bầu không khí nhộn nhịp nhưng vẫn giữ được sự yên tĩnh đặc trưng của không gian bảo tàng.\n\nCác phòng trưng bày được bố trí theo từng chủ đề, giúp khách tham quan dễ dàng theo dõi mạch cảm xúc của triển lãm. Nhiều bức tranh gây ấn tượng bởi gam màu tươi sáng, trong khi một số tác phẩm sử dụng những tông màu trầm hơn để gợi cảm giác lắng đọng và hoài niệm. Xen kẽ là những tác phẩm về nhịp sống thành phố với bố cục rộng mở, tạo cảm giác chuyển động, đối lập với các khung cảnh làng quê yên bình hay phong cảnh miền núi được thể hiện bằng những mảng màu nhẹ nhàng. Không ít khách tham quan dành nhiều thời gian đứng trước từng tác phẩm để đọc phần giới thiệu và trao đổi với bạn đồng hành về những cảm nhận riêng.\n\nTheo ban tổ chức, triển lãm không hướng đến một chủ đề duy nhất mà mong muốn giới thiệu nhiều góc nhìn khác nhau về cuộc sống đương đại. Bên cạnh các họa sĩ đã có nhiều năm hoạt động nghệ thuật, sự kiện còn dành không gian cho những gương mặt trẻ với các tác phẩm được sáng tác trong vài năm gần đây. Sự kết hợp này tạo nên một tổng thể đa dạng, giúp người xem tiếp cận nhiều phong cách thể hiện mà vẫn cảm nhận được sự kết nối về cảm xúc.\n\nHọa sĩ Nguyễn Minh An, một trong những tác giả tham gia triển lãm, chia sẻ rằng anh mong mỗi bức tranh có thể gợi lại một ký ức hoặc một cảm xúc quen thuộc đối với người xem. Theo anh, điều đáng quý nhất không phải là mọi người đều hiểu tác phẩm theo cùng một cách, mà là mỗi người có thể tìm thấy trong đó một câu chuyện gắn với trải nghiệm của chính mình. Một nữ họa sĩ trẻ cũng bày tỏ hy vọng những bức tranh về đời sống thường ngày sẽ khuyến khích người xem dành nhiều thời gian hơn để quan sát những điều bình dị xung quanh.\n\nNhiều khách tham quan cho biết họ ấn tượng với sự phong phú của các đề tài và cách sắp xếp không gian triển lãm. Một gia đình đưa con nhỏ đến bảo tàng nhận xét rằng việc kết hợp các tác phẩm về thiên nhiên, phố thị và sinh hoạt đời thường khiến hành trình tham quan trở nên sinh động hơn. Một nhóm sinh viên mỹ thuật chia sẻ họ đến để tìm cảm hứng cho quá trình học tập, đồng thời đánh giá cao cơ hội được tiếp cận tác phẩm của nhiều thế hệ họa sĩ trong cùng một triển lãm. Trong khi đó, một số du khách quốc tế cho biết họ đặc biệt yêu thích những bức tranh khắc họa cảnh sinh hoạt, chợ truyền thống và phong cảnh Việt Nam vì giúp họ hiểu thêm về văn hóa địa phương.\n\nTheo đại diện bảo tàng, triển lãm sẽ kéo dài trong ba tuần và dự kiến đón hàng nghìn lượt khách tham quan. Ngoài hoạt động trưng bày, ban tổ chức còn lên kế hoạch tổ chức các buổi giao lưu giữa công chúng và các họa sĩ, cũng như chương trình hướng dẫn dành cho học sinh nhằm khuyến khích sự quan tâm đối với nghệ thuật. Không khí cởi mở, sự đa dạng trong nội dung trưng bày cùng những cuộc trò chuyện diễn ra ngay trong không gian triển lãm đã góp phần tạo nên một điểm hẹn văn hóa thu hút đông đảo người yêu hội họa trong những ngày đầu mở cửa.\n",
+    "TXT_FAMILY_TRAVEL": "Theo ghi nhận từ nhiều công ty lữ hành, thị trường du lịch hè tại Việt Nam năm nay tiếp tục duy trì xu hướng tăng trưởng tích cực, với nhu cầu du lịch phân hóa theo từng nhóm khách hàng thay vì tập trung vào một phân khúc duy nhất.\n\nỞ nhóm khách công sở đi theo đoàn doanh nghiệp, nhiều công ty lữ hành ghi nhận lượng đặt tour tăng khoảng 18% so với cùng kỳ năm trước, chủ yếu lựa chọn chương trình kết hợp nghỉ dưỡng và hội nghị ngắn ngày. Trong khi đó, nhóm gia đình vẫn chiếm tỷ trọng lớn của thị trường mùa hè với mức tăng khoảng 15%, tập trung vào các tour từ ba đến năm ngày, ưu tiên dịch vụ trọn gói nhằm tối ưu chi phí và thuận tiện cho việc di chuyển cùng trẻ nhỏ.\n\nĐáng chú ý, nhóm khách đi du lịch một mình (solo travel) đang tăng trưởng nhanh nhất thị trường, ước tính khoảng 22%. Đây phần lớn là những người trưởng thành sống độc thân, đã ly hôn hoặc đang trong giai đoạn tìm lại cân bằng cá nhân sau biến cố cuộc sống. Nhóm này thường chọn các hành trình linh hoạt, không cố định lịch trình, ưu tiên trải nghiệm cá nhân như thiền, yoga, retreat hoặc khám phá văn hóa địa phương một mình thay vì các gói tour cố định. Nhiều đơn vị lữ hành cho biết đã thiết kế riêng các sản phẩm \"du lịch chữa lành\" (healing travel) nhắm đến nhóm này, tập trung vào không gian yên tĩnh và thời gian tự do thay vì lịch trình dày đặc.\n\nĐối với nhóm sinh viên và người trẻ, nhu cầu du lịch tiếp tục tăng khoảng 12%, chủ yếu hướng đến các tour ngắn ngày, ngân sách hợp lý và hình thức du lịch theo nhóm bạn. Bên cạnh đó, lượng khách quốc tế cũng tiếp tục cải thiện nhờ đà phục hồi của thị trường.",
+    "TXT_HEALTH_FAMILY": "Bài viết tổng hợp khuyến nghị sức khỏe theo độ tuổi trung niên, chia theo giới tính. Với nam giới, các bác sĩ khuyến cáo nên tầm soát tim mạch định kỳ (đo huyết áp, mỡ máu, điện tâm đồ) từ tuổi 40, đồng thời kiểm tra tuyến tiền liệt qua xét nghiệm PSA mỗi 1-2 năm để phát hiện sớm bất thường — đây là nhóm bệnh lý có tỷ lệ mắc tăng rõ rệt ở nam giới trên 45 tuổi. Với nữ giới cùng độ tuổi, khuyến nghị tập trung vào sức khỏe xương khớp — đặc biệt sau giai đoạn tiền mãn kinh khi mật độ xương giảm nhanh, nên bổ sung canxi và vitamin D, đồng thời tầm soát ung thư vú qua chụp nhũ ảnh định kỳ mỗi 1-2 năm từ tuổi 40-50. Cả hai giới đều được khuyến nghị duy trì chế độ ăn cân bằng, hạn chế muối và đường, khám sức khỏe tổng quát mỗi năm một lần, và tránh hút thuốc, uống rượu bia quá mức.",
+    "TXT_FOREIGN_POLICY": "Nhiều doanh nghiệp xuất khẩu của Việt Nam đang đẩy nhanh quá trình chuẩn bị để thích ứng với **Cơ chế điều chỉnh biên giới carbon (CBAM)** của Liên minh châu Âu (EU), trong bối cảnh các yêu cầu về phát thải, truy xuất dữ liệu và minh bạch chuỗi cung ứng ngày càng trở thành yếu tố quan trọng trong hoạt động thương mại quốc tế. Theo ghi nhận từ các doanh nghiệp và hiệp hội ngành hàng, những thay đổi không chỉ tác động đến các đơn vị xuất khẩu trực tiếp mà còn lan sang các nhà cung cấp nguyên liệu, doanh nghiệp logistics và đơn vị tư vấn kiểm kê khí nhà kính.\n\nTrong giai đoạn chuyển tiếp, nhiều doanh nghiệp cho biết đã đầu tư vào hệ thống thu thập dữ liệu phát thải, nâng cấp quy trình sản xuất và xây dựng cơ chế phối hợp với các đối tác nước ngoài nhằm đáp ứng yêu cầu báo cáo. Các ngành như thép, xi măng, nhôm và phân bón được đánh giá là chịu tác động rõ nét hơn do nằm trong nhóm hàng hóa được theo dõi theo cơ chế này. Một số doanh nghiệp dệt may và điện tử cũng bắt đầu triển khai các chương trình giảm phát thải, dù chưa thuộc phạm vi điều chỉnh trực tiếp, với mục tiêu nâng cao năng lực cạnh tranh trong chuỗi cung ứng toàn cầu.\n\nÔng Nguyễn Chánh Phương, Phó Chủ tịch **Hiệp hội Mỹ nghệ và Chế biến gỗ TP. Hồ Chí Minh (HAWA)**, nhận định rằng các tiêu chuẩn môi trường quốc tế đang trở thành một phần của yêu cầu thương mại thay vì chỉ là hoạt động phát triển bền vững mang tính tự nguyện. Theo ông, doanh nghiệp cần chuẩn hóa dữ liệu, tăng khả năng truy xuất nguồn gốc và xây dựng hệ thống quản trị phát thải ngay từ sớm để tránh bị động khi các quy định mới được mở rộng sang nhiều nhóm sản phẩm hơn.\n\nỞ góc độ tư vấn, nhiều chuyên gia cho rằng thách thức lớn nhất hiện nay không nằm ở việc đầu tư thiết bị mà là năng lực quản lý dữ liệu. Việc xác định lượng phát thải trong toàn bộ quá trình sản xuất đòi hỏi sự phối hợp giữa nhiều bộ phận cũng như sự thống nhất về phương pháp tính toán với đối tác quốc tế. Đối với doanh nghiệp vừa và nhỏ, chi phí xây dựng hệ thống đo lường và thuê đơn vị kiểm định độc lập vẫn là một rào cản đáng kể.\n\nBên cạnh những khó khăn ban đầu, không ít doanh nghiệp xem quá trình thích ứng là cơ hội để cải thiện hiệu quả sử dụng năng lượng, giảm chi phí vận hành và nâng cao uy tín trên thị trường xuất khẩu. Các hiệp hội ngành hàng cũng đang tăng cường tổ chức hội thảo, chương trình đào tạo và hướng dẫn kỹ thuật nhằm hỗ trợ doanh nghiệp cập nhật yêu cầu mới, đồng thời chia sẻ kinh nghiệm triển khai từ các đơn vị đã bắt đầu thực hiện kiểm kê phát thải và xây dựng chiến lược giảm carbon trong hoạt động sản xuất.:::\n",
+    "TXT_VALUES_GENERIC": "Một khảo sát xã hội được thực hiện trong quý II năm nay trên **2.400 người lao động** tại Hà Nội, TP. Hồ Chí Minh, Đà Nẵng, Cần Thơ và một số tỉnh công nghiệp cho thấy bức tranh việc làm đang dần ổn định hơn, nhưng áp lực về thu nhập, chi phí sinh hoạt và cân bằng giữa công việc với cuộc sống vẫn là những mối quan tâm hàng đầu. Theo kết quả khảo sát, **61%** người tham gia cho biết hài lòng ở mức tương đối hoặc cao với công việc hiện tại, **27%** cảm thấy chưa thực sự hài lòng nhưng vẫn chưa có kế hoạch nghỉ việc ngay, trong khi **12%** đang chủ động tìm kiếm cơ hội nghề nghiệp mới. Bên cạnh đó, **68%** nhận định chi phí sinh hoạt tăng nhanh hơn thu nhập trong vòng một năm qua, còn **54%** cho biết họ thường xuyên phải làm thêm giờ vào một số giai đoạn cao điểm.\n\nCác chỉ số về môi trường làm việc cũng cho thấy sự thay đổi trong kỳ vọng của người lao động. Khoảng **72%** người được hỏi đánh giá cơ hội học hỏi và phát triển kỹ năng là yếu tố quan trọng khi cân nhắc gắn bó lâu dài với doanh nghiệp, vượt nhẹ tiêu chí về chế độ phúc lợi (**69%**). Trong khi đó, **58%** mong muốn có thêm các hình thức làm việc linh hoạt nếu tính chất công việc cho phép, còn **64%** cho rằng sức khỏe tinh thần cần được doanh nghiệp quan tâm nhiều hơn thông qua các chính sách hỗ trợ phù hợp.\n\nNhững câu chuyện được ghi nhận trong khảo sát cũng phản ánh nhiều góc nhìn khác nhau. Anh Minh, một kỹ sư sản xuất tại Bình Dương, cho biết vẫn hài lòng với công việc vì thu nhập ổn định và có cơ hội được đào tạo chuyên môn định kỳ, dù khối lượng công việc đôi lúc khá lớn. Chị Lan, nhân viên văn phòng tại Hà Nội, chia sẻ rằng chị đang cân nhắc chuyển việc nhưng chưa đưa ra quyết định do vẫn đánh giá cao môi trường làm việc hiện tại và lo ngại biến động của thị trường lao động. Trong khi đó, anh Tuấn, tài xế công nghệ, cho biết thu nhập có sự dao động theo từng tháng nên anh đang tìm thêm nguồn thu bổ sung để bảo đảm tài chính gia đình. Một trường hợp khác là chị Hương, làm việc trong lĩnh vực thương mại điện tử, nhận định việc được làm việc kết hợp giữa văn phòng và từ xa giúp chị cân bằng tốt hơn giữa công việc và cuộc sống.\n\nNhìn chung, kết quả khảo sát cho thấy người lao động không chỉ quan tâm đến mức lương mà còn chú trọng nhiều hơn đến cơ hội phát triển nghề nghiệp, sự linh hoạt trong cách thức làm việc và chất lượng môi trường làm việc. Những yếu tố này đang dần trở thành tiêu chí quan trọng trong quyết định gắn bó hay tìm kiếm cơ hội mới của lực lượng lao động Việt Nam.\n",
+    "TXT_TET_FESTIVAL": "Những ngày cận Tết Nguyên Đán năm nay, không khí đón xuân tại TP. Hồ Chí Minh trở nên nhộn nhịp khi các tuyến đường, khu chợ và trung tâm thương mại đồng loạt tăng cường hoạt động phục vụ nhu cầu mua sắm của người dân. Các chợ hoa truyền thống như Công viên 23/9, Bến Bình Đông thu hút đông đảo khách tham quan và mua sắm.\n\nĐối với nhiều gia đình theo nếp sống truyền thống, việc chuẩn bị Tết vẫn giữ đầy đủ các nghi lễ lâu đời: thắp hương mời tổ tiên về ăn Tết vào chiều 30, gói bánh chưng bánh tét cùng con cháu trong nhà, dọn dẹp bàn thờ và chuẩn bị mâm ngũ quả. Sáng mùng Một, nhiều gia đình đi chùa lễ Phật đầu năm, sau đó thực hiện tục chúc Tết, mừng tuổi ông bà cha mẹ và lì xì trẻ nhỏ — những phong tục được xem là không thể thiếu để giữ gìn nét văn hóa cội nguồn.\n\nTrong khi đó, một bộ phận không nhỏ người dân, đặc biệt tại các đô thị lớn, lại chọn cách đón Tết theo hướng hiện đại và linh hoạt hơn. Thay vì ở nhà chuẩn bị mâm cỗ, nhiều người đặt tour du lịch nước ngoài ngay trong kỳ nghỉ Tết, tận dụng thời gian nghỉ dài để khám phá những điểm đến mới như Nhật Bản, Hàn Quốc hay Thái Lan thay vì ở nhà đón giao thừa. Một số khác tổ chức tiệc Tết theo phong cách buffet hiện đại tại nhà hàng, mời bạn bè cùng đồng nghiệp thay vì tập trung họ hàng, trang trí nhà cửa theo phong cách tối giản thay vì bày biện mâm ngũ quả và câu đối truyền thống, hoặc đặt sẵn toàn bộ món ăn Tết qua ứng dụng giao hàng thay vì tự tay chuẩn bị từ nhiều ngày trước.\n\nVề giá cả, nhiều tiểu thương cho biết sức mua năm nay khá ổn định. Hoạt động giao thông cũng bước vào giai đoạn cao điểm khi nhiều người bắt đầu về quê hoặc di chuyển đến các bến xe, nhà ga và sân bay.\n",
+    "TXT_REGIONAL_AGRI": "Ba diện mạo đổi mới của nông nghiệp Việt Nam trước thách thức khí hậu\nTừ những cánh đồng thông minh né mặn ở miền Tây, giảng đường nông nghiệp đô thị tại Bắc Bộ đến các trang trại tuần hoàn trên đại ngàn, ngành nông nghiệp đang định hình lại bản đồ sản xuất để thích ứng với nghịch cảnh.\n\nNằm ở hạ lưu sông Mekong, Đồng bằng sông Cửu Long (ĐBSCL) đang là tâm điểm chịu ảnh hưởng nặng nề bởi biến đổi khí hậu. Xâm nhập mặn không còn là thiên tai bất thường mà đã trở thành quy luật hàng năm, buộc người nông dân nơi đây phải thay đổi tư duy từ \"chống chọi\" sang \"thuận thiên\".\n\nTại các tỉnh ven biển như Bến Tre, Trà Vinh và Sóc Trăng, mô hình canh tác thông minh, chuyển đổi cơ cấu cây trồng đang mang lại những tín hiệu tích cực. Thay vì độc canh cây lúa ba vụ rủi ro cao, các hợp tác xã đã chủ động chuyển sang mô hình \"con tôm ôm cây lúa\" hoặc hệ thống luân canh lúa - màu. Vào mùa mặn đạt đỉnh từ tháng 2 đến tháng 4, nông dân chủ động lấy nước lợ vào ruộng để nuôi tôm thẻ chân trắng, tôm sú. Khi mùa mưa đến, nước ngọt gột rửa bớt mặn, họ lại xuống giống các giống lúa chịu mặn cao do Viện Lúa ĐBSCL lai tạo.\n\nBên cạnh đó, việc ứng dụng công nghệ số như trạm đo độ mặn tự động kết nối qua ứng dụng điện thoại đã giúp nhà vườn biết chính xác thời điểm đóng mở cống ngăn mặn, bảo vệ hàng nghìn hecta cây ăn trái đặc sản.\n\nỞ một thái cực khác, các đô thị lớn tại Đồng bằng sông Hồng (ĐBSH) lại chọn hướng đi chinh phục không gian bằng nông nghiệp công nghệ cao. Do quỹ đất canh tác ngày càng thu hẹp trước tốc độ đô thị hóa nhanh chóng, các địa phương như Hà Nội, Hải Phòng, Quảng Ninh đang đẩy mạnh mô hình nông nghiệp đô thị khép kín.\n\nThay vì phụ thuộc vào diện tích mặt đất, các mô hình nhà màng, nhà kính thông minh kết hợp hệ thống thủy canh, khí canh đa tầng đang nở rộ ngay sát các khu công nghiệp và đô thị lớn. Toàn bộ quy trình từ châm phân tự động, điều chỉnh độ ẩm, ánh sáng đèn LED cho đến nhiệt độ phòng đều được lập trình qua máy tính. Phương thức này cho phép sản xuất rau thủy canh, hoa cao cấp quanh năm, bất chấp thời tiết cực đoan của mùa đông Bắc Bộ.\n\nNăng suất của nông nghiệp đô thị công nghệ cao tại ĐBSH hiện đạt gấp 4 đến 5 lần so với canh tác truyền thống, cung ứng chuỗi thực phẩm an toàn, ngắn hạn (Last-mile food supply) trực tiếp cho hàng triệu cư dân thành thị mà không tốn chi phí vận chuyển đường xa.\n\nTrong khi đó, khu vực dải miền Trung và vùng đất đỏ Tây Nguyên lại tìm thấy lời giải ở các mô hình nông nghiệp tuần hoàn và thích ứng khô hạn. Đối mặt với cái nắng cháy da của gió Lào và những đợt hạn hán kéo dài, các trang trại cà phê tại Đắk Lắk, Lâm Đồng đã ứng dụng hệ thống tưới tiết kiệm nhỏ giọt công nghệ Israel, giúp giảm 40% lượng nước tưới nhưng vẫn đảm bảo năng suất. Đồng thời, dọc các tỉnh duyên hải miền Trung, mô hình chăn nuôi gia súc lớn (bò, dê) kết hợp nhà máy chế biến phân bón hữu cơ từ phế phẩm nông nghiệp đang tạo ra một chu trình khép kín, vừa giải quyết bài toán ô nhiễm môi trường, vừa tăng sức chống chịu cho đất cát bạc màu trước hiện tượng hoang mạc hóa.\n\nSự chuyển dịch đồng bộ ở cả ba vùng chiến lược cho thấy nông nghiệp Việt Nam đang chuyển mình mạnh mẽ. Dù là giải pháp thích ứng mặn ở miền Tây, công nghệ cao tại đô thị miền Bắc hay tuần hoàn chịu hạn ở miền Trung, mục tiêu tối hậu vẫn là xây dựng một nền di sản nông nghiệp bền vững, bám sát vào lợi thế tự nhiên và đặc thù kinh tế của từng vùng miền.",
+    "TXT_CULINARY_TASTE": "Ẩm thực Việt Nam tiếp tục duy trì sức hút trong năm nay khi thị trường dịch vụ ăn uống ghi nhận sự phục hồi ổn định ở nhiều phân khúc. Theo ghi nhận từ các doanh nghiệp trong ngành, lượng khách tại nhiều cơ sở kinh doanh ở Hà Nội, TP. Hồ Chí Minh và các thành phố du lịch tăng từ **10–15%** so với cùng kỳ năm trước. Bên cạnh nhu cầu ăn uống hằng ngày của người dân, sự gia tăng của khách du lịch trong và ngoài nước cũng góp phần tạo thêm động lực cho thị trường, đặc biệt ở hai phân khúc nổi bật là ẩm thực đường phố và nhà hàng cao cấp.\n\nTại khu vực phố cổ Hà Nội, nhiều quán bún, phở, bún chả và các món ăn truyền thống liên tục đông khách vào các khung giờ sáng và buổi tối. Chị Nguyễn Thu Hà, chủ một quán phở lâu năm, cho biết lượng khách cuối tuần hiện cao hơn khoảng **20%** so với ngày thường, trong đó khách quốc tế chiếm tỷ lệ ngày càng lớn. Theo chị, nhiều thực khách tìm đến nhờ các ứng dụng bản đồ, mạng xã hội hoặc những lời giới thiệu từ bạn bè. \"Khách nước ngoài thường hỏi rất kỹ về nguyên liệu và lịch sử món ăn, còn khách trong nước lại quan tâm nhiều đến hương vị quen thuộc và mức giá hợp lý,\" chị chia sẻ.\n\nỞ chiều ngược lại, phân khúc nhà hàng fine-dining cũng ghi nhận những tín hiệu tích cực khi nhu cầu trải nghiệm ẩm thực kết hợp không gian và câu chuyện văn hóa tăng lên. Bếp trưởng Lê Hoàng Nam của một nhà hàng tại Đà Nẵng cho biết lượng khách đặt bàn trước vào cuối tuần đã tăng khoảng **18%** so với năm trước. Theo anh, thực khách hiện không chỉ mong muốn thưởng thức những món ăn được chế biến công phu mà còn quan tâm đến nguồn gốc nguyên liệu và cách mỗi món ăn phản ánh bản sắc vùng miền. \"Chúng tôi cố gắng giữ tinh thần của ẩm thực Việt nhưng kể câu chuyện theo cách mới mẻ hơn để cả khách trong nước lẫn quốc tế đều có thể cảm nhận,\" anh nói.\n\nMột số chuyên gia trong ngành nhận định khoảng cách giữa ẩm thực đường phố và nhà hàng cao cấp đang dần thu hẹp ở khía cạnh trải nghiệm. Không ít đầu bếp từng làm việc tại các nhà hàng lớn quay trở lại nghiên cứu các món ăn truyền thống, trong khi nhiều quán bình dân cũng chú trọng hơn đến chất lượng phục vụ, vệ sinh và cách giới thiệu món ăn để đáp ứng kỳ vọng ngày càng cao của thực khách.\n\nBên cạnh hai phân khúc chủ đạo, thị trường cũng xuất hiện thêm nhiều mô hình bổ trợ. Các quán ăn gia đình tầm trung ghi nhận lượng khách theo nhóm tăng vào cuối tuần nhờ thực đơn đa dạng và mức giá phù hợp, còn các đơn vị tổ chức food tour cho biết số lượt đặt chỗ tăng khoảng **15%** so với cùng kỳ, chủ yếu từ du khách muốn khám phá nhiều món đặc sản trong một hành trình ngắn. Dù quy mô chưa lớn bằng hai phân khúc chính, những mô hình này góp phần làm phong phú thêm bức tranh ẩm thực Việt Nam và mở rộng lựa chọn cho nhiều nhóm thực khách khác nhau.\n",
+    "TXT_HOBBY_CULINARY": "Giữ hương vị truyền thống hay ưu tiên sự tiện lợi? Hai xu hướng cùng tồn tại trong ẩm thực Việt\n\nTrong những năm gần đây, nhiều món ăn truyền thống của Việt Nam được giới trẻ quan tâm trở lại thông qua các chương trình truyền hình, mạng xã hội và những lễ hội ẩm thực địa phương. Tuy nhiên, cùng với nhịp sống ngày càng bận rộn, nhiều đầu bếp và gia đình cũng lựa chọn các phương pháp chế biến nhanh hơn để tiết kiệm thời gian mà vẫn giữ được hương vị quen thuộc.\n\nTại một lễ hội ẩm thực ở miền Trung, món bún bò Huế trở thành chủ đề được nhiều đầu bếp trao đổi. Theo các nghệ nhân, để có nồi nước dùng đúng hương vị truyền thống, xương bò cần được ngâm và làm sạch trước khi ninh liên tục từ 8 đến 10 giờ. Trong quá trình nấu, người nấu phải thường xuyên hớt bọt để nước dùng trong, đồng thời rang hành tím, gừng và một số gia vị trước khi cho vào nồi nhằm tạo mùi thơm đặc trưng. Mắm ruốc được hòa tan, lọc kỹ rồi mới thêm vào nước dùng ở từng giai đoạn để vị ngọt và mùi thơm hòa quyện tự nhiên.\n\nMột số đầu bếp lâu năm cho rằng chất lượng của món ăn còn phụ thuộc vào việc lựa chọn nguyên liệu. Xương ống tạo vị ngọt, trong khi xương bò có nhiều gân giúp nước dùng đậm đà hơn. Sả được đập dập thay vì cắt nhỏ để tinh dầu tiết ra chậm hơn trong suốt quá trình ninh. Nhiều gia đình vẫn giữ thói quen tự làm sa tế từ ớt khô, dầu điều và sả băm thay vì sử dụng sản phẩm chế biến sẵn vì cho rằng hương vị sẽ cân bằng và thơm hơn.\n\nBên cạnh cách nấu truyền thống, nhiều đầu bếp trẻ giới thiệu phiên bản rút gọn phù hợp với người bận rộn. Thay vì ninh xương nhiều giờ, họ sử dụng nồi áp suất để giảm thời gian xuống còn khoảng một giờ. Một số nguyên liệu như sa tế, gia vị tổng hợp hoặc nước dùng cô đặc được chuẩn bị sẵn, giúp việc nấu ăn nhanh hơn nhưng vẫn tạo được hương vị tương đối gần với phiên bản truyền thống. Nhiều người cũng lựa chọn thịt bò thái sẵn, bánh bún đóng gói và rau đã sơ chế để rút ngắn thời gian chuẩn bị.\n\nTheo khảo sát tại lễ hội, nhiều gia đình trẻ cho biết họ ưu tiên những công thức đơn giản vì có thể hoàn thành bữa ăn sau giờ làm việc mà không cần dành cả ngày trong bếp. Một số người chia sẻ rằng nếu món ăn đạt khoảng 80 đến 90% hương vị truyền thống thì vẫn đáp ứng được nhu cầu sinh hoạt hằng ngày.\n\nTrong khi đó, các nghệ nhân ẩm thực lại cho rằng việc rút gọn quá nhiều công đoạn có thể làm mất đi những đặc trưng được hình thành qua nhiều thế hệ. Theo họ, mỗi bước như rang gia vị, hớt bọt, điều chỉnh lượng mắm ruốc hay kiểm soát lửa khi ninh đều ảnh hưởng đến màu sắc, mùi thơm và vị ngọt tự nhiên của nước dùng. Những kỹ thuật này không chỉ nhằm tạo ra món ăn ngon mà còn là một phần của kinh nghiệm được truyền lại trong mỗi gia đình.\n\nNgoài việc chia sẻ công thức, lễ hội còn tổ chức các buổi trình diễn nấu ăn và giao lưu với nghệ nhân. Nhiều người tham dự quan tâm đến câu chuyện phía sau từng món ăn, từ nguồn gốc của bún bò Huế đến sự khác biệt giữa cách nấu của các vùng miền. Trong khi đó, khu vực trải nghiệm nấu nhanh thu hút đông các bạn trẻ muốn học những mẹo giúp tiết kiệm thời gian nhưng vẫn có thể tự chuẩn bị bữa ăn tại nhà.\n\nTheo các chuyên gia văn hóa ẩm thực, hai xu hướng trên không loại trừ lẫn nhau. Những công thức truyền thống góp phần gìn giữ giá trị văn hóa và kỹ thuật chế biến, còn các phiên bản rút gọn giúp món ăn tiếp cận nhiều người hơn trong cuộc sống hiện đại. Việc lựa chọn cách nấu nào phụ thuộc vào mục đích của mỗi người, quỹ thời gian và trải nghiệm mà họ mong muốn khi vào bếp.\n",
+    "TXT_TRAVEL_NATURE_CULTURE": "Trước khi mặt trời lên hẳn trên vịnh, chuyến xe từ trung tâm thành phố Huế đã lăn bánh về phía Vườn quốc gia Bạch Mã, quãng đường hơn 40 km chỉ mất khoảng một giờ di chuyển. Càng rời xa phố xá, không khí càng trở nên mát lạnh, những dải sương mỏng còn vương trên sườn núi và tiếng chim rừng dần thay thế âm thanh của xe cộ. Những con đường uốn lượn dẫn lên độ cao gần 1.450 m mở ra khung cảnh xanh thẳm của rừng nguyên sinh, nơi những thân cây cổ thụ phủ đầy rêu và các dòng suối len lỏi qua từng phiến đá.\n\nCon đường mòn dẫn tới thác Đỗ Quyên không quá dài nhưng đủ để người đi chậm lại và cảm nhận sự thay đổi của thiên nhiên theo từng bước chân. Tiếng nước đổ từ vách đá cao hòa cùng hương rừng tạo nên bầu không khí đặc trưng mà khó nơi nào có được. Một hướng dẫn viên địa phương mỉm cười chia sẻ rằng: “Điều đặc biệt của Bạch Mã không chỉ là khí hậu mát mẻ quanh năm mà còn là hệ sinh thái rất phong phú, nơi nhiều loài động thực vật quý hiếm vẫn được bảo tồn.” Lời giới thiệu ấy dường như được minh chứng ngay trước mắt khi những tán rừng nối tiếp nhau trải dài đến tận đường chân trời.\n\nBuổi chiều, hành trình trở lại trung tâm Huế đưa du khách đến với một không gian hoàn toàn khác. Bên dòng sông Hương hiền hòa, Đại Nội hiện lên uy nghi với những cổng thành rêu phong, mái ngói lưu ly và các công trình từng là trung tâm quyền lực của triều Nguyễn. Mỗi lối đi, mỗi bức tường đều lưu giữ dấu ấn của hàng trăm năm lịch sử. Tiếng chuông chùa Thiên Mụ ngân vang trên đồi Hà Khê khiến nhịp bước như chậm lại, mang đến cảm giác thanh tịnh giữa khung cảnh cổ kính. Khi hoàng hôn buông xuống, ánh nắng cuối ngày phủ lên mặt sông một màu vàng nhạt, tạo nên bức tranh yên bình rất đặc trưng của cố đô.\n\nGiữa hai không gian tưởng chừng đối lập ấy, Huế vẫn giữ được sự hài hòa hiếm có. Buổi sáng là sắc xanh của núi rừng nguyên sơ, buổi chiều lại là màu thời gian của những di tích văn hóa và lịch sử. Chính sự kết hợp ấy khiến hành trình không chỉ là chuyến tham quan cảnh đẹp mà còn là cuộc gặp gỡ giữa thiên nhiên và di sản.\n\nKhi phố lên đèn, hương thơm của bún bò Huế, cơm hến hay những đĩa bánh bèo nóng hổi lan tỏa từ các quán nhỏ ven đường, khép lại một ngày nhiều cảm xúc. Nhiều cơ sở lưu trú nằm dọc bờ nam sông Hương hoặc gần khu vực Đại Nội cũng giúp việc khám phá thành phố trở nên thuận tiện hơn. Rời Huế, điều còn đọng lại không chỉ là hình ảnh của rừng xanh hay những thành quách cổ kính, mà còn là cảm giác về một vùng đất nơi thiên nhiên và lịch sử vẫn song hành, bổ sung cho nhau để tạo nên sức hấp dẫn rất riêng.\n"
+  },
+  "test_cases": [
+    {
+      "cq_id": "CQ1",
+      "question": "Trình độ học vấn của người dùng có ảnh hưởng đến độ phức tạp ngôn ngữ trong bản tóm tắt không?",
+      "field_under_test": "education_level (HARD)",
+      "type": "pair_comparison",
+      "person_a": {
+        "row_index": 2,
+        "label": "Bà Nga - Không học vấn, 88 tuổi"
+      },
+      "person_b": {
+        "row_index": 40,
+        "label": "Oanh - Sau đại học, nhà nghiên cứu"
+      },
+      "text_id": "TXT_NEWS_GENERAL",
+      "expected_effect": "Tóm tắt cho Bà Nga dùng câu ngắn, từ ngữ đời thường, không thuật ngữ; tóm tắt cho Oanh có thể dùng câu phức tạp hơn, lập luận nhiều tầng hơn rõ rệt.",
+      "judge_question": "So sánh độ phức tạp ngôn ngữ (độ dài câu, mức độ dùng thuật ngữ, số tầng lập luận) giữa bản tóm tắt A và B. Bản A có đơn giản hơn bản B một cách rõ rệt không?"
+    },
+    {
+      "cq_id": "CQ2",
+      "question": "Nghề nghiệp và lĩnh vực làm việc của người dùng có quyết định chủ đề văn bản nào được ưu tiên tóm tắt không?",
+      "field_under_test": "occupation + professional_persona (HARD)",
+      "type": "pair_comparison",
+      "person_a": {
+        "row_index": 5,
+        "label": "Minh - Buôn bán lúa gạo"
+      },
+      "person_b": {
+        "row_index": 38,
+        "label": "Dương Xuân Hiếu - Y tế / dược"
+      },
+      "text_id": "TXT_NEWS_GENERAL",
+      "expected_effect": "Tóm tắt cho Minh nhấn vào giá vé, chi phí, cơ hội kinh doanh dịch vụ du lịch quanh lễ hội; tóm tắt cho Hiếu có thể trung lập hơn hoặc nhấn khía cạnh khác (không nhất thiết nhấn kinh doanh).",
+      "judge_question": "Bản tóm tắt A có nhấn mạnh các khía cạnh giá cả/kinh doanh/thị trường rõ rệt hơn bản B không, phù hợp với nghề buôn bán của person A?"
+    },
+    {
+      "cq_id": "CQ3",
+      "question": "Độ tuổi của người dùng có làm thay đổi chủ đề được nhấn mạnh trong bản tóm tắt không?",
+      "field_under_test": "age (HARD)",
+      "type": "pair_comparison",
+      "person_a": {
+        "row_index": 33,
+        "label": "Phương Hạnh - 21 tuổi, thất nghiệp tìm việc"
+      },
+      "person_b": {
+        "row_index": 2,
+        "label": "Bà Nga - 88 tuổi, nghỉ hưu"
+      },
+      "text_id": "TXT_HEALTH_SPORT",
+      "expected_effect": "Tóm tắt cho Phương Hạnh (trẻ) có thể nhấn cơ hội/khởi đầu tập luyện cơ bản; tóm tắt cho Bà Nga nhấn mạnh khía cạnh sức khỏe, vận động nhẹ nhàng, an toàn cho người lớn tuổi.",
+      "judge_question": "Bản tóm tắt B (người cao tuổi) có thiên về nội dung sức khỏe/an toàn/vận động nhẹ nhàng rõ rệt hơn bản A không?"
+    },
+    {
+      "cq_id": "CQ4",
+      "question": "Khu vực sống (Đô Thị/Nông Thôn) có làm thay đổi phần nào của văn bản được giữ lại trong tóm tắt không?",
+      "field_under_test": "zone (SOFT, bổ trợ)",
+      "type": "pair_comparison",
+      "person_a": {
+        "row_index": 34,
+        "label": "Chị Mai - Buôn bán, Nông Thôn, Đà Nẵng"
+      },
+      "person_b": {
+        "row_index": 41,
+        "label": "Phạm Thị Thảo - Buôn bán, Đô Thị, TP.HCM"
+      },
+      "text_id": "TXT_BUSINESS_MARKET",
+      "expected_effect": "Tóm tắt cho Chị Mai (nông thôn) giữ lại phần giá nông sản/kênh phân phối truyền thống; tóm tắt cho Thảo (đô thị) giữ lại phần thương mại điện tử/logistics.",
+      "judge_question": "Bản tóm tắt A có nhấn vào nông sản/kênh truyền thống còn bản B nhấn vào thương mại điện tử/logistics đô thị không?"
+    },
+    {
+      "cq_id": "CQ5",
+      "question": "Sở thích cá nhân có đủ để xác định góc độ tóm tắt phù hợp không, hay cần kết hợp với education_level?",
+      "field_under_test": "hobbies_and_interests (SOFT) + education_level (HARD)",
+      "type": "pair_comparison",
+      "person_a": {
+        "row_index": 12,
+        "label": "Lê Văn Dung - Công nhân, Trung cấp/Cao đẳng"
+      },
+      "person_b": {
+        "row_index": 38,
+        "label": "Dương Xuân Hiếu - Y tế/dược, Sau đại học"
+      },
+      "text_id": "TXT_HEALTH_SPORT",
+      "expected_effect": "Dù cả hai đều có liên quan đến thể thao trong hồ sơ, văn phong tóm tắt cho A vẫn đơn giản hơn B do chênh lệch education_level, chứng tỏ hobbies không tự quyết định toàn bộ cách diễn đạt.",
+      "judge_question": "Mặc dù chủ đề thể thao xuất hiện ở cả hai, bản tóm tắt B có phức tạp hơn bản A về ngôn ngữ/lập luận do trình độ học vấn khác biệt không?"
+    },
+    {
+      "cq_id": "CQ6",
+      "question": "Mục tiêu nghề nghiệp có làm tăng mức độ ưu tiên của nội dung mang tính định hướng tương lai (xu hướng thị trường, cơ hội đầu tư) trong tóm tắt không?",
+      "field_under_test": "career_goals_and_ambitions (GENERAL)",
+      "type": "pair_comparison",
+      "person_a": {
+        "row_index": 39,
+        "label": "Trần Thùy Thảo - muốn mở rộng kinh doanh ra quốc tế"
+      },
+      "person_b": {
+        "row_index": 5,
+        "label": "Minh - mong muốn ổn định, ít tham vọng mở rộng"
+      },
+      "text_id": "TXT_BUSINESS_MARKET",
+      "expected_effect": "Tóm tắt cho Thảo giữ lại phần xu hướng thị trường/thương mại điện tử (cơ hội mở rộng); tóm tắt cho Minh thiên về mô tả hiện trạng giá cả ổn định, ít nhấn cơ hội mở rộng.",
+      "judge_question": "Bản tóm tắt A (Thảo) có nhấn mạnh xu hướng/cơ hội phát triển kinh doanh rõ rệt hơn bản B (Minh) không?"
+    },
+    {
+      "cq_id": "CQ7",
+      "question": "Tình trạng hôn nhân có làm thay đổi góc độ được nhấn mạnh khi tóm tắt văn bản về gia đình/du lịch không?",
+      "field_under_test": "marital_status (SOFT)",
+      "type": "pair_comparison",
+      "person_a": {
+        "row_index": 18,
+        "label": "Huỳnh Thanh Hoa - Đã kết hôn"
+      },
+      "person_b": {
+        "row_index": 48,
+        "label": "Ly thân, occupation không chuyên biệt (tránh Topic 'kinh doanh' lấn át marital_status)"
+      },
+      "text_id": "TXT_FAMILY_TRAVEL",
+      "expected_effect": "Tóm tắt cho Hoa (đã kết hôn) nhấn vào điểm đến phù hợp gia đình/trẻ nhỏ; tóm tắt cho Hương (ly thân) nhấn vào trải nghiệm cá nhân/độc lập.",
+      "judge_question": "Bản tóm tắt A có thiên về nội dung phù hợp gia đình còn bản B thiên về trải nghiệm cá nhân/độc thân không?"
+    },
+    {
+      "cq_id": "CQ8",
+      "question": "Kỹ năng hiện có của người dùng có tác động loại bỏ phần hướng dẫn cơ bản (nhập môn) trong tóm tắt không?",
+      "field_under_test": "skills_and_expertise (HARD)",
+      "type": "pair_comparison",
+      "person_a": {
+        "row_index": 15,
+        "label": "Anh Dũng - Freelance designer nhiều năm kinh nghiệm"
+      },
+      "person_b": {
+        "row_index": 12,
+        "label": "Lê Văn Dung - Công nhân, kỹ năng cơ bản"
+      },
+      "text_id": "TXT_TECH_DESIGN",
+      "expected_effect": "Tóm tắt cho Anh Dũng (thiết kế chuyên sâu) lược bỏ phần hướng dẫn cơ bản (mở phần mềm, công cụ cơ bản), chỉ giữ phần nâng cao (typography, motion design); tóm tắt cho Lê Văn Dung có thể giữ lại nhiều hơn hoặc trình bày khác do không có nền tảng thiết kế.",
+      "judge_question": "Bản tóm tắt A có lược bỏ rõ rệt phần hướng dẫn nhập môn/cơ bản về thiết kế so với bản B không?"
+    },
+    {
+      "cq_id": "CQ9",
+      "question": "Vùng địa lý cư trú có làm tăng mức độ ưu tiên của nội dung địa phương trong tóm tắt không?",
+      "field_under_test": "region (GENERAL)",
+      "type": "pair_comparison",
+      "person_a": {
+        "row_index": 43,
+        "label": "Cô (Cần Thơ) - Buôn bán, gắn với chợ nổi miền Tây"
+      },
+      "person_b": {
+        "row_index": 40,
+        "label": "Oanh - Hải Phòng, vùng đồng bằng sông Hồng"
+      },
+      "text_id": "TXT_REGIONAL_AGRI",
+      "expected_effect": "Tóm tắt cho person A (Cần Thơ) giữ lại phần ĐBSCL/canh tác thông minh chống xâm nhập mặn rõ rệt hơn; tóm tắt cho person B (Hải Phòng) giữ lại phần nông nghiệp đô thị công nghệ cao ở ĐBSH rõ rệt hơn, cả hai đều lược bớt phần miền Trung/Tây Nguyên (không liên quan trực tiếp đến region của cả 2 person).",
+      "judge_question": "Bản tóm tắt A có ưu tiên rõ rệt nội dung ĐBSCL còn bản B ưu tiên rõ rệt nội dung ĐBSH, và cả hai đều giảm nhẹ phần miền Trung/Tây Nguyên không?"
+    },
+    {
+      "cq_id": "CQ10",
+      "question": "Phong cách du lịch (travel_persona) có làm thay đổi phần nào của văn bản du lịch được giữ lại trong tóm tắt không?",
+      "field_under_test": "travel_persona (SOFT)",
+      "type": "pair_comparison",
+      "person_a": {
+        "row_index": 38,
+        "label": "Dương Xuân Hiếu - thích khám phá thiên nhiên, Vườn quốc gia Cát Tiên"
+      },
+      "person_b": {
+        "row_index": 9,
+        "label": "Ngô Thị Hà - thích điểm đến có giá trị lịch sử, văn hóa"
+      },
+      "text_id": "TXT_TRAVEL_NATURE_CULTURE",
+      "expected_effect": "Tóm tắt cho Hiếu giữ lại rõ rệt phần nội dung thiên nhiên/sinh thái (Bạch Mã, thác Đỗ Quyên); tóm tắt cho Hà giữ lại rõ rệt phần nội dung di tích lịch sử/văn hóa (Đại Nội, chùa Thiên Mụ).",
+      "judge_question": "Bản tóm tắt A có nhấn vào nội dung thiên nhiên/sinh thái còn bản B nhấn vào nội dung lịch sử/văn hóa không?"
+    },
+    {
+      "cq_id": "CQ11",
+      "question": "Người dùng có nghề nghiệp sáng tạo thì bản tóm tắt về văn hóa nghệ thuật có cần giữ lại phần kỹ thuật chuyên môn không?",
+      "field_under_test": "occupation/professional_persona (HARD) x arts_persona (SOFT)",
+      "type": "pair_comparison",
+      "person_a": {
+        "row_index": 15,
+        "label": "Anh Dũng - Freelance designer (nghề sáng tạo)"
+      },
+      "person_b": {
+        "row_index": 12,
+        "label": "Lê Văn Dung - Công nhân/lao động phổ thông"
+      },
+      "text_id": "TXT_ARTS_CULTURE",
+      "expected_effect": "Tóm tắt cho Anh Dũng giữ lại phần phân tích kỹ thuật (lớp màu, phối màu, trường phái); tóm tắt cho Lê Văn Dung chỉ giữ phần giới thiệu sự kiện và cảm nhận tổng thể.",
+      "judge_question": "Bản tóm tắt A có giữ lại chi tiết kỹ thuật nghệ thuật (kỹ thuật, trường phái) rõ rệt hơn bản B không?"
+    },
+    {
+      "cq_id": "CQ12",
+      "question": "Mức độ tham gia thể thao có quyết định phần nào của văn bản sức khỏe được ưu tiên trong tóm tắt không?",
+      "field_under_test": "sports_persona (SOFT)",
+      "type": "pair_comparison",
+      "person_a": {
+        "row_index": 8,
+        "label": "Phương Chi - năng động, tập bóng bàn/đi bộ thường xuyên"
+      },
+      "person_b": {
+        "row_index": 2,
+        "label": "Bà Nga - chỉ tập nhẹ nhàng, dưỡng sinh"
+      },
+      "text_id": "TXT_HEALTH_SPORT",
+      "expected_effect": "Tóm tắt cho Phương Chi có thể giữ phần dinh dưỡng thể thao/phục hồi cơ chuyên sâu hơn; tóm tắt cho Bà Nga giữ phần khuyến nghị sức khỏe cơ bản, vận động nhẹ.",
+      "judge_question": "Bản tóm tắt A có nhấn vào nội dung tập luyện/dinh dưỡng chuyên sâu hơn còn bản B nhấn vào khuyến nghị sức khỏe cơ bản, nhẹ nhàng không?"
+    },
+    {
+      "cq_id": "CQ13",
+      "question": "Giới tính có làm thay đổi góc độ ưu tiên trong tóm tắt khi văn bản đề cập đến nhiều nhóm đối tượng không?",
+      "field_under_test": "sex",
+      "type": "pair_comparison",
+      "person_a": {
+        "row_index": 17,
+        "label": "Trần Văn Hải - Nam, 48 tuổi"
+      },
+      "person_b": {
+        "row_index": 1,
+        "label": "Chị Linh - Nữ, 45 tuổi"
+      },
+      "text_id": "TXT_HEALTH_FAMILY",
+      "expected_effect": "Tóm tắt cho Hải giữ lại phần khuyến nghị dành cho nam giới (tim mạch, tuyến tiền liệt); tóm tắt cho Linh giữ lại phần dành cho nữ giới (xương khớp, tầm soát ung thư vú).",
+      "judge_question": "Bản tóm tắt A có ưu tiên nội dung sức khỏe nam giới còn bản B ưu tiên nội dung sức khỏe nữ giới không?"
+    },
+    {
+      "cq_id": "CQ14",
+      "question": "Quốc gia cư trú (cố định Việt Nam) có đóng vai trò ràng buộc cứng loại bỏ/chú thích nội dung không phù hợp ngữ cảnh Việt Nam trong tóm tắt không?",
+      "field_under_test": "country (HARD, cố định)",
+      "type": "single_constraint",
+      "note": "Không thể test bằng so sánh cặp vì country cố định là Việt Nam cho toàn bộ 50 person trong sample50.csv. Test bằng cách đưa văn bản có nội dung chính sách nước ngoài và kiểm tra pipeline có lược bỏ/chú thích đúng cách không.",
+      "person_a": {
+        "row_index": 39,
+        "label": "Trần Thùy Thảo - dùng làm đại diện chung"
+      },
+      "text_id": "TXT_FOREIGN_POLICY",
+      "expected_effect": "Bản tóm tắt không trình bày chính sách thuế EU hoặc luật California như thể áp dụng trực tiếp cho người đọc tại Việt Nam; nội dung nước ngoài bị lược bỏ hoặc được chú thích rõ là không áp dụng trực tiếp.",
+      "judge_question": "Bản tóm tắt có lược bỏ hoặc chú thích rõ rằng các chính sách EU/Mỹ không áp dụng trực tiếp cho người đọc Việt Nam không, thay vì trình bày như thể áp dụng trực tiếp?"
+    },
+    {
+      "cq_id": "CQ15",
+      "question": "Giá trị sống và thế giới quan (persona) có ảnh hưởng đến văn phong và ngữ điệu của bản tóm tắt không?",
+      "field_under_test": "persona (GENERAL)",
+      "type": "pair_comparison",
+      "person_a": {
+        "row_index": 23,
+        "label": "Đỗ Thanh Hương - quản lý, thực dụng, tham vọng"
+      },
+      "person_b": {
+        "row_index": 2,
+        "label": "Bà Nga - tận hưởng tuổi già, bình yên"
+      },
+      "text_id": "TXT_VALUES_GENERIC",
+      "expected_effect": "Tóm tắt cho Hương súc tích, thiên về số liệu/kết luận rõ ràng; tóm tắt cho Bà Nga có thể nhẹ nhàng, gần gũi đời thường hơn.",
+      "judge_question": "Bản tóm tắt A có văn phong súc tích/thiên số liệu rõ rệt hơn, còn bản B nhẹ nhàng/đời thường hơn không?"
+    },
+    {
+      "cq_id": "CQ16",
+      "question": "Nền tảng văn hóa có làm thay đổi mức độ cộng hưởng của người dùng với cùng một văn bản không?",
+      "field_under_test": "cultural_background (GENERAL)",
+      "type": "pair_comparison",
+      "person_a": {
+        "row_index": 2,
+        "label": "Bà Nga - gắn bó văn hóa truyền thống Đà Nẵng (bài chòi, lễ hội)"
+      },
+      "person_b": {
+        "row_index": 38,
+        "label": "Dương Xuân Hiếu - sống chung cư hiện đại, pha trộn văn hóa"
+      },
+      "text_id": "TXT_TET_FESTIVAL",
+      "expected_effect": "Tóm tắt cho Bà Nga nhấn vào phong tục truyền thống (thắp hương, gói bánh chưng, đi chùa); tóm tắt cho Hiếu có thể giữ cả phần xu hướng hiện đại (du lịch nước ngoài, tiệc Tết hiện đại).",
+      "judge_question": "Bản tóm tắt A có nhấn mạnh phong tục truyền thống hơn, còn bản B có giữ lại phần nội dung hiện đại/quốc tế nhiều hơn không?"
+    },
+    {
+      "cq_id": "CQ17",
+      "question": "Khi trường HARD (zone, occupation) và trường SOFT (travel_persona) xung đột nhau, tóm tắt có ưu tiên theo HARD không?",
+      "field_under_test": "zone + occupation (HARD) vs travel_persona (SOFT) - quan hệ uu_tien_hon",
+      "type": "single_constraint",
+      "note": "Chị Mai có travel_persona thiên về du lịch quốc tế (Bà Nà Hills, kế hoạch đi quốc tế) nhưng zone=Nông Thôn, occupation=Buôn bán/kinh doanh là HARD. Kỳ vọng: tóm tắt ưu tiên giữ lại nội dung trong nước/chi phí hợp lý, không ưu tiên phần tour quốc tế cao cấp.",
+      "person_a": {
+        "row_index": 34,
+        "label": "Chị Mai - Nông Thôn/Buôn bán (HARD) nhưng travel_persona thích quốc tế (SOFT)"
+      },
+      "text_id": "TXT_TRAVEL_CULTURE",
+      "expected_effect": "Tóm tắt giữ lại phần khám phá tự túc bằng xe máy, ẩm thực vỉa hè, chi phí hợp lý (phù hợp HARD: nông thôn, buôn bán) hơn là phần resort 5 sao/tour cao cấp (dù travel_persona SOFT có xu hướng quốc tế/cao cấp).",
+      "judge_question": "Bản tóm tắt có ưu tiên nội dung trong nước, chi phí hợp lý, tự túc hơn là nội dung resort cao cấp/quốc tế không, mặc dù travel_persona của person gợi ý thích du lịch quốc tế/cao cấp?"
+    },
+    {
+      "cq_id": "CQ18",
+      "question": "Sự kết hợp giữa nghề nghiệp và khu vực sống có tạo ra yêu cầu tóm tắt đặc thù không?",
+      "field_under_test": "occupation x zone (HARD x SOFT combo)",
+      "type": "pair_comparison",
+      "person_a": {
+        "row_index": 5,
+        "label": "Minh - Buôn bán, Nông Thôn"
+      },
+      "person_b": {
+        "row_index": 41,
+        "label": "Phạm Thị Thảo - Buôn bán, Đô Thị"
+      },
+      "text_id": "TXT_BUSINESS_MARKET",
+      "expected_effect": "Cùng nghề buôn bán nhưng tóm tắt cho Minh (nông thôn) giữ phần giá nông sản/kênh phân phối truyền thống; tóm tắt cho Thảo (đô thị) giữ phần thương mại điện tử/logistics.",
+      "judge_question": "Mặc dù cùng nghề buôn bán, bản tóm tắt A (nông thôn) và B (đô thị) có khác nhau rõ rệt về trọng tâm nội dung (nông sản/truyền thống vs. online/logistics) không?"
+    },
+    {
+      "cq_id": "CQ19",
+      "question": "Mức độ tham gia nghệ thuật (arts_persona) có ảnh hưởng đến khả năng tiếp nhận văn phong giàu hình ảnh/ẩn dụ trong bản tóm tắt không?",
+      "field_under_test": "arts_persona (SOFT)",
+      "type": "pair_comparison",
+      "person_a": {
+        "row_index": 40,
+        "label": "Oanh - đam mê hội họa, thường xuyên dự triển lãm (arts cao)"
+      },
+      "person_b": {
+        "row_index": 19,
+        "label": "Anh Tuấn - thợ xây dựng, ít quan tâm nghệ thuật (arts thấp, dùng ngôn ngữ dè dặt 'có thể thích')"
+      },
+      "text_id": "TXT_ARTS_CULTURE",
+      "expected_effect": "Tóm tắt cho Oanh có thể dùng ngôn ngữ giàu hình ảnh/ẩn dụ hơn khi mô tả triển lãm; tóm tắt cho Dung trực tiếp, tường minh hơn.",
+      "judge_question": "Bản tóm tắt A có dùng ngôn ngữ giàu hình ảnh/ẩn dụ hơn rõ rệt so với bản B (trực tiếp, tường minh) không?"
+    },
+    {
+      "cq_id": "CQ20",
+      "question": "Đam mê và sở thích cá nhân có làm tăng ngưỡng chấp nhận độ dài tóm tắt của người dùng trong chủ đề họ yêu thích không?",
+      "field_under_test": "hobbies_and_interests (SOFT)",
+      "type": "pair_comparison",
+      "person_a": {
+        "row_index": 21,
+        "label": "Anh Thanh - sở thích đa dạng (lễ hội, cờ, làm vườn), không gắn bó sâu với ẩm thực"
+      },
+      "person_b": {
+        "row_index": 33,
+        "label": "Phương Hạnh - đam mê ẩm thực Hải Phòng cụ thể, thường tự nấu ăn tại nhà"
+      },
+      "text_id": "TXT_HOBBY_CULINARY",
+      "expected_effect": "Tóm tắt cho Phương Hạnh (B) có thể dài hơn, giữ lại nhiều chi tiết về công thức truyền thống cầu kỳ; tóm tắt cho Anh Thanh (A) ngắn gọn hơn, chỉ giữ phần công thức nhanh gọn cơ bản.",
+      "judge_question": "Bản tóm tắt B có dài hơn và giữ nhiều chi tiết về ẩm thực truyền thống hơn bản A không, phản ánh đam mê sâu hơn của person B với chủ đề này?"
+    }
+  ]
+}

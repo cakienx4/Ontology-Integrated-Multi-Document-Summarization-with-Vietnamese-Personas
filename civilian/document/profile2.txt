@@ -1,0 +1,20 @@
+professional_persona: Trần Thùy Thảo là một doanh nhân trẻ tuổi, có năng lực tổ chức và điều hành sự kiện lễ hội đồng thời quảng bá sản phẩm của mình trên mạng xã hội.
+sports_persona: Trần Thùy Thảo yêu thích bóng đá và tập gym. Cô còn tham gia các hoạt động thể thao khác và là một người năng động.
+arts_persona: Trần Thùy Thảo tham gia vào các lễ hội và có niềm đam mê với việc tổ chức các sự kiện văn hóa. Cô cũng là một người có tinh thần sáng tạo trong việc chuẩn bị mâm cỗ cho các lễ hội.
+travel_persona: Trần Thùy Thảo thích khám phá thiên nhiên và thường xuyên đến Vườn quốc gia Cát Tiên để du lịch và nghỉ ngơi.
+culinary_persona: Trần Thùy Thảo yêu thích việc làm bánh bèo và bánh xèo, những món ăn truyền thống của làng cô. Cô làm rất thành thạo các món ăn này từ khi còn nhỏ.
+persona: Trần Thùy Thảo, một cô gái trẻ tuổi, 24 tuổi, đang bắt đầu hành trình kinh doanh của mình tại một ngôi làng nhỏ ở Đồng Nai. Cô có tinh thần khởi nghiệp mạnh mẽ và đam mê với việc mang hương vị truyền thống đến với các lễ hội.
+cultural_background: Sống trong một ngôi làng nhỏ ở Đồng Nai, Trần Thùy Thảo quen với không khí yên bình của miền công nghiệp. Người làng có truyền thống tổ chức lễ hội để tưởng nhớ tổ tiên, và Thảo luôn tham gia vào các nghi lễ này, từ việc chuẩn bị mâm cỗ đến hát quan họ. Món ăn không thể thiếu trong các lễ hội là bánh bèo và bánh xèo, mà Thảo làm rất thành thạo từ khi còn nhỏ.
+skills_and_expertise: Với tuổi trẻ và tinh thần khởi nghiệp, Thảo có năng lực quản lý và điều hành kinh doanh, đặc biệt là trong lĩnh vực nông sản và ẩm thực. Cô còn biết sử dụng công nghệ để quảng bá sản phẩm trên mạng xã hội, đồng thời có kinh nghiệm trong việc tổ chức và điều phối các sự kiện lễ hội.
+skills_and_expertise_list: ['Quản lý và điều hành kinh doanh', 'Quảng bá sản phẩm trên mạng xã hội', 'Chuẩn bị mâm cỗ cho lễ hội', 'Điều phối sự kiện lễ hội', 'Làm bánh bèo và bánh xèo', 'Sử dụng công nghệ trong kinh doanh']
+hobbies_and_interests: Bên cạnh việc kinh doanh, Trần Thùy Thảo yêu thích việc trồng rau và chăm sóc vườn nhà. Cô còn thích tham gia các hoạt động thể thao như bóng đá và tập gym. Ngoài ra, Thảo cũng có niềm đam mê với du lịch và thường xuyên đến Vườn quốc gia Cát Tiên để khám phá thiên nhiên.
+hobbies_and_interests_list: ['Trồng rau', 'Chăm sóc vườn nhà', 'Bóng đá', 'Tập gym', 'Du lịch Vườn quốc gia Cát Tiên']
+career_goals_and_ambitions: Trần Thùy Thảo có mong muốn mở rộng quy mô kinh doanh của mình, đặc biệt là trong lĩnh vực ẩm thực và tổ chức các lễ hội. Cô cũng hy vọng sẽ đưa sản phẩm của mình ra thị trường quốc tế, đồng thời xây dựng một thương hiệu có tiếng tăm trong lĩnh vực này.
+sex: Nữ
+age: 24
+marital_status: Ly thân
+education_level: THPT
+occupation: Buôn bán / kinh doanh
+zone: Nông Thôn
+region: Tỉnh Đồng Nai
+country: Việt Nam

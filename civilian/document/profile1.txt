@@ -1,0 +1,20 @@
+professional_persona: Sau khi nghỉ hưu, bà Nga không còn tham gia vào môi trường làm việc, nhưng bà vẫn duy trì các mối quan hệ xã hội trong khu vực.
+sports_persona: Bà Nga thích tập các môn thể thao nhẹ nhàng như đi bộ và tập dưỡng sinh, đặc biệt là vào những ngày cuối tuần.
+arts_persona: Bà Nga tham dự các buổi xem bài chòi và lễ hội pháo hoa, những hoạt động văn hóa quan trọng trong sinh hoạt cộng đồng tại Đà Nẵng.
+travel_persona: Bà Nga thích tham quan các điểm du lịch quanh khu vực thành phố Đà Nẵng, đặc biệt là các lễ hội lớn và các khu nghỉ dưỡng gần biển.
+culinary_persona: Bà Nga thích nấu ăn và có thể nấu những món ăn truyền thống như mì Quảng và bánh tráng cuốn thịt heo.
+persona: Bà Nguyễn Thu Nga, người đã nghỉ hưu và tận hưởng tuổi già của mình bằng cách tham dự các lễ hội, chăm sóc vườn rau và nuôi gà trong khuôn viên nhà ở thành phố Đà Nẵng.
+cultural_background: Sinh ra và lớn lên ở Đà Nẵng, bà Nga có thói quen đi xem bài chòi vào các ngày lễ hội. Bà cũng thích tham dự lễ hội pháo hoa vào dịp cuối năm, xem đây như một hoạt động vui chơi quan trọng của gia đình. Mặc dù đã nghỉ hưu, bà vẫn duy trì mối quan hệ với xóm giềng, giúp đỡ hàng xóm khi có nhu cầu.
+skills_and_expertise: Bà Nga có kinh nghiệm quản lý tiền bạc và chi tiêu hợp lý trong gia đình, đảm bảo các khoản thu nhập được sử dụng hiệu quả. Bà cũng có khả năng nấu những món ăn truyền thống như mì Quảng, bánh tráng cuốn thịt heo.
+skills_and_expertise_list: ['Quản lý tài chính gia đình', 'Nấu ăn truyền thống', 'Chăm sóc vườn rau', 'Tham gia lễ hội', 'Giúp đỡ hàng xóm']
+hobbies_and_interests: Bà Nga thích tham dự các lễ hội, đặc biệt là lễ hội pháo hoa. Bà cũng có sở thích trồng rau trong vườn nhà, chăm sóc các loại cây ăn trái và nuôi gà. Bà thường xuyên tham dự các buổi xem bài chòi vào dịp lễ lớn.
+hobbies_and_interests_list: ['Tham dự lễ hội', 'Trồng rau', 'Nuôi gà', 'Xem bài chòi', 'Chăm sóc cây ăn trái']
+career_goals_and_ambitions: Bà Nga mong muốn tận hưởng tuổi già một cách vui vẻ và bình yên, tham dự các lễ hội và hoạt động cộng đồng, đồng thời duy trì sức khỏe tốt để chăm sóc bản thân và các cháu trong gia đình.
+sex: Nữ
+age: 88
+marital_status: Góa
+education_level: Không học vấn
+occupation: Nghỉ hưu
+zone: Nông Thôn
+region: Thành Phố Đà Nẵng
+country: Việt Nam

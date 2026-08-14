@@ -1,0 +1,27 @@
+# Jupyter
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Env / secrets
+.env
+*.key
+
+# PyCharm
+.idea/
+
+# OS
+.DS_Store
+
+# output
+**/output/
+
+# file csv
+civilian/data/persona.csv
+*.csv

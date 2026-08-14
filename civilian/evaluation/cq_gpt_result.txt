@@ -1,0 +1,34 @@
+Kết quả chạy cq_validator_gpt
+
+* Báo cão validate Conpetency Questions (CQ)
+Thời gian sinh: 2026-07-02 03:58:43
+
+Model tóm tất:"gpt-oss-120b | Model Judge: gpt-oss-120b"
+## Tổng quan
+
+- Tổng sõ CQ: 20
+
+- PASS: 14 | FAIL: 6 | UNCLEAR: 0 | ERROR: 0
+
+
+CQ	| Verdict	| Confidence 	| Trường kiểm tra 
+CQ1 	| PASS 		| 0.95 		| education level (HARD)
+CQ2  	| PASS  	| 0.95  	| occupation + professional_ persona (HARD) 
+CQ3 	| PASS 		| 0.9  		| age (HARD) 
+CQ4  	| PASS  	| 0.95  	| zone (SOFT, bố trợ) 
+CQ5 	| PASS  	| 0.85  	| hobbies and_interests (SOFT) + education_level (HARD)
+CQ6 	| FAIL		| 0.85		| career goals_and_ambitions (GENERAL) 
+CQ7 	| FAIL		| 0.95		| marital status (SOFT) 
+CQ8 	| PASS 		| 0.85		| skills _and_expertise (HARD) 
+CQ9 	| FAIL 		| 0.85		| region (GENERAL) 
+CQ10 	| FAIL 		| 0.95		| travel_persona (SOFT) 
+CQ11 	| PASS 		| 0.99 		| occupation | professional_persona (HARD) x arts_persona (SOFT) 
+CQ12 	| PASS 		| 0.97		| sports_persona (SOFT)
+CQ13 	| PASS 		| 0.97 		| sex
+CQ14 	| FAIL 		| 0.96		| country (HARD, cõ định) 
+CQ15 	| PASS 		| 0.95 		| persona (GENERAL) 
+CQ16 	| PASS 		| 0.95 		| cultural_background (GENERAL)
+CQ17 	| FAIL 		| 0.85 		| zone + occupation (HARD) v5 travel persona (SOFT) - quan hệ uu_tien_hon 
+CQ18 	| PASS 		| 0.95 		| occupation x zone (HARD x SOFT combo) 
+CQ19 	| PASS 		| 0.85 		| arts_persona (SOFT)
+CQ20 	| PASS 		| 0.95 		| hobbies and interests (SOFT) 

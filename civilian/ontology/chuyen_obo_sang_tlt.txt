@@ -1,0 +1,4 @@
+vào powershell quyền admin
+
+
+robot convert --input "C:\Users\Dell\OneDrive - Hanoi University of Mining and Geology\Tai_lieu_cong_viec\Personas\ontology\persona_analysis_3.obo" --output "C:\Users\Dell\OneDrive - Hanoi University of Mining and Geology\Tai_lieu_cong_viec\Personas\ontology\persona_analysis_3.tlt"

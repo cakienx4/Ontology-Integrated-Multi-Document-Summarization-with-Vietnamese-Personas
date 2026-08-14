@@ -1,0 +1,123 @@
+THIẾT KẾ HỒ SƠ BỘ ONTOLOGY  
+1.	Mục đích chung
+Ontology bổ sung tri thức cho LLM, giúp LLM nhận biết trong từng trường hợp thì ont nào được sử dụng vào lúc nào.
+Khi xử lý một hồ sơ người dùng, LLM không chỉ hiểu hồ sơ người dùng một cách phẳng và rời rạc mà có thể suy luận theo chiều sâu. Ontology giúp LLM phân biệt được đâu là thông tin trực tiếp từ dữ liệu, đâu là thông tin có thể suy ra từ các quan hệ đã được định nghĩa sẵn.
+2.	Các thuộc tính trong tập dữ liệu persona
+Một số thuộc tính dưới bị soft (có sai cũng chẳng sao, ko quá qtrong)
+-	Professional_persona: Mô tả các đặc điểm liên quan đến nghề nghiệp như môi trường làm việc, lĩnh vực công việc, phong cách làm việc, văn hóa doanh nghiệp và các mối quan hệ nghề nghiệp,  phục vụ việc phân tích tác động của nghề nghiệp đến hành vi và lối sống của người dùng. (HARD)
+
+-	Sports_persona: Mô tả các đặc điểm về hoạt động thể thao như mục đích luyện tập, mức độ tham gia, môn thể thao yêu thích và thói quen vận động. Ontology này được sử dụng để phân tích hành vi thể thao và lối sống của persona. (SOFT)
+
+-	Arts_persona: Mô tả sở thích, khả năng và mức độ tham gia vào các hoạt động nghệ thuật. Ontology này phục vụ việc biểu diễn xu hướng sáng tạo, bản sắc nghệ thuật và ảnh hưởng của nghệ thuật đến các đặc điểm khác của persona. (SOFT)
+
+-	Travel_persona: Mô tả đặc điểm liên quan đến hành vi du lịch như phong cách du lịch, sở thích điểm đến, mức độ khám phá và trải nghiệm văn hóa. Ontology này phục vụ việc phân tích hành vi và xu hướng du lịch của người dùng. (SOFT)
+
+-	Culinary_persona: Mô tả các đặc điểm liên quan đến ẩm thực như khẩu vị, chế độ ăn uống, trải nghiệm ẩm thực và hành vi chia sẻ về ẩm thực. Ontology này được sử dụng để phân tích sở thích ẩm thực và mối liên hệ giữa ẩm thực với văn hóa, du lịch và phong cách sống. (SOFT)
+-	Persona: Mô tả các đặc điểm cốt lõi của một cá nhân như giá trị sống, thế giới quan, nguyên tắc sống, quan niệm về hạnh phúc và cách ra quyết định. Đây là ontology trung tâm dùng để biểu diễn bản sắc và đặc điểm nền tảng của persona (GENERAL)
+
+-	Cultural_persona: Mô tả nền tảng văn hóa của người dùng, bao gồm nguồn gốc văn hóa, phong tục tập quán, môi trường sống, tín ngưỡng và các yếu tố xã hội. Ontology này được sử dụng để phân tích ảnh hưởng của văn hóa đến các hành vi và đặc điểm khác của persona (GENERAL)
+
+-	Skill_and_expertise: Mô tả các kỹ năng, năng lực và kinh nghiệm của người dùng. Ontology này phục vụ việc biểu diễn chuyên môn, khả năng làm việc cũng như phân tích ảnh hưởng của kỹ năng đối với nghề nghiệp và các hoạt động khác. (HARD)
+
+-	Hobbies_and_interests: Mô tả các sở thích, đam mê và hoạt động giải trí của người dùng. Ontology này được sử dụng để biểu diễn hành vi giải trí và phân tích mối liên hệ giữa sở thích với các nhóm persona khác. (SOFT)
+
+-	Career_goal_and_ambitions: Mô tả các mục tiêu phát triển nghề nghiệp, định hướng tương lai và động lực phát triển bản thân của người dùng. Ontology này được sử dụng để biểu diễn định hướng nghề nghiệp và mối liên hệ giữa mục tiêu nghề nghiệp với các đặc điểm khác của persona. (GENERAL)
+
+-	Sex: Giới tính sinh học (Nam/Nữ) giúp LLM loại bỏ hoặc ưu tiên nội dung phù hợp với từng giới, đặc biệt trong các chủ đề như sức khỏe, thời trang, thể thao hay gia đình. (???)
+
+-	Age — Tuổi (18–90) xác định giai đoạn cuộc sống của người dùng, từ đó điều chỉnh ngữ điệu, độ phức tạp và chủ đề nội dung cho phù hợp — ví dụ người trẻ ưu tiên nội dung hướng nghiệp và giải trí, người lớn tuổi ưu tiên sức khỏe và ổn định. (HARD)
+
+-	Marital_status — Tình trạng hôn nhân (Độc thân, Đã kết hôn, Góa, Ly thân) ảnh hưởng đến nhu cầu nội dung liên quan đến gia đình, tài chính cá nhân, du lịch và lối sống. (SOFT)
+-	Education_level — Trình độ học vấn cao nhất đã hoàn thành giúp LLM căn chỉnh độ sâu và cách diễn đạt của nội dung được gợi ý, tránh quá chuyên sâu hoặc quá đơn giản so với khả năng tiếp thu của người dùng. (HARD)
+
+-	Occupation — Nhóm ngành nghề (20 loại) là trường nhân khẩu học bổ trợ cho professional_persona, cung cấp thông tin phân loại nhanh về lĩnh vực làm việc mà không cần đi sâu vào cấu trúc phân cấp của ontology. (HARD)
+
+-	Zone — Khu vực cư trú (Đô thị/Nông thôn) ảnh hưởng đến khả năng tiếp cận dịch vụ, thói quen tiêu dùng và ngữ cảnh cuộc sống, giúp lọc nội dung phù hợp với thực tế sinh hoạt của người dùng. (SOFT)
+
+-	Region — Tỉnh/Thành phố cư trú (1 trong 6 địa điểm lớn) giúp cá nhân hóa nội dung theo địa phương như tin tức vùng miền, ẩm thực đặc trưng, sự kiện địa phương hay văn hóa vùng. (GENERAL)
+
+-	Country — Quốc gia cư trú (cố định là Việt Nam) xác định ngữ cảnh pháp lý, ngôn ngữ và văn hóa tổng thể, đảm bảo toàn bộ pipeline hoạt động trong phạm vi nội dung tiếng Việt. (HARD)
+
+3.	Phương pháp luận
+
+3.1.	Cách tạo ont
+
+-	Ontology được xây dựng xuất phát từ dữ liệu thực tế. Bước đầu tiên là khảo sát tập dữ liệu CSV hồ sơ người dùng để xác định toàn bộ các trường dữ liệu cần mô hình hóa. Mỗi trường được phân loại vào một trong ba nhóm: HARD (dữ liệu cứng, bắt buộc chính xác như tuổi, học vấn, nghề nghiệp), SOFT (dữ liệu mềm, sai lệch nhỏ không ảnh hưởng nhiều đến kết quả như sở thích, phong cách du lịch), và GENERAL (nằm giữa hai nhóm trên, có tác động bổ trợ như vùng địa lý, mục tiêu nghề nghiệp, văn hóa).
+
+-	Từ các trường dữ liệu đó, ontology được tổ chức thành 10 nhánh tương ứng với 10 chiều mô tả hồ sơ người dùng, mỗi nhánh có cấu trúc phân cấp 4 tầng từ L0 đến L3. Các thuật ngữ trong ontology được định nghĩa bằng tiếng Việt, có ví dụ thực tế lấy từ dữ liệu, và được liên kết với nhau qua các quan hệ có ngữ nghĩa rõ ràng thể hiện bản chất của mối liên hệ — ví dụ quan hệ kéo theo, tác động, kìm hãm, là điều kiện tiên quyết — thay vì dùng quan hệ chung chung.
+
+-	Các Competency Question (CQ) được xây dựng không phải để mô tả cấu trúc ontology mà để trả lời các câu hỏi nghiệp vụ thực tế của bài toán tóm tắt văn bản: trường dữ liệu nào ảnh hưởng đến độ phức tạp ngôn ngữ của tóm tắt, trường nào quyết định chủ đề được ưu tiên, trường nào tác động đến văn phong và ngữ điệu. Từ mỗi CQ mới suy ra cần có quan hệ gì giữa thuật ngữ nào trong ontology.
+
+3.2.	Cách dùng ont
+
+Ontology được sử dụng theo một pipeline gồm ba giai đoạn chính.
+
+-	Giai đoạn 1 — Xây dựng hồ sơ người dùng có cấu trúc
+Hệ thống đọc hồ sơ người dùng từ CSV và dùng ontology để diễn giải các trường dữ liệu thành hai thành phần:
+•	Thứ nhất là thế giới xác nhận — tập hợp các thông tin chính xác, có thật về người dùng, lấy nòng cốt từ các trường HARD. Đây là phần không thể sai lệch trong quá trình tóm tắt: tuổi tác, trình độ học vấn, nghề nghiệp, quốc gia cư trú phải được phản ánh đúng trong mọi bản tóm tắt.
+•	Thứ hai là thế giới giả tưởng — phần được suy ra từ các trường dữ liệu của chính person đó, gồm ba chiều: bổn phận (person này có trách nhiệm hoặc nghĩa vụ gì trong cuộc sống), mong muốn (họ đang hướng đến điều gì, kỳ vọng gì cho bản thân), và niềm tin (họ tin rằng mình sẽ đạt được hoặc làm được gì). Ví dụ, bà Nga mong muốn tận hưởng tuổi già một cách vui vẻ và bình yên; Trần Thùy Thảo có mong muốn mở rộng quy mô kinh doanh của mình. Ba chiều này giúp LLM không chỉ hiểu person một cách phẳng qua các trường dữ liệu mà còn hình dung được động lực và định hướng sống của họ — từ đó điều chỉnh góc độ và cách diễn đạt của bản tóm tắt cho phù hợp với đúng con người đó.
+
+-	Giai đoạn 2 — Xác định Community
+Từ tổ hợp các property của người dùng, hệ thống xác định người dùng thuộc community nào. Mỗi community được đặc trưng bởi 5 chiều: Language (cách dùng ngôn ngữ và độ phức tạp phù hợp), Topic (chủ đề quan tâm chính), Domain (lĩnh vực chuyên môn), Cultural (nền tảng và bối cảnh văn hóa), và Prototype (hình mẫu đại diện của nhóm người dùng đó). Ontology đóng vai trò cung cấp tri thức nền để LLM suy ra community phù hợp thay vì chỉ khớp từ khóa đơn thuần.
+
+-	Giai đoạn 3 — Tóm tắt văn bản cá nhân hóa
+Văn bản đầu vào được đối chiếu với đặc điểm community và hai thế giới của người dùng để quyết định: phần nào của văn bản được giữ lại, phần nào được nhấn mạnh, phần nào được lược bỏ, và toàn bộ bản tóm tắt được viết theo văn phong, độ phức tạp và góc độ phù hợp với đúng person đó. Kết quả không phải là một bản tóm tắt chung chung mà là một bản tóm tắt được cá nhân hóa — cùng một văn bản gốc nhưng hai người dùng khác community sẽ nhận được hai bản tóm tắt khác nhau về cả nội dung lẫn cách diễn đạt.
+
+4.	Các CQ
+CQ	Đã KT (✓)	Lí do
+CQ1: Trình độ học vấn của người dùng có ảnh hưởng đến độ phức tạp ngôn ngữ trong bản tóm tắt không?		Người không có học vấn hoặc chỉ học đến tiểu học cần bản tóm tắt ngắn gọn, từ ngữ đời thường; người sau đại học có thể tiếp nhận văn bản có thuật ngữ chuyên môn và lập luận nhiều tầng. Education_level là HARD nên đây là ràng buộc bắt buộc trong mọi lần tóm tắt.
+CQ2: Nghề nghiệp và lĩnh vực làm việc của người dùng quyết định chủ đề văn bản nào được ưu tiên tóm tắt không?		Người buôn bán cần tóm tắt tập trung vào thông tin thị trường, giá cả; kỹ sư cần nội dung kỹ thuật; người nghỉ hưu cần nội dung sức khỏe, đời sống. Occupation và professional_persona đều là HARD nên chủ đề tóm tắt phải phản ánh đúng nghề nghiệp thực tế.
+CQ3: Độ tuổi của người dùng có làm thay đổi chủ đề được nhấn mạnh trong bản tóm tắt không?		Người 20–30 tuổi cần tóm tắt nhấn vào cơ hội, phát triển bản thân; người 60–88 tuổi cần tóm tắt nhấn vào sức khỏe, ổn định, hồi ký. Cùng một văn bản gốc nhưng phần nào được giữ lại trong tóm tắt phụ thuộc vào giai đoạn cuộc sống của người đọc.
+CQ4: Khu vực sống có làm thay đổi phần nào của văn bản được giữ lại trong tóm tắt không?		Cùng một bài về ẩm thực, người nông thôn cần tóm tắt giữ lại phần nguyên liệu tự nhiên, chế biến tại nhà; người đô thị cần phần nhà hàng, xu hướng. Zone là SOFT nhưng ảnh hưởng rõ đến phần nào của văn bản là trọng tâm.
+CQ5: Sở thích cá nhân có đủ để xác định góc độ tóm tắt phù hợp không, hay cần kết hợp với các trường khác?		Người có hobbies là "đọc sách, nghe nhạc" nhưng trình độ THCS thì tóm tắt vẫn cần điều chỉnh ngôn ngữ. Sở thích xác định góc độ tiếp cận văn bản nhưng education_level mới quyết định cách diễn đạt trong tóm tắt.
+CQ6: Mục tiêu nghề nghiệp có làm tăng mức độ ưu tiên của các văn bản mang tính định hướng tương lai trong tóm tắt không?		Người muốn mở rộng kinh doanh sang thực phẩm sạch cần tóm tắt giữ lại phần xu hướng thị trường, cơ hội đầu tư hơn là phần mô tả hiện trạng — dù văn bản gốc có cả hai. Career_goals là GENERAL nên tác động này mang tính bổ trợ, không ghi đè trường HARD.
+CQ7: Tình trạng hôn nhân có làm thay đổi góc độ được nhấn mạnh khi tóm tắt văn bản về gia đình, tài chính hay du lịch không?		Cùng một bài về du lịch, người đã kết hôn có con cần tóm tắt nhấn vào điểm đến phù hợp gia đình; người độc thân cần phần trải nghiệm cá nhân, tự do. Marital_status là SOFT nên chỉ điều chỉnh góc nhấn, không loại bỏ nội dung.
+CQ8: Kỹ năng hiện có của người dùng có tác động loại bỏ phần hướng dẫn cơ bản trong tóm tắt không?		Người đã thành thạo thiết kế đồ họa không cần tóm tắt giữ lại phần "bước đầu làm quen với Photoshop". Kỹ năng cao trong một lĩnh vực là tín hiệu để lược bỏ nội dung nhập môn và tập trung vào phần nâng cao hoặc xu hướng mới.
+CQ9: Vùng địa lý cư trú có làm tăng mức độ ưu tiên của nội dung địa phương trong tóm tắt không?		Người ở Cần Thơ đọc bài về nông nghiệp Việt Nam cần tóm tắt giữ lại phần liên quan đến đồng bằng sông Cửu Long hơn là phần về Tây Nguyên. Region là GENERAL nên tạo ra ưu tiên địa phương nhưng không loại bỏ hoàn toàn nội dung vùng khác.
+CQ10: Phong cách du lịch có làm thay đổi phần nào của văn bản ẩm thực được giữ lại trong tóm tắt không?		Người thích khám phá tự phát, hòa nhập bản địa cần tóm tắt văn bản ẩm thực giữ lại phần món đường phố, chợ địa phương hơn là phần nhà hàng cao cấp — dù văn bản gốc bao gồm cả hai.
+CQ11: Người dùng có nghề nghiệp sáng tạo thì bản tóm tắt về văn hóa nghệ thuật có cần giữ lại phần kỹ thuật chuyên môn không?		Freelance designer đọc bài về triển lãm mỹ thuật cần tóm tắt giữ lại phần phân tích phong cách, kỹ thuật sáng tác; người lao động phổ thông đọc cùng bài chỉ cần phần giới thiệu sự kiện và cảm nhận tổng thể.
+CQ12: Mức độ tham gia thể thao có quyết định phần nào của văn bản sức khỏe được ưu tiên trong tóm tắt không?		Người tập thể thao thường xuyên cần tóm tắt giữ lại phần dinh dưỡng thể thao, kỹ thuật luyện tập; người ít vận động cần phần khuyến nghị sức khỏe cơ bản. Cùng một văn bản y tế nhưng trọng tâm tóm tắt khác nhau hoàn toàn.
+CQ13: Giới tính có làm thay đổi góc độ ưu tiên trong tóm tắt khi văn bản đề cập đến nhiều nhóm đối tượng không?		Bài về sức khỏe gia đình thường có phần dành cho nam và nữ — tóm tắt cần ưu tiên giữ lại phần phù hợp với giới tính người đọc. Sex hiện đang là (???) nhưng vai trò thực tế của nó là bộ lọc góc độ, không phải bộ lọc chủ đề.
+CQ14: Quốc gia cư trú có đóng vai trò ràng buộc cứng loại bỏ toàn bộ nội dung không phù hợp ngữ cảnh Việt Nam trong tóm tắt không?		Country là HARD và cố định là Việt Nam. Mọi phần của văn bản đề cập đến chính sách, pháp lý, thói quen tiêu dùng của quốc gia khác cần được lược bỏ hoặc chú thích rõ trong tóm tắt, không được trình bày như thể áp dụng trực tiếp cho người dùng.
+CQ15: Giá trị sống và thế giới quan của người dùng có ảnh hưởng đến văn phong và ngữ điệu của bản tóm tắt không?		Người có thế giới quan thực dụng cần tóm tắt súc tích, số liệu rõ ràng, kết luận thẳng; người có thế giới quan lý tưởng hóa cần tóm tắt giàu cảm xúc hơn. Persona là GENERAL nên ảnh hưởng đến hình thức tóm tắt, không ghi đè chủ đề.
+CQ16: Nền tảng văn hóa có làm thay đổi mức độ cộng hưởng của người dùng với cùng một văn bản không?		Bài về Tết Nguyên Đán phù hợp hoàn toàn với người gắn bó văn hóa truyền thống nhưng chỉ phù hợp một phần với người có mức độ tiếp nhận văn hóa bên ngoài cao. Cultural_background là GENERAL nên tác động đến mức độ ưu tiên, không phải loại bỏ.
+CQ17: Khi trường HARD và trường SOFT xung đột nhau, tóm tắt ưu tiên theo trường nào?		Người có travel_persona (SOFT) thiên về du lịch xa, khám phá quốc tế, nhưng zone là Nông thôn và occupation là Nông dân (HARD) — khi tóm tắt bài về du lịch, tóm tắt phải ưu tiên giữ lại phần điểm đến trong nước, chi phí hợp lý thay vì phần tour nước ngoài cao cấp mà travel_persona gợi ý. Cần quy tắc rõ ràng để ontology xác định HARD luôn được ưu tiên hơn SOFT khi hai chiều này xung đột, thay vì để LLM tự cân nhắc và có thể ra kết quả không nhất quán giữa các lần tóm tắt.
+CQ18: Sự kết hợp giữa nghề nghiệp và khu vực sống có tạo ra yêu cầu tóm tắt đặc thù không?		Người buôn bán ở nông thôn cần tóm tắt văn bản kinh doanh giữ lại phần giá nông sản, kênh phân phối truyền thống; người buôn bán đô thị cần phần thương mại điện tử, logistics. Cùng occupation nhưng zone tạo ra ngữ cảnh tóm tắt hoàn toàn khác.
+CQ19: Mức độ tham gia nghệ thuật có ảnh hưởng đến khả năng tiếp nhận văn phong giàu hình ảnh và ẩn dụ trong bản tóm tắt không?		Người có arts_persona cao thường tiếp nhận tốt hơn với tóm tắt dùng ngôn ngữ hình ảnh, ẩn dụ; người có arts_persona thấp cần tóm tắt trực tiếp, tường minh. Đây là chiều ảnh hưởng đến hình thức ngôn ngữ của tóm tắt, không phải chủ đề.
+CQ20: Đam mê và sở thích cá nhân có làm tăng ngưỡng chấp nhận độ dài tóm tắt của người dùng trong chủ đề họ yêu thích không?		Người đam mê nấu ăn sẵn sàng đọc tóm tắt dài hơn về ẩm thực so với chủ đề khác. Hobbies_and_interests là SOFT nhưng tác động trực tiếp đến độ dài và mức độ chi tiết phù hợp của tóm tắt theo từng chủ đề.
+
+
+5.	Tóm tắt kết quả có những class chính nào
+
+Ontology bao gồm 5 class chính, được chọn lọc từ các trường có mức độ ảnh hưởng trực tiếp và bắt buộc đến quá trình tóm tắt văn bản cá nhân hóa. Các class này thuộc nhóm HARD hoặc GENERAL — tức là thông tin đủ tin cậy để đưa ra ràng buộc hoặc định hướng rõ ràng cho bản tóm tắt. Các class SOFT còn lại (sports_persona, arts_persona, travel_persona, culinary_persona, hobbies_and_interests) vẫn tồn tại trong ontology với vai trò bổ trợ, cung cấp thêm ngữ cảnh khi cần thiết. Mỗi class có cấu trúc phân cấp 4 tầng (L0–L3), được định nghĩa bằng tiếng Việt và liên kết với nhau qua các quan hệ ngữ nghĩa rõ ràng.
+
+5.1.	Professional_persona (HARD)
+Mô tả: Biểu diễn các đặc điểm liên quan đến nghề nghiệp của người dùng, bao gồm môi trường làm việc, lĩnh vực công việc, phong cách làm việc, văn hóa doanh nghiệp và các mối quan hệ nghề nghiệp.
+Vai trò trong pipeline: Quyết định chủ đề văn bản nào được ưu tiên giữ lại (CQ2). Người làm kỹ thuật cần tóm tắt giữ lại nội dung kỹ thuật; người buôn bán cần nội dung thị trường, giá cả. Kết hợp với zone tạo ra ngữ cảnh nghề nghiệp đặc thù (CQ18).
+
+5.2.	Skills_and_expertise (HARD)
+Mô tả: Biểu diễn các kỹ năng, năng lực và kinh nghiệm của người dùng, phản ánh chuyên môn và khả năng làm việc thực tế.
+Vai trò trong pipeline: Quyết định lược bỏ nội dung nhập môn khi người dùng đã thành thạo lĩnh vực đó (CQ8). Khi xung đột với education_level, cần quy tắc xử lý ưu tiên rõ ràng thay vì để LLM tự suy đoán (CQ17).
+
+5.3.	Persona (GENERAL)
+Mô tả: Biểu diễn các đặc điểm cốt lõi của cá nhân như giá trị sống, thế giới quan, nguyên tắc sống, quan niệm về hạnh phúc và cách ra quyết định. Đây là class trung tâm dùng để biểu diễn bản sắc nền tảng của người dùng.
+Vai trò trong pipeline: Tác động đến văn phong và ngữ điệu của bản tóm tắt (CQ15). Người có thế giới quan thực dụng cần tóm tắt súc tích, số liệu rõ ràng; người có thế giới quan lý tưởng hóa cần tóm tắt giàu cảm xúc hơn. Là GENERAL nên ảnh hưởng đến hình thức tóm tắt, không ghi đè chủ đề từ trường HARD.
+
+5.4.	Cultural_background (GENERAL)
+Mô tả: Biểu diễn nền tảng văn hóa của người dùng, bao gồm nguồn gốc văn hóa, phong tục tập quán, môi trường sống, tín ngưỡng và các yếu tố xã hội.
+Vai trò trong pipeline: Ảnh hưởng đến mức độ cộng hưởng của người dùng với văn bản (CQ16). Bài về Tết Nguyên Đán phù hợp hoàn toàn với người gắn bó văn hóa truyền thống nhưng chỉ phù hợp một phần với người có mức độ tiếp nhận văn hóa bên ngoài cao. Là GENERAL nên tác động đến mức độ ưu tiên nội dung, không loại bỏ hoàn toàn.
+
+5.5.	Career_goals_and_ambitions (GENERAL)
+Mô tả: Biểu diễn các mục tiêu phát triển nghề nghiệp, định hướng tương lai và động lực phát triển bản thân của người dùng.
+Vai trò trong pipeline: Làm tăng mức độ ưu tiên của nội dung mang tính định hướng tương lai trong tóm tắt (CQ6). Người có mục tiêu mở rộng kinh doanh cần tóm tắt giữ lại phần xu hướng thị trường và cơ hội đầu tư hơn là phần mô tả hiện trạng. Là GENERAL nên tác động bổ trợ, không ghi đè trường HARD.
+
+Ngoài ra, tập dữ liệu còn có các trường không được tổ chức thành nhánh ontology riêng nhưng vẫn tham gia trực tiếp vào pipeline tóm tắt với vai trò ràng buộc hoặc định hướng.
+-	age — xác định giai đoạn cuộc sống, quyết định chủ đề được nhấn mạnh trong tóm tắt (CQ3)
+-	education_level — ràng buộc độ phức tạp ngôn ngữ và cách diễn đạt của toàn bộ bản tóm tắt (CQ1)
+-	occupation — cung cấp phân loại nghề nghiệp nhanh, bổ trợ cho professional_persona mà không cần đi sâu vào cấu trúc phân cấp ontology (CQ2)
+-	country — ràng buộc cứng loại bỏ hoặc chú thích toàn bộ nội dung không phù hợp với ngữ cảnh pháp lý, văn hóa và thói quen tiêu dùng của Việt Nam (CQ14).
+-	region — tạo ra ưu tiên địa phương trong tóm tắt mà không loại bỏ hoàn toàn nội dung vùng khác (CQ9);
+-	sex — đóng vai trò bộ lọc góc độ, ưu tiên giữ lại phần văn bản phù hợp với giới tính người đọc khi văn bản đề cập đến nhiều nhóm đối tượng (CQ13).
+
+6.	Ví dụ
+

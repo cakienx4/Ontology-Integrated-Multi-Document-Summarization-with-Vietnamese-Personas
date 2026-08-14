@@ -1,0 +1,251 @@
+{
+  "domains": {
+    "Công nghệ / Kỹ thuật số": {
+      "máy tính": 1.0,
+      "lập trình": 1.0,
+      "phần mềm": 1.0,
+      "website": 0.9,
+      "công nghệ": 0.7,
+      "GPS": 0.6,
+      "kỹ thuật số": 0.8,
+      "giao diện": 0.6,
+      "tối ưu": 0.4,
+      "thiết kế đồ họa": 0.5
+    },
+    "Tài chính / Kế toán": {
+      "tài chính": 1.0,
+      "kế toán": 1.0,
+      "lợi nhuận": 0.8,
+      "ngân sách": 0.8,
+      "đầu tư": 0.9,
+      "tính toán": 0.4
+    },
+    "Quản lý / Tổ chức": {
+      "quản lý": 1.0,
+      "tổ chức": 0.8,
+      "lãnh đạo": 0.9,
+      "dự án": 0.7,
+      "kế hoạch": 0.6,
+      "điều phối": 0.7
+    },
+    "Giao tiếp / Truyền thông": {
+      "giao tiếp": 1.0,
+      "thuyết trình": 0.8,
+      "đàm phán": 0.8,
+      "quan hệ": 0.5,
+      "truyền thông": 0.9
+    },
+    "Nấu ăn / Ẩm thực": {
+      "nấu ăn": 1.0,
+      "ẩm thực": 1.0,
+      "chế biến": 0.7,
+      "món ăn": 0.8,
+      "dinh dưỡng": 0.5
+    },
+    "Thủ công / Nghề truyền thống": {
+      "thủ công": 1.0,
+      "nghề truyền thống": 1.0,
+      "tháo lắp": 0.6,
+      "bảo dưỡng": 0.6,
+      "sửa chữa": 0.7
+    },
+    "Vận tải / Giao nhận": {
+      "lái xe": 1.0,
+      "điều khiển": 0.6,
+      "giao hàng": 0.9,
+      "vận chuyển": 0.9,
+      "bản đồ": 0.5
+    },
+    "Nông nghiệp / Tự nhiên": {
+      "trồng": 0.9,
+      "chăm sóc vườn": 0.7,
+      "nông nghiệp": 1.0,
+      "nuôi": 0.7,
+      "thu hoạch": 0.8
+    },
+    "Y tế / Chăm sóc": {
+      "sức khỏe": 0.5,
+      "tầm soát": 0.7,
+      "khám sức khỏe": 0.6,
+      "khám bệnh": 0.6,
+      "bệnh viện": 0.5,
+      "bác sĩ": 0.4,
+      "điều trị": 0.5,
+      "tim mạch": 0.7,
+      "ung thư": 0.7,
+      "tuyến tiền liệt": 0.8,
+      "xương khớp": 0.7,
+      "dinh dưỡng": 0.2,
+      "chế độ ăn": 0.3,
+      "vắc xin": 0.7,
+      "tiêm chủng": 0.7,
+      "sức đề kháng": 0.5,
+      "phòng bệnh": 0.6,
+      "chẩn đoán": 0.6,
+      "triệu chứng": 0.6,
+      "sức khỏe tâm thần": 0.7,
+      "chăm sóc sức khỏe": 0.6
+    },
+    "Sáng tạo / Nghệ thuật": {
+      "sáng tạo": 0.8,
+      "thiết kế": 0.6,
+      "nghệ thuật": 1.0,
+      "âm nhạc": 0.9,
+      "phác thảo": 0.6
+    },
+    "Du lịch / Lữ hành": {
+      "du lịch": 1.0,
+      "tour": 0.8,
+      "khách sạn": 0.7,
+      "vé máy bay": 0.7,
+      "điểm đến": 0.6,
+      "hành trình": 0.5,
+      "lữ hành": 0.9,
+      "check-in": 0.4,
+      "phượt": 0.7
+    },
+    "Giáo dục / Học thuật": {
+      "giáo dục": 1.0,
+      "học tập": 0.7,
+      "giảng dạy": 0.9,
+      "trường học": 0.7,
+      "sinh viên": 0.5,
+      "nghiên cứu khoa học": 0.8,
+      "học bổng": 0.6,
+      "chương trình đào tạo": 0.7
+    },
+    "Pháp lý / Pháp luật": {
+      "pháp luật": 1.0,
+      "luật": 0.6,
+      "quy định": 0.5,
+      "nghị định": 0.7,
+      "thông tư": 0.7,
+      "hợp đồng": 0.6,
+      "quyền lợi": 0.4,
+      "nghĩa vụ pháp lý": 0.8
+    },
+    "Thể thao": {
+      "thể thao": 1.0,
+      "bóng đá": 0.9,
+      "vận động viên": 0.8,
+      "thi đấu": 0.6,
+      "huấn luyện": 0.5,
+      "tập luyện": 0.4,
+      "giải đấu": 0.7,
+      "câu lạc bộ": 0.4
+    }
+  },
+  "keyword_relations": [
+    {
+      "from": "thiết kế đồ họa",
+      "to": "Sáng tạo / Nghệ thuật",
+      "type": "tuong_quan",
+      "weight": 0.4,
+      "note": "thiết kế đồ họa vừa là kỹ năng công nghệ vừa mang tính nghệ thuật"
+    },
+    {
+      "from": "lập trình",
+      "to": "Quản lý / Tổ chức",
+      "type": "tuong_quan",
+      "weight": 0.2,
+      "note": "kỹ năng lập trình thường đi kèm tư duy tổ chức/logic dự án"
+    },
+    {
+      "from": "nấu ăn",
+      "to": "Y tế / Chăm sóc",
+      "type": "keo_theo",
+      "weight": 0.3,
+      "note": "nấu ăn kéo theo hiểu biết dinh dưỡng/sức khỏe"
+    },
+    {
+      "from": "giao hàng",
+      "to": "Công nghệ / Kỹ thuật số",
+      "type": "tuong_quan",
+      "weight": 0.2,
+      "note": "tài xế công nghệ hiện đại dùng app/GPS nhiều"
+    },
+    {
+      "from": "quản lý",
+      "to": "Thủ công / Nghề truyền thống",
+      "type": "kim_che",
+      "weight": -0.3,
+      "note": "kỹ năng quản lý hiện đại thường không song hành với nghề thủ công truyền thống"
+    },
+    {
+      "from": "nông nghiệp",
+      "to": "Công nghệ / Kỹ thuật số",
+      "type": "kim_che",
+      "weight": -0.2,
+      "note": "mặc định nông nghiệp truyền thống ít liên quan công nghệ số, trừ trường hợp có tín hiệu ngược lại"
+    },
+    {
+      "from": "thuyết trình",
+      "to": "Quản lý / Tổ chức",
+      "type": "tuong_quan",
+      "weight": 0.3,
+      "note": "kỹ năng thuyết trình thường song hành vai trò quản lý"
+    },
+    {
+      "from": "sức khỏe",
+      "to": "Nấu ăn / Ẩm thực",
+      "type": "tuong_quan",
+      "weight": 0.2,
+      "note": "quan tâm sức khỏe thường liên quan ẩm thực/dinh dưỡng"
+    },
+    {
+      "from": "huấn luyện",
+      "to": "Quản lý / Tổ chức",
+      "type": "tuong_quan",
+      "weight": 0.2,
+      "note": "huấn luyện viên thường cần kỹ năng tổ chức/quản lý đội nhóm"
+    },
+    {
+      "from": "du lịch",
+      "to": "Giao tiếp / Truyền thông",
+      "type": "tuong_quan",
+      "weight": 0.2,
+      "note": "ngành du lịch đòi hỏi kỹ năng giao tiếp/dịch vụ khách hàng"
+    },
+    {
+      "from": "nghiên cứu khoa học",
+      "to": "Công nghệ / Kỹ thuật số",
+      "type": "tuong_quan",
+      "weight": 0.2,
+      "note": "nghiên cứu hiện đại thường gắn với công cụ/công nghệ số"
+    }
+  ],
+  "domain_priority": [
+    {
+      "prefer": "Y tế / Chăm sóc",
+      "over": "Nấu ăn / Ẩm thực",
+      "note": "khi điểm gần bằng nhau, ưu tiên diễn giải theo hướng y tế vì tính chuyên môn cao hơn"
+    },
+    {
+      "prefer": "Công nghệ / Kỹ thuật số",
+      "over": "Sáng tạo / Nghệ thuật",
+      "note": "kỹ năng thiết kế số nên được xem là công nghệ trước khi xem là nghệ thuật thuần túy"
+    },
+    {
+      "prefer": "Thể thao",
+      "over": "Y tế / Chăm sóc",
+      "note": "nội dung có yếu tố thi đấu/vận động viên nên ưu tiên diễn giải là thể thao trừ khi trọng tâm rõ ràng là điều trị y khoa"
+    }
+  ],
+  "soft_topics": {
+    "Du lịch": {
+      "Thiên nhiên / Sinh thái": {"thiên nhiên": 0.4, "sinh thái": 0.4, "vườn quốc gia": 0.5, "khám phá thiên nhiên": 0.5, "núi": 0.3, "rừng": 0.3, "thác": 0.3, "biển": 0.3},
+      "Lịch sử / Văn hóa":       {"lịch sử": 0.4, "di tích": 0.4, "văn hóa": 0.3, "cổ": 0.3, "đền": 0.3, "chùa": 0.3, "cung điện": 0.4, "phố cổ": 0.4, "bảo tàng": 0.4}
+    },
+    "Nghệ thuật": {
+      "Thị giác / Hội họa":      {"hội họa": 0.5, "tranh": 0.4, "triển lãm": 0.4, "vẽ": 0.3},
+      "Biểu diễn / Âm nhạc":     {"âm nhạc": 0.4, "biểu diễn": 0.3, "ca trù": 0.4, "chèo": 0.4, "cải lương": 0.4, "kịch": 0.3}
+    }
+  },
+
+  "intensity_markers": {
+    "niềm đam mê": 1.0, "đam mê": 0.9, "say mê": 0.9,
+    "thường xuyên": 0.6, "chuyên sâu": 0.6,
+    "yêu thích": 0.5, "quan tâm": 0.35, "thích": 0.3,
+    "có thể thích": 0.15, "cũng thích": 0.2, "cũng có thể": 0.15
+  }
+}

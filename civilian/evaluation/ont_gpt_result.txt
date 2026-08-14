@@ -1,0 +1,20 @@
+# Ontology Score Report - gpt-oss-120b
+
+# Ket quả tổng
+Thành phần        	Giá trị 
+Feature Coverbge: 	96.5% (772/800)
+CO Coverage :		70.0% (14/20)
+Ontology Score 	:	83.2%
+
+## Feature Coverage theo nhánh
+Nhánh 			   | Đặc trưng trích 	| Được bao phủ 	| Coverage 
+professional_persona 	   | 80 		| 80 		| 100%
+sports_persona80 	   | 80 		| 79 		| 98.8%
+arts_persona 		   | 80 		| 80		| 100%
+travel_persona 		   | 80 		| 80		| 100%
+culinary_persona 	   | 80 		| 80 		| 100%
+persona 		   | 80	 		| 59 		| 73.8%
+cultural_background 	   | 80 		| 80 		| 100%
+skills_and_expertise 	   | 80 		| 80 		| 100%
+hobbies_and_Interests 	   | 80 		| 80 		| 100%
+career_goals_and_ambitions | 80 		| 74 		| 92.5%

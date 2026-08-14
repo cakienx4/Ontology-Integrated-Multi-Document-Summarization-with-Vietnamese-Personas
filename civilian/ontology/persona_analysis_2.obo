@@ -1,0 +1,3612 @@
+format-version: 1.2
+ontology: persona_analysis
+default-namespace: persona_analysis
+
+[Typedef]
+id: influences
+name: influences
+def: "A tác động trực tiếp đến B, làm thay đổi hoặc định hình B" []
+
+[Typedef]
+id: correlated_with
+name: correlated_with
+def: "A và B có liên hệ tương quan, thường xuất hiện hoặc thay đổi cùng nhau" []
+
+[Term]
+id: professional_persona
+name: professional_persona
+def: "Hình mẫu nghề nghiệp đại diện cho lĩnh vực làm việc chính, hệ thống kỹ năng chuyên môn cốt lõi, cùng các đặc điểm \nvà hành vi đặc trưng trong môi trường làm việc của một cá nhân" []
+
+[Term]
+id: linh_vuc_lam_viec_chinh
+name: Lĩnh vực làm việc chính
+def: "Ngành nghề, phân khúc thị trường hoặc phạm vi chuyên môn hóa cụ thể mà một cá nhân dành phần lớn thời gian \nvà nguồn lực để hoạt động và phát triển sự nghiệp." []
+is_a: professional_persona
+relationship: influences dinh_huong_phat_trien_ban_than ! định hình
+
+[Term]
+id: nganh_nghe
+name: Ngành nghề
+def: "Lĩnh vực kinh tế - xã hội được phân loại theo chức năng sản xuất hoặc dịch vụ mà một cá nhân lựa chọn làm phương tiện mưu sinh \nvà tích lũy chuyên môn chính. Ví dụ: công nghệ thông tin, y tế, giáo dục,..." []
+is_a: linh_vuc_lam_viec_chinh
+relationship: influences muc_tieu_kinh_doanh_hoac_su_nghiep_cu_the ! định hình
+
+[Term]
+id: chuc_nang_san_xuat_hoac_dich_vu
+name: Chức năng sản xuất hoặc dịch vụ
+def: "Vai trò kinh tế cốt lõi của một ngành nghề: tạo ra hàng hóa vật chất (sản xuất) hoặc cung cấp giá trị phi vật chất (dịch vụ).\nVí dụ thực tế từ dữ liệu: nông nghiệp trồng rau là sản xuất, điều dưỡng chăm sóc bệnh nhân là dịch vụ, bán tạp hóa là thương mại dịch vụ." []
+is_a: nganh_nghe
+
+[Term]
+id: phuong_tien_muu_sinh
+name: Phương tiện mưu sinh
+def: "Cách thức cụ thể mà một cá nhân sử dụng hoạt động nghề nghiệp để tạo ra thu nhập đảm bảo cuộc sống.\nVí dụ thực tế từ dữ liệu: bán sản phẩm nông nghiệp ra chợ, nhận lương điều dưỡng tại bệnh viện tư, thu lợi nhuận từ tiệm tạp hóa gia đình." []
+is_a: nganh_nghe
+
+[Term]
+id: tich_luy_chuyen_mon_chinh
+name: Tích lũy chuyên môn chính
+def: "Quá trình xây dựng và làm sâu sắc thêm năng lực trong một ngành nghề cụ thể theo thời gian gắn bó.\nPhản ánh ngành nghề không chỉ là nơi kiếm tiền mà còn là nơi cá nhân đầu tư phát triển năng lực lâu dài." []
+is_a: nganh_nghe
+
+[Term]
+id: phan_khuc_thi_truong
+name: Phân khúc thị trường
+def: "Tập hợp khách hàng mục tiêu hoặc nhóm nhu cầu cụ thể mà cá nhân hoặc tổ chức hướng đến phục vụ trong phạm vi ngành nghề của mình. \nPhân chia theo yếu tố như quy mô doanh nghiệp, địa lý hoặc nhóm nhân khẩu học." []
+is_a: linh_vuc_lam_viec_chinh
+
+[Term]
+id: khach_hang_muc_tieu
+name: Khách hàng mục tiêu
+def: "Nhóm người hoặc tổ chức cụ thể mà cá nhân hướng đến phục vụ trong hoạt động nghề nghiệp.\nVí dụ thực tế từ dữ liệu: bệnh nhân tại bệnh viện tư, người dân trong khu phố mua tạp hóa, lớp trẻ học làm nem cua bể." []
+is_a: phan_khuc_thi_truong
+
+[Term]
+id: nhom_nhu_cau_cu_the
+name: Nhóm nhu cầu cụ thể
+def: "Tập hợp các vấn đề, mong muốn hoặc đòi hỏi đặc thù mà khách hàng mục tiêu cần được đáp ứng.\nVí dụ thực tế từ dữ liệu: nhu cầu chăm sóc sức khỏe sau phẫu thuật, nhu cầu mua hàng thiết yếu gần nhà, nhu cầu học nghề truyền thống." []
+is_a: phan_khuc_thi_truong
+
+[Term]
+id: phan_khuc_theo_quy_mo_doanh_nghiep
+name: Phân khúc theo quy mô doanh nghiệp
+def: "Cách phân chia thị trường dựa trên quy mô của tổ chức khách hàng: hộ gia đình, doanh nghiệp nhỏ, vừa hay lớn.\nVí dụ thực tế từ dữ liệu: tiệm tạp hóa phục vụ hộ gia đình lẻ, kỹ sư xây dựng làm việc cho công ty thầu lớn." []
+is_a: phan_khuc_thi_truong
+
+[Term]
+id: phan_khuc_theo_dia_ly
+name: Phân khúc theo địa lý
+def: "Cách phân chia thị trường dựa trên vị trí địa lý của khách hàng hoặc phạm vi hoạt động của cá nhân.\nVí dụ thực tế từ dữ liệu: bán hàng trong khu phố, phục vụ bệnh nhân trong quận, tổ chức sự kiện trong toàn thành phố." []
+is_a: phan_khuc_thi_truong
+
+[Term]
+id: phan_khuc_theo_nhan_khau_hoc
+name: Phân khúc theo nhân khẩu học
+def: "Cách phân chia thị trường theo đặc điểm dân số như tuổi, giới tính, trình độ học vấn hoặc thu nhập của nhóm khách hàng.\nVí dụ thực tế từ dữ liệu: dạy nghề ẩm thực cho lớp trẻ, phục vụ người cao tuổi tại bệnh viện, bán hàng thiết yếu cho gia đình lao động phổ thông." []
+is_a: phan_khuc_thi_truong
+
+[Term]
+id: pham_vi_chuyen_mon_hoa
+name: Phạm vi chuyên môn hóa
+def: "Mức độ tập trung chuyên sâu vào một mảng hẹp và cụ thể trong một ngành nghề rộng lớn hơn. Phản ánh sự lựa chọn \nđi theo chiều sâu thay vì chiều rộng trong con đường phát triển nghề nghiệp." []
+is_a: linh_vuc_lam_viec_chinh
+
+[Term]
+id: muc_do_tap_trung_chuyen_mon
+name: Mức độ tập trung chuyên môn
+def: "Cường độ mà cá nhân dồn năng lực và thời gian vào một lĩnh vực hẹp thay vì dàn trải sang nhiều hướng.\nĐo lường bằng tỷ lệ thời gian và công sức dành cho mảng chuyên sâu so với toàn bộ hoạt động nghề nghiệp." []
+is_a: pham_vi_chuyen_mon_hoa
+
+[Term]
+id: mang_hep_va_cu_the
+name: Mảng hẹp và cụ thể
+def: "Lĩnh vực con được xác định rõ ràng và có phạm vi giới hạn trong một ngành nghề rộng hơn mà cá nhân lựa chọn làm trọng tâm.\nVí dụ thực tế từ dữ liệu: trong điều dưỡng chuyên mảng tim mạch, trong kỹ thuật cơ khí chuyên thiết bị nông nghiệp, trong ẩm thực chuyên món truyền thống Hải Phòng." []
+is_a: pham_vi_chuyen_mon_hoa
+
+[Term]
+id: phat_trien_theo_chieu_sau
+name: Phát triển theo chiều sâu
+def: "Chiến lược nghề nghiệp ưu tiên đào sâu năng lực trong một lĩnh vực hẹp đến mức thành thạo vượt trội.\nBiểu hiện qua việc liên tục học thêm, thực hành và cập nhật trong cùng một chuyên môn theo thời gian." []
+is_a: pham_vi_chuyen_mon_hoa
+
+[Term]
+id: phat_trien_theo_chieu_rong
+name: Phát triển theo chiều rộng
+def: "Chiến lược nghề nghiệp ưu tiên mở rộng sang nhiều lĩnh vực khác nhau thay vì chuyên sâu một mảng.\nBiểu hiện qua việc tích lũy nhiều kỹ năng đa dạng ở mức độ khá thay vì xuất sắc trong một chuyên môn." []
+is_a: pham_vi_chuyen_mon_hoa
+
+[Term]
+id: muc_do_dau_tu_thoi_gian_va_nguon_luc
+name: Mức độ đầu tư thời gian và nguồn lực
+def: "Tỷ lệ và cường độ mà một cá nhân phân bổ quỹ thời gian, công sức và tài chính vào một lĩnh vực nghề nghiệp cụ thể. \nLà chỉ số gián tiếp đo lường mức độ cam kết và ưu tiên nghề nghiệp." []
+is_a: linh_vuc_lam_viec_chinh
+relationship: influences muc_do_dau_tu_vao_so_thich ! ảnh hưởng đến
+relationship: influences nhip_do_hanh_trinh ! ảnh hưởng đến
+relationship: influences tan_suat_tham_gia_the_thao ! ảnh hưởng đến
+relationship: influences tan_suat_tiep_xuc_nghe_thuat ! ảnh hưởng đến
+relationship: correlated_with moc_thoi_gian_muc_tieu ! tương quan với
+
+[Term]
+id: ty_le_phan_bo_nguon_luc
+name: Tỷ lệ phân bổ nguồn lực
+def: "Phần trăm thời gian, công sức và tiền bạc mà cá nhân dành cho nghề nghiệp chính so với các hoạt động khác trong cuộc sống.\nVí dụ thực tế từ dữ liệu: nông dân dành gần như toàn bộ ngày làm đồng, công nhân làm ca cố định 8 tiếng rồi về." []
+is_a: muc_do_dau_tu_thoi_gian_va_nguon_luc
+
+[Term]
+id: cuong_do_lam_viec
+name: Cường độ làm việc
+def: "Mức độ nỗ lực thể chất và tinh thần mà cá nhân bỏ ra trong mỗi đơn vị thời gian làm việc.\nPhân biệt giữa làm việc nhẹ nhàng thong thả và làm việc với cường độ cao, áp lực liên tục." []
+is_a: muc_do_dau_tu_thoi_gian_va_nguon_luc
+relationship: influences muc_do_hung_thu_van_dong ! ảnh hưởng đến
+relationship: influences che_do_an_uong_ca_nhan ! ảnh hưởng đến
+
+[Term]
+id: quy_thoi_gian_danh_cho_nghe_nghiep
+name: Quỹ thời gian dành cho nghề nghiệp
+def: "Tổng số giờ thực tế trong ngày, tuần mà cá nhân sử dụng cho hoạt động nghề nghiệp.\nVí dụ thực tế từ dữ liệu: ra đồng từ sáng sớm đến chiều tối, làm ca đêm tại bệnh viện, mở tiệm từ sáng đến tối mỗi ngày." []
+is_a: muc_do_dau_tu_thoi_gian_va_nguon_luc
+
+[Term]
+id: dau_tu_tai_chinh_vao_nghe_nghiep
+name: Đầu tư tài chính vào nghề nghiệp
+def: "Số tiền cá nhân chi ra để duy trì hoặc phát triển hoạt động nghề nghiệp: mua công cụ, học thêm, mở rộng cơ sở.\nVí dụ thực tế từ dữ liệu: mua phân bón và hạt giống, đóng học phí lấy chứng chỉ điều dưỡng, nhập hàng tạp hóa." []
+is_a: muc_do_dau_tu_thoi_gian_va_nguon_luc
+
+[Term]
+id: muc_do_cam_ket_nghe_nghiep
+name: Mức độ cam kết nghề nghiệp
+def: "Sức mạnh của sự gắn bó và quyết tâm của cá nhân trong việc duy trì và phát triển con đường nghề nghiệp đã chọn dù gặp khó khăn.\nVí dụ thực tế từ dữ liệu: vẫn dạy nghề truyền thống dù đã nghỉ hưu, tiếp tục học thêm chứng chỉ dù đang đi làm." []
+is_a: muc_do_dau_tu_thoi_gian_va_nguon_luc
+
+[Term]
+id: hoat_dong_nghe_nghiep
+name: Hoạt động nghề nghiệp
+def: "Toàn bộ các hành động, nhiệm vụ và quy trình mà một cá nhân thực hiện thường xuyên trong phạm vi công việc chuyên môn của mình. \nBao gồm cả công việc cốt lõi lẫn các hoạt động hỗ trợ, phối hợp với các bên liên quan." []
+is_a: linh_vuc_lam_viec_chinh
+
+[Term]
+id: hanh_dong_nghe_nghiep_cu_the
+name: Hành động nghề nghiệp cụ thể
+def: "Các thao tác đơn lẻ có thể quan sát được mà cá nhân thực hiện trong quá trình làm việc.\nVí dụ thực tế từ dữ liệu: tiêm bắp, đo huyết áp, tưới rau, vận hành máy móc, ghi chép sổ sách tạp hóa." []
+is_a: hoat_dong_nghe_nghiep
+
+[Term]
+id: nhiem_vu_trong_cong_viec
+name: Nhiệm vụ trong công việc
+def: "Đơn vị công việc có mục tiêu rõ ràng và kết quả đầu ra cụ thể mà cá nhân cần hoàn thành.\nVí dụ thực tế từ dữ liệu: chăm sóc ca bệnh trong buổi trực, thu hoạch rau đưa chợ, kiểm kê hàng tồn kho cuối ngày." []
+is_a: hoat_dong_nghe_nghiep
+
+[Term]
+id: quy_trinh_cong_viec
+name: Quy trình công việc
+def: "Chuỗi các bước được thực hiện theo thứ tự nhất định để hoàn thành một nhiệm vụ hoặc tạo ra một đầu ra cụ thể.\nVí dụ thực tế từ dữ liệu: quy trình chăm sóc hậu phẫu, quy trình lắp đặt hệ thống điện, quy trình làm bánh đa cua từ ngâm gạo đến tráng bánh." []
+is_a: hoat_dong_nghe_nghiep
+
+[Term]
+id: cong_viec_cot_loi
+name: Công việc cốt lõi
+def: "Hoạt động trực tiếp tạo ra giá trị chính và là lý do tồn tại của vai trò nghề nghiệp của cá nhân.\nVí dụ thực tế từ dữ liệu: điều dưỡng chăm sóc bệnh nhân, nông dân trồng và thu hoạch rau, thợ lắp đặt hệ thống kỹ thuật tại công trình." []
+is_a: hoat_dong_nghe_nghiep
+
+[Term]
+id: hoat_dong_ho_tro_va_phoi_hop
+name: Hoạt động hỗ trợ và phối hợp
+def: "Các việc làm không trực tiếp tạo ra sản phẩm nhưng cần thiết để công việc cốt lõi diễn ra trơn tru.\nVí dụ thực tế từ dữ liệu: báo cáo với bác sĩ, sắp xếp hàng trước khi mở cửa, liên lạc với nhà cung cấp nhập hàng." []
+is_a: hoat_dong_nghe_nghiep
+
+[Term]
+id: phat_trien_su_nghiep
+name: Phát triển sự nghiệp
+def: "Quá trình tiến bộ có chủ đích của một cá nhân trong việc nâng cao vị trí, năng lực và danh tiếng nghề nghiệp theo thời gian. \nBao gồm việc mở rộng mạng lưới quan hệ, thăng tiến vị trí, chuyển ngành hoặc tự khởi nghiệp." []
+is_a: linh_vuc_lam_viec_chinh
+relationship: influences hinh_thuc_tich_luy_kinh_nghiem ! định hình
+relationship: influences muc_tieu_vi_tri_nghe_nghiep ! định hình
+
+[Term]
+id: vi_tri_nghe_nghiep
+name: Vị trí nghề nghiệp
+def: "Chức danh, cấp bậc hoặc vai trò chính thức mà cá nhân đang đảm nhận trong tổ chức hoặc ngành nghề.\nVí dụ thực tế từ dữ liệu: điều dưỡng viên, kỹ sư cơ khí, chủ tiệm tạp hóa, quản lý dự án cộng đồng." []
+is_a: phat_trien_su_nghiep
+
+[Term]
+id: nang_luc_nghe_nghiep_theo_thoi_gian
+name: Năng lực nghề nghiệp theo thời gian
+def: "Sự thay đổi và tiến bộ trong khả năng chuyên môn của cá nhân qua các giai đoạn trong sự nghiệp.\nPhản ánh quá trình học hỏi tích lũy liên tục từ thực tế công việc và đào tạo bổ sung." []
+is_a: phat_trien_su_nghiep
+
+[Term]
+id: danh_tieng_nghe_nghiep
+name: Danh tiếng nghề nghiệp
+def: "Mức độ được công nhận và đánh giá cao của cá nhân trong cộng đồng nghề nghiệp hoặc cộng đồng khách hàng.\nVí dụ thực tế từ dữ liệu: được biết đến là người làm bánh đa cua ngon nhất khu vực, được bệnh nhân tin tưởng và giới thiệu nhau." []
+is_a: phat_trien_su_nghiep
+
+[Term]
+id: mang_luoi_quan_he_nghe_nghiep
+name: Mạng lưới quan hệ nghề nghiệp
+def: "Tập hợp các mối kết nối với đồng nghiệp, đối tác, khách hàng và người cố vấn được xây dựng trong quá trình làm việc.\nVí dụ thực tế từ dữ liệu: mạng lưới bạn hàng của tiệm tạp hóa, đồng nghiệp bệnh viện giới thiệu cơ hội học thêm." []
+is_a: phat_trien_su_nghiep
+
+[Term]
+id: thang_tien_vi_tri
+name: Thăng tiến vị trí
+def: "Quá trình di chuyển lên các cấp bậc cao hơn trong hệ thống phân cấp của tổ chức hoặc ngành nghề.\nVí dụ thực tế từ dữ liệu: từ điều dưỡng viên lên trưởng bộ phận, từ thợ kỹ thuật lên kỹ sư trưởng." []
+is_a: phat_trien_su_nghiep
+
+[Term]
+id: chuyen_nganh_hoac_tu_khoi_nghiep
+name: Chuyển ngành hoặc tự khởi nghiệp
+def: "Quyết định thay đổi hướng đi nghề nghiệp bằng cách sang lĩnh vực mới hoặc tự tạo ra cơ sở kinh doanh của riêng mình.\nVí dụ thực tế từ dữ liệu: từ xây dựng chuyển sang quản lý tài chính cá nhân, mở xưởng sửa chữa thiết bị nông nghiệp riêng." []
+is_a: phat_trien_su_nghiep
+
+[Term]
+id: he_thong_ky_nang_chuyen_mon_cot_loi
+name: Hệ thống kỹ năng chuyên môn cốt lõi
+def: "Tập hợp các năng lực kỹ thuật, kiến thức chuyên ngành và kỹ năng thực hành đóng vai trò quyết định, giúp \ncá nhân thực hiện hiệu quả các tác vụ đặc thù trong công việc." []
+is_a: professional_persona
+
+[Term]
+id: tap_hop_nang_luc
+name: Tập hợp năng lực
+def: "Bộ sưu tập có cấu trúc các khả năng, kiến thức và kỹ năng bổ trợ lẫn nhau mà một cá nhân sở hữu và có thể huy động để thực hiện công việc. \nKhác với từng năng lực đơn lẻ ở chỗ chúng tương tác và khuếch đại hiệu quả của nhau." []
+is_a: he_thong_ky_nang_chuyen_mon_cot_loi
+relationship: correlated_with nang_luc_can_phat_trien ! tương quan với
+
+[Term]
+id: kha_nang_ca_nhan
+name: Khả năng cá nhân
+def: "Năng lực tự nhiên hoặc được rèn luyện mà cá nhân có thể huy động để thực hiện một loại công việc nhất định.\nKhác với kỹ năng ở chỗ khả năng mang tính tiềm năng, còn kỹ năng là đã được thực hành thành thục." []
+is_a: tap_hop_nang_luc
+
+[Term]
+id: kien_thuc_trong_tap_hop_nang_luc
+name: Kiến thức trong tập hợp năng lực
+def: "Phần tri thức lý thuyết và hiểu biết nền tảng đóng góp vào bộ năng lực tổng thể của cá nhân.\nHỗ trợ các kỹ năng thực hành bằng cách cung cấp khung lý giải và định hướng khi gặp tình huống mới." []
+is_a: tap_hop_nang_luc
+
+[Term]
+id: su_tuong_tac_va_khuech_dai_nang_luc
+name: Sự tương tác và khuếch đại năng lực
+def: "Hiện tượng các năng lực trong bộ sưu tập củng cố và nhân lên hiệu quả của nhau khi kết hợp.\nVí dụ thực tế từ dữ liệu: kỹ năng tổ chức sự kiện kết hợp với ngoại ngữ và công nghệ tạo ra giá trị lớn hơn tổng từng kỹ năng riêng lẻ." []
+is_a: tap_hop_nang_luc
+
+[Term]
+id: nang_luc_ky_thuat
+name: Năng lực kỹ thuật
+def: "Khả năng vận hành, áp dụng và làm chủ các công cụ, phần mềm, quy trình hoặc phương pháp kỹ thuật chuyên biệt trong một lĩnh vực nghề nghiệp nhất định. \nĐây là dạng kỹ năng cứng (hard skill) có thể đo lường và kiểm định trực tiếp." []
+is_a: he_thong_ky_nang_chuyen_mon_cot_loi
+relationship: influences ky_nang_ky_thuat_chuyen_nganh ! củng cố
+
+[Term]
+id: kha_nang_van_hanh_cong_cu
+name: Khả năng vận hành công cụ
+def: "Mức độ thành thục trong việc sử dụng các thiết bị, phần mềm hoặc công cụ chuyên ngành để hoàn thành nhiệm vụ.\nVí dụ thực tế từ dữ liệu: vận hành phần mềm thiết kế 3D, sử dụng thiết bị đo huyết áp và điện tâm đồ, dùng máy tính xử lý hành chính." []
+is_a: nang_luc_ky_thuat
+
+[Term]
+id: kha_nang_ap_dung_quy_trinh_ky_thuat
+name: Khả năng áp dụng quy trình kỹ thuật
+def: "Mức độ cá nhân có thể triển khai đúng các bước kỹ thuật được quy định trong một quy trình chuyên ngành.\nVí dụ thực tế từ dữ liệu: thực hiện đúng quy trình chăm sóc hậu phẫu, lắp đặt hệ thống điện theo tiêu chuẩn kỹ thuật." []
+is_a: nang_luc_ky_thuat
+
+[Term]
+id: muc_do_lam_chu_ky_thuat
+name: Mức độ làm chủ kỹ thuật
+def: "Trình độ mà cá nhân không chỉ thực hiện được mà còn hiểu sâu, có thể điều chỉnh và xử lý ngoại lệ trong kỹ thuật đó.\nPhân biệt giữa người làm được theo hướng dẫn và người thực sự làm chủ kỹ thuật có thể dạy lại cho người khác." []
+is_a: nang_luc_ky_thuat
+
+[Term]
+id: tinh_do_luong_va_kiem_dinh_duoc
+name: Tính đo lường và kiểm định được
+def: "Đặc điểm của kỹ năng kỹ thuật cho phép đánh giá mức độ thành thục một cách khách quan và có thể chứng minh.\nVí dụ thực tế từ dữ liệu: chứng chỉ điều dưỡng, bằng kỹ sư cơ khí, kết quả kiểm tra tay nghề làm bánh." []
+is_a: nang_luc_ky_thuat
+
+[Term]
+id: kien_thuc_chuyen_nganh
+name: Kiến thức chuyên ngành
+def: "Hệ thống tri thức lý thuyết, nguyên lý, quy chuẩn và học thuật đặc thù của một ngành. \nĐược tích lũy qua đào tạo bài bản và cập nhật liên tục để đáp ứng sự phát triển của lĩnh vực." []
+is_a: he_thong_ky_nang_chuyen_mon_cot_loi
+
+[Term]
+id: tri_thuc_ly_thuyet_chuyen_nganh
+name: Tri thức lý thuyết chuyên ngành
+def: "Hệ thống khái niệm, mô hình và lý luận nền tảng của một ngành được học qua đào tạo chính quy hoặc tự nghiên cứu.\nVí dụ thực tế từ dữ liệu: kiến thức sinh lý và dược lý của điều dưỡng, lý thuyết cơ học và vật liệu của kỹ sư xây dựng." []
+is_a: kien_thuc_chuyen_nganh
+
+[Term]
+id: nguyen_ly_chuyen_nganh
+name: Nguyên lý chuyên ngành
+def: "Các quy luật nền tảng chi phối cách hoạt động trong một lĩnh vực, là cơ sở để lý giải và dự đoán kết quả.\nVí dụ thực tế từ dữ liệu: nguyên lý trao đổi chất trong dinh dưỡng, nguyên lý chịu lực trong thiết kế kết cấu." []
+is_a: kien_thuc_chuyen_nganh
+
+[Term]
+id: quy_chuan_nghe_nghiep
+name: Quy chuẩn nghề nghiệp
+def: "Các tiêu chuẩn, quy định và yêu cầu bắt buộc được ngành nghề hoặc cơ quan quản lý đặt ra mà cá nhân phải nắm và tuân thủ.\nVí dụ thực tế từ dữ liệu: quy chuẩn vệ sinh an toàn thực phẩm khi làm bánh, quy trình tiêm thuốc an toàn trong điều dưỡng." []
+is_a: kien_thuc_chuyen_nganh
+
+[Term]
+id: cap_nhat_kien_thuc_theo_thoi_gian
+name: Cập nhật kiến thức theo thời gian
+def: "Quá trình chủ động tiếp thu kiến thức và phương pháp mới để theo kịp sự phát triển của ngành.\nVí dụ thực tế từ dữ liệu: điều dưỡng học thêm chứng chỉ tim mạch, kỹ sư cập nhật phần mềm thiết kế mới, người làm ẩm thực thử công thức cải tiến." []
+is_a: kien_thuc_chuyen_nganh
+
+[Term]
+id: ky_nang_thuc_hanh_nghe_nghiep
+name: Kỹ năng thực hành nghề nghiệp
+def: "Khả năng triển khai kiến thức vào hành động thực tế trong điều kiện công việc thực tiễn. \nBao gồm độ chính xác, tốc độ xử lý và khả năng thích ứng khi đối mặt với các tình huống phát sinh ngoài lý thuyết." []
+is_a: he_thong_ky_nang_chuyen_mon_cot_loi
+
+[Term]
+id: do_chinh_xac_trong_thuc_hanh
+name: Độ chính xác trong thực hành
+def: "Mức độ không sai sót khi cá nhân thực hiện một thao tác hoặc quy trình nghề nghiệp cụ thể.\nVí dụ thực tế từ dữ liệu: tiêm bắp đúng vị trí và liều lượng, lắp điện đúng sơ đồ không để rò rỉ, nấu phở đúng tỷ lệ gia vị." []
+is_a: ky_nang_thuc_hanh_nghe_nghiep
+
+[Term]
+id: toc_do_xu_ly_cong_viec
+name: Tốc độ xử lý công việc
+def: "Thời gian cần thiết để cá nhân hoàn thành một thao tác hoặc nhiệm vụ nhất định ở mức chất lượng chấp nhận được.\nVí dụ thực tế từ dữ liệu: phục vụ nhiều khách trong giờ cao điểm, xử lý nhanh ca bệnh cấp cứu, làm xong mẻ bánh kịp giờ chợ sáng." []
+is_a: ky_nang_thuc_hanh_nghe_nghiep
+
+[Term]
+id: kha_nang_thich_ung_tinh_huong_phat_sinh
+name: Khả năng thích ứng tình huống phát sinh
+def: "Mức độ cá nhân xử lý hiệu quả các tình huống bất ngờ, bất thường không có trong quy trình chuẩn hoặc lý thuyết đã học.\nVí dụ thực tế từ dữ liệu: xử lý ca bệnh có biến chứng ngoài dự kiến, ứng phó khi thiếu nguyên liệu trong quá trình làm bánh." []
+is_a: ky_nang_thuc_hanh_nghe_nghiep
+
+[Term]
+id: vai_tro_quyet_dinh_trong_cong_viec
+name: Vai trò quyết định trong công việc
+def: "Mức độ ảnh hưởng và tính không thể thiếu của một năng lực hoặc kỹ năng cụ thể đối với kết quả đầu ra của công việc. \nMột kỹ năng được xem là có vai trò quyết định khi thiếu nó sẽ khiến tác vụ không thể hoàn thành hoặc chất lượng giảm sút đáng kể." []
+is_a: he_thong_ky_nang_chuyen_mon_cot_loi
+
+[Term]
+id: muc_do_anh_huong_den_ket_qua
+name: Mức độ ảnh hưởng đến kết quả
+def: "Tầm quan trọng của một kỹ năng hoặc năng lực cụ thể đối với chất lượng và sự thành công của đầu ra công việc.\nPhân biệt kỹ năng có ảnh hưởng lớn (thiếu là hỏng) và kỹ năng bổ trợ (thiếu vẫn làm được nhưng kém hơn)." []
+is_a: vai_tro_quyet_dinh_trong_cong_viec
+
+[Term]
+id: tinh_khong_the_thieu
+name: Tính không thể thiếu
+def: "Mức độ mà một kỹ năng là điều kiện bắt buộc để công việc có thể được thực hiện hay không.\nVí dụ thực tế từ dữ liệu: điều dưỡng bắt buộc phải biết đọc điện tâm đồ, thợ xây bắt buộc phải biết đọc bản vẽ kỹ thuật." []
+is_a: vai_tro_quyet_dinh_trong_cong_viec
+
+[Term]
+id: ket_qua_dau_ra_cong_viec
+name: Kết quả đầu ra công việc
+def: "Sản phẩm, dịch vụ hoặc thành quả cụ thể được tạo ra khi cá nhân hoàn thành một tác vụ nghề nghiệp.\nVí dụ thực tế từ dữ liệu: bệnh nhân được chăm sóc đúng phác đồ, công trình lắp đặt đúng tiêu chuẩn, mẻ bánh đa cua thành phẩm." []
+is_a: vai_tro_quyet_dinh_trong_cong_viec
+
+[Term]
+id: hieu_qua_thuc_hien_cong_viec
+name: Hiệu quả thực hiện công việc
+def: "Mức độ đạt được mục tiêu đề ra với mức tiêu hao thời gian, công sức và nguồn lực ở mức tối ưu nhất có thể. \nĐược đánh giá qua chất lượng đầu ra, tốc độ hoàn thành và khả năng duy trì nhất quán." []
+is_a: he_thong_ky_nang_chuyen_mon_cot_loi
+relationship: correlated_with ket_qua_do_luong_duoc_tu_kinh_nghiem ! tương quan với
+relationship: influences dong_luc_phat_trien_su_nghiep ! thúc đẩy
+
+[Term]
+id: muc_tieu_cong_viec_de_ra
+name: Mục tiêu công việc đề ra
+def: "Đích đến cụ thể và có thể đo lường mà cá nhân hoặc tổ chức xác định cần đạt được qua hoạt động nghề nghiệp.\nVí dụ thực tế từ dữ liệu: hoàn thành ca trực không để xảy ra sự cố, bán hết hàng nhập trong tuần, giao công trình đúng tiến độ." []
+is_a: hieu_qua_thuc_hien_cong_viec
+
+[Term]
+id: chat_luong_dau_ra
+name: Chất lượng đầu ra
+def: "Mức độ sản phẩm hoặc dịch vụ tạo ra đáp ứng tiêu chuẩn và kỳ vọng đặt ra ban đầu.\nVí dụ thực tế từ dữ liệu: phở đúng vị, công trình không thấm dột, bánh cống giữ được độ giòn đặc trưng." []
+is_a: hieu_qua_thuc_hien_cong_viec
+
+[Term]
+id: toc_do_hoan_thanh_cong_viec
+name: Tốc độ hoàn thành công việc
+def: "Thời gian thực tế cần để hoàn thành một nhiệm vụ so với mức kỳ vọng hoặc tiêu chuẩn ngành.\nĐo lường khả năng làm việc nhanh mà không đánh đổi chất lượng." []
+is_a: hieu_qua_thuc_hien_cong_viec
+
+[Term]
+id: kha_nang_duy_tri_nhat_quan
+name: Khả năng duy trì nhất quán
+def: "Mức độ cá nhân giữ được chất lượng và tốc độ ổn định qua nhiều lần thực hiện cùng một nhiệm vụ theo thời gian.\nVí dụ thực tế từ dữ liệu: mỗi mẻ bánh đều đạt chất lượng như nhau, mỗi ca trực đều tuân thủ đúng quy trình." []
+is_a: hieu_qua_thuc_hien_cong_viec
+
+[Term]
+id: tac_vu_dac_thu_cong_viec
+name: Tác vụ đặc thù công việc
+def: "Các nhiệm vụ, hoạt động hoặc quy trình mang tính nghiệp vụ đặc trưng, chỉ xuất hiện hoặc đòi hỏi năng lực riêng biệt trong một vị trí hoặc ngành nghề cụ thể. \nPhân biệt rõ ràng với các nhiệm vụ hành chính hoặc hỗ trợ chung." []
+is_a: he_thong_ky_nang_chuyen_mon_cot_loi
+relationship: influences linh_vuc_kinh_nghiem_tich_luy ! định hình
+
+[Term]
+id: nghiep_vu_dac_trung_chuyen_nganh
+name: Nghiệp vụ đặc trưng chuyên ngành
+def: "Thao tác hoặc quy trình chỉ tồn tại trong một ngành nghề hoặc vị trí cụ thể, không phổ biến ở các nghề khác.\nVí dụ thực tế từ dữ liệu: đọc điện tâm đồ chỉ có trong y tế, thẩm định bản vẽ kỹ thuật chỉ có trong kỹ thuật xây dựng, tráng bánh đa chỉ có trong nghề làm bánh truyền thống." []
+is_a: tac_vu_dac_thu_cong_viec
+
+[Term]
+id: nang_luc_rieng_biet_de_thuc_hien_tac_vu
+name: Năng lực riêng biệt để thực hiện tác vụ
+def: "Kỹ năng hoặc kiến thức chuyên biệt mà người không thuộc ngành nghề đó không thể thực hiện được nếu không qua đào tạo.\nVí dụ thực tế từ dữ liệu: kỹ năng tiêm bắp đúng kỹ thuật, kỹ năng thiết kế hệ thống tưới tiêu, kỹ năng làm bánh cuốn đúng độ mỏng." []
+is_a: tac_vu_dac_thu_cong_viec
+
+[Term]
+id: phan_biet_voi_nhiem_vu_hanh_chinh_chung
+name: Phân biệt với nhiệm vụ hành chính chung
+def: "Ranh giới giữa tác vụ đặc thù nghề nghiệp và các công việc hành chính phổ quát mà bất kỳ ai cũng có thể làm.\nVí dụ thực tế từ dữ liệu: điền hồ sơ bệnh nhân là hành chính chung, nhưng đọc và giải thích kết quả xét nghiệm là tác vụ đặc thù điều dưỡng." []
+is_a: tac_vu_dac_thu_cong_viec
+
+[Term]
+id: dac_diem_va_hanh_vi_dac_trung_cong_viec
+name: Đặc điểm và hành vi đặc trưng công việc
+def: "Các thói quen, phong cách giao tiếp, phương pháp xử lý vấn đề và xu hướng phản ứng của một cá nhân được \nthể hiện một cách nhất quán trong môi trường làm việc." []
+is_a: professional_persona
+relationship: influences hinh_anh_phong_cach_song_dac_trung ! định hình
+
+[Term]
+id: thoi_quen_lam_viec
+name: Thói quen làm việc
+def: "Các hành vi lặp đi lặp lại có tính tự động trong quá trình thực hiện công việc. Bao gồm cách tổ chức công việc, \nlịch trình cá nhân, thứ tự ưu tiên nhiệm vụ và phương thức theo dõi tiến độ hàng ngày." []
+is_a: dac_diem_va_hanh_vi_dac_trung_cong_viec
+relationship: correlated_with loai_hinh_so_thich ! tương quan với
+relationship: correlated_with lich_trinh_tap_luyen ! tương quan với
+
+[Term]
+id: cach_to_chuc_cong_viec
+name: Cách tổ chức công việc
+def: "Phương thức sắp xếp không gian, công cụ và thông tin để công việc diễn ra có trật tự và hiệu quả.\nVí dụ thực tế từ dữ liệu: sắp xếp hàng tạp hóa gọn gàng theo loại, chuẩn bị dụng cụ y tế trước ca trực, bố trí nguyên liệu nấu ăn theo thứ tự sử dụng." []
+is_a: thoi_quen_lam_viec
+
+[Term]
+id: lich_trinh_ca_nhan_hang_ngay
+name: Lịch trình cá nhân hàng ngày
+def: "Thời gian biểu mà cá nhân duy trì để thực hiện các nhiệm vụ nghề nghiệp theo thứ tự cố định.\nVí dụ thực tế từ dữ liệu: ra đồng lúc sáng sớm trước khi nắng, mở tiệm đúng giờ chợ, đến bệnh viện theo ca xoay." []
+is_a: thoi_quen_lam_viec
+
+[Term]
+id: thu_tu_uu_tien_nhiem_vu
+name: Thứ tự ưu tiên nhiệm vụ
+def: "Cách cá nhân xếp hạng và quyết định làm việc gì trước khi có nhiều nhiệm vụ cùng lúc.\nVí dụ thực tế từ dữ liệu: ưu tiên ca bệnh nặng trước, giải quyết hàng sắp hết trước khi nhập hàng mới, hoàn thành hạng mục cốt lõi trước hạng mục phụ." []
+is_a: thoi_quen_lam_viec
+
+[Term]
+id: phuong_thuc_theo_doi_tien_do
+name: Phương thức theo dõi tiến độ
+def: "Cách cá nhân kiểm soát và đánh giá mức độ hoàn thành nhiệm vụ trong ngày làm việc.\nVí dụ thực tế từ dữ liệu: ghi sổ tay theo dõi bệnh nhân, kiểm đếm hàng tồn cuối ngày, đánh dấu hạng mục đã hoàn thành trong bản vẽ thi công." []
+is_a: thoi_quen_lam_viec
+
+[Term]
+id: phong_cach_giao_tiep_nghe_nghiep
+name: Phong cách giao tiếp nghề nghiệp
+def: "Cách thức một cá nhân truyền đạt, lắng nghe và trao đổi thông tin trong bối cảnh công việc. Thể hiện qua ngôn ngữ sử dụng, \nkênh giao tiếp ưu tiên và khả năng điều chỉnh phong cách tùy theo đối tượng và mục đích giao tiếp." []
+is_a: dac_diem_va_hanh_vi_dac_trung_cong_viec
+relationship: correlated_with ky_nang_giao_tiep_va_ung_xu ! tương quan với
+
+[Term]
+id: ngon_ngu_su_dung_trong_cong_viec
+name: Ngôn ngữ sử dụng trong công việc
+def: "Cách dùng từ ngữ, thuật ngữ và văn phong đặc trưng của cá nhân khi giao tiếp nghề nghiệp.\nVí dụ thực tế từ dữ liệu: điều dưỡng dùng thuật ngữ y khoa với bác sĩ và ngôn ngữ đơn giản với bệnh nhân, người bán tạp hóa nói chuyện thân mật với khách quen." []
+is_a: phong_cach_giao_tiep_nghe_nghiep
+
+[Term]
+id: kenh_giao_tiep_uu_tien_nghe_nghiep
+name: Kênh giao tiếp ưu tiên nghề nghiệp
+def: "Hình thức trao đổi thông tin mà cá nhân chủ động chọn trong bối cảnh công việc.\nVí dụ thực tế từ dữ liệu: giao tiếp trực tiếp mặt đối mặt tại quầy bán hàng, qua điện thoại khi phối hợp nhóm thi công, qua sổ giao ban trong bệnh viện." []
+is_a: phong_cach_giao_tiep_nghe_nghiep
+
+[Term]
+id: kha_nang_dieu_chinh_phong_cach_giao_tiep
+name: Khả năng điều chỉnh phong cách giao tiếp
+def: "Mức độ cá nhân thay đổi cách truyền đạt và lắng nghe cho phù hợp với từng đối tượng và mục đích khác nhau.\nVí dụ thực tế từ dữ liệu: giải thích đơn giản cho bệnh nhân cao tuổi, dùng ngôn ngữ kỹ thuật với đồng nghiệp, thuyết phục bằng số liệu với cấp trên." []
+is_a: phong_cach_giao_tiep_nghe_nghiep
+
+[Term]
+id: phuong_phap_xu_ly_van_de
+name: Phương pháp xử lý vấn đề
+def: "Trình tự tư duy và các bước hành động mà một cá nhân áp dụng khi đối mặt với tình huống khó khăn, mâu thuẫn hoặc \ncâu hỏi chưa có lời giải trong công việc. Phản ánh tư duy phân tích, sáng tạo hay kinh nghiệm tích lũy." []
+is_a: dac_diem_va_hanh_vi_dac_trung_cong_viec
+relationship: influences ky_nang_giai_quyet_van_de_thuc_te ! củng cố
+
+[Term]
+id: trinh_tu_tu_duy_xu_ly
+name: Trình tự tư duy xử lý
+def: "Thứ tự các bước nhận thức mà cá nhân đi qua khi đối mặt với một vấn đề: nhận diện vấn đề, phân tích nguyên nhân, đánh giá lựa chọn, ra quyết định.\nPhản ánh cách não bộ cá nhân xử lý thông tin trước khi hành động." []
+is_a: phuong_phap_xu_ly_van_de
+
+[Term]
+id: cac_buoc_hanh_dong_xu_ly_van_de
+name: Các bước hành động xử lý vấn đề
+def: "Chuỗi hành động cụ thể mà cá nhân thực hiện để giải quyết một tình huống khó khăn sau khi đã phân tích.\nVí dụ thực tế từ dữ liệu: báo bác sĩ ngay khi phát hiện bất thường, gọi nhà cung cấp khi hàng thiếu đột ngột, kiểm tra lại bản vẽ khi kết quả không khớp." []
+is_a: phuong_phap_xu_ly_van_de
+
+[Term]
+id: tu_duy_phan_tich_trong_cong_viec
+name: Tư duy phân tích trong công việc
+def: "Khuynh hướng tách vấn đề ra thành các thành phần nhỏ, tìm nguyên nhân gốc rễ và đánh giá logic trước khi hành động.\nThường thấy ở những người được đào tạo bài bản hoặc có kinh nghiệm xử lý nhiều tình huống phức tạp." []
+is_a: phuong_phap_xu_ly_van_de
+
+[Term]
+id: kinh_nghiem_tich_luy_trong_xu_ly
+name: Kinh nghiệm tích lũy trong xử lý
+def: "Bộ nhớ về các tình huống đã gặp và cách giải quyết thành công trong quá khứ, được huy động như nguồn lực chính khi gặp vấn đề tương tự.\nVí dụ thực tế từ dữ liệu: thợ lành nghề nhìn máy là biết hỏng chỗ nào dù không có bản vẽ, người bán tạp hóa biết hàng nào sắp khan hiếm qua kinh nghiệm nhiều năm." []
+is_a: phuong_phap_xu_ly_van_de
+
+[Term]
+id: xu_huong_phan_ung_tinh_huong
+name: Xu hướng phản ứng tình huống
+def: "Kiểu hành vi và cảm xúc mang tính bản năng hoặc học hỏi mà cá nhân thể hiện khi gặp các kích thích bất ngờ như \náp lực thời hạn, phê bình từ cấp trên hay xung đột với đồng nghiệp." []
+is_a: dac_diem_va_hanh_vi_dac_trung_cong_viec
+
+[Term]
+id: phan_ung_ban_nang_va_hoc_hoi
+name: Phản ứng bản năng và học hỏi
+def: "Sự phân biệt giữa phản ứng tức thời có tính bẩm sinh và phản ứng được hình thành qua rèn luyện và kinh nghiệm.\nVí dụ: người bẩm sinh bình tĩnh trước áp lực với người học được cách giữ bình tĩnh qua nhiều năm làm việc căng thẳng." []
+is_a: xu_huong_phan_ung_tinh_huong
+
+[Term]
+id: phan_ung_truoc_ap_luc_thoi_han
+name: Phản ứng trước áp lực thời hạn
+def: "Kiểu hành vi và cảm xúc mà cá nhân thể hiện khi thời gian hoàn thành công việc bị thu hẹp đột ngột.\nVí dụ thực tế từ dữ liệu: tăng tốc xử lý ca bệnh khi có ca cấp cứu, đẩy nhanh tiến độ thi công khi gần đến hạn bàn giao." []
+is_a: xu_huong_phan_ung_tinh_huong
+
+[Term]
+id: phan_ung_truoc_phe_binh_tu_cap_tren
+name: Phản ứng trước phê bình từ cấp trên
+def: "Cách cá nhân tiếp nhận và ứng xử khi nhận được góp ý tiêu cực hoặc bị chỉ trích từ người có thẩm quyền.\nPhân biệt giữa người cởi mở lắng nghe và điều chỉnh, và người phòng thủ hoặc bị tác động tiêu cực đến hiệu suất." []
+is_a: xu_huong_phan_ung_tinh_huong
+
+[Term]
+id: phan_ung_truoc_xung_dot_dong_nghiep
+name: Phản ứng trước xung đột đồng nghiệp
+def: "Kiểu hành vi mà cá nhân chọn khi nảy sinh mâu thuẫn với người cùng làm việc.\nVí dụ thực tế từ dữ liệu: chủ động trao đổi thẳng thắn để giải quyết, nhờ người trung gian hòa giải, hoặc im lặng né tránh xung đột." []
+is_a: xu_huong_phan_ung_tinh_huong
+
+[Term]
+id: tinh_nhat_quan_hanh_vi
+name: Tính nhất quán hành vi
+def: "Mức độ ổn định và có thể dự đoán được trong cách một cá nhân hành động, phản ứng và ra quyết định qua các tình huống khác nhau theo thời gian. \nLà biểu hiện của sự trưởng thành chuyên môn và độ tin cậy trong môi trường nghề nghiệp." []
+is_a: dac_diem_va_hanh_vi_dac_trung_cong_viec
+relationship: influences muc_do_chu_dong_voi_bi_dong ! củng cố
+relationship: influences thoi_quen_lam_viec ! củng cố
+
+[Term]
+id: muc_do_on_dinh_hanh_vi
+name: Mức độ ổn định hành vi
+def: "Tần suất mà cá nhân hành xử theo cùng một cách nhất quán bất kể hoàn cảnh bên ngoài thay đổi.\nPhân biệt người luôn đúng giờ và đúng quy trình dù điều kiện thay đổi với người dễ bị tác động bởi tâm trạng hay áp lực." []
+is_a: tinh_nhat_quan_hanh_vi
+
+[Term]
+id: kha_nang_du_doan_hanh_vi
+name: Khả năng dự đoán hành vi
+def: "Mức độ mà đồng nghiệp hoặc cấp trên có thể biết trước cách cá nhân sẽ phản ứng hoặc hành động trong một tình huống nhất định.\nLà nền tảng của niềm tin trong môi trường làm việc nhóm." []
+is_a: tinh_nhat_quan_hanh_vi
+
+[Term]
+id: su_truong_thanh_chuyen_mon
+name: Sự trưởng thành chuyên môn
+def: "Mức độ chín chắn và kinh nghiệm được tích lũy theo thời gian giúp cá nhân xử lý tình huống nghề nghiệp một cách điềm tĩnh và hiệu quả hơn.\nThể hiện qua việc ít bị dao động cảm xúc và đưa ra quyết định ổn định hơn theo năm tháng." []
+is_a: tinh_nhat_quan_hanh_vi
+
+[Term]
+id: do_tin_cay_nghe_nghiep
+name: Độ tin cậy nghề nghiệp
+def: "Mức độ mà những người xung quanh có thể tin tưởng vào cam kết và hành động của cá nhân trong công việc.\nVí dụ thực tế từ dữ liệu: luôn hoàn thành đúng hạn, không để đồng nghiệp phải nhắc nhở, nói là làm." []
+is_a: tinh_nhat_quan_hanh_vi
+
+[Term]
+id: moi_truong_lam_viec
+name: Môi trường làm việc
+def: "Không gian vật lý, bối cảnh văn hóa doanh nghiệp, các mối quan hệ xã hội và điều kiện tổ chức \nnơi cá nhân thực hiện các nhiệm vụ nghề nghiệp của mình." []
+is_a: professional_persona
+relationship: influences boi_canh_giai_tri ! ảnh hưởng đến
+relationship: influences hinh_thuc_to_chuc_hanh_trinh ! ảnh hưởng đến
+relationship: influences thoi_quen_sinh_hoat_hang_ngay ! ảnh hưởng đến
+relationship: influences ky_nang_cong_nghe_va_cong_cu_so ! ảnh hưởng đến
+
+[Term]
+id: khong_gian_vat_ly_lam_viec
+name: Không gian vật lý làm việc
+def: "Địa điểm, cơ sở vật chất và điều kiện hạ tầng nơi cá nhân thực hiện công việc hàng ngày. \nBao gồm văn phòng, không gian coworking, môi trường làm việc từ xa hoặc thực địa và ảnh hưởng của điều kiện vật lý đó đến hiệu suất cá nhân." []
+is_a: moi_truong_lam_viec
+relationship: influences boi_canh_tham_gia_the_thao ! ảnh hưởng đến
+
+[Term]
+id: dia_diem_lam_viec_cu_the
+name: Địa điểm làm việc cụ thể
+def: "Vị trí địa lý và không gian thực tế nơi cá nhân thực hiện công việc hàng ngày.\nVí dụ thực tế từ dữ liệu: bệnh viện tư quận Bình Thạnh, công trình xây dựng ngoài trời, tiệm tạp hóa tầng 1 nhà ống, ruộng rau ngoại thành, căn bếp 10m²." []
+is_a: khong_gian_vat_ly_lam_viec
+
+[Term]
+id: co_so_vat_chat_va_ha_tang
+name: Cơ sở vật chất và hạ tầng
+def: "Trang thiết bị, công cụ và điều kiện kỹ thuật được trang bị tại nơi làm việc hỗ trợ cá nhân thực hiện công việc.\nVí dụ thực tế từ dữ liệu: thiết bị y tế tại bệnh viện, máy móc tại công trình xây dựng, quầy hàng và kệ tủ tại tiệm tạp hóa." []
+is_a: khong_gian_vat_ly_lam_viec
+
+[Term]
+id: loai_hinh_khong_gian_lam_viec
+name: Loại hình không gian làm việc
+def: "Phân loại môi trường vật lý nơi công việc diễn ra theo tính chất của không gian.\nVí dụ thực tế từ dữ liệu: trong nhà có điều hòa (văn phòng, bệnh viện), ngoài trời (công trình, ruộng đồng), tại nhà kiêm nơi kinh doanh (tiệm tạp hóa)." []
+is_a: khong_gian_vat_ly_lam_viec
+
+[Term]
+id: anh_huong_dieu_kien_vat_ly_den_hieu_suat
+name: Ảnh hưởng điều kiện vật lý đến hiệu suất
+def: "Tác động của các yếu tố môi trường như nhiệt độ, ánh sáng, tiếng ồn và không gian đến năng suất và sức khỏe của cá nhân.\nVí dụ thực tế từ dữ liệu: làm ngoài trời nắng nóng ảnh hưởng thể lực công nhân, bếp chật hẹp giới hạn số lượng món có thể chế biến cùng lúc." []
+is_a: khong_gian_vat_ly_lam_viec
+
+[Term]
+id: van_hoa_doanh_nghiep
+name: Văn hóa doanh nghiệp
+def: "Hệ thống giá trị, chuẩn mực ứng xử, niềm tin và thực hành được chia sẻ trong một tổ chức. Định hình cách thức \nthành viên tương tác với nhau và với khách hàng, đồng thời xác định tiêu chí đánh giá thành công hay thất bại trong nội bộ." []
+is_a: moi_truong_lam_viec
+relationship: influences gia_tri_phong_cach_song_an_hien ! định hình
+relationship: influences kieu_trai_nghiem_uu_tien ! định hình
+relationship: influences nhan_thuc_ca_nhan_van_hoa ! định hình
+
+[Term]
+id: gia_tri_to_chuc
+name: Giá trị tổ chức
+def: "Các nguyên tắc cốt lõi mà tổ chức đề cao và kỳ vọng mọi thành viên thể hiện trong công việc hàng ngày.\nVí dụ thực tế từ dữ liệu: bệnh viện đề cao an toàn bệnh nhân, tiệm tạp hóa gia đình coi trọng uy tín với khách quen lâu năm." []
+is_a: van_hoa_doanh_nghiep
+
+[Term]
+id: chuan_muc_ung_xu_noi_bo
+name: Chuẩn mực ứng xử nội bộ
+def: "Các quy tắc hành vi ngầm định hoặc tường minh điều chỉnh cách các thành viên đối xử với nhau trong tổ chức.\nVí dụ thực tế từ dữ liệu: gọi nhau bằng chức danh trong bệnh viện, chia sẻ thông tin giá cả trong cộng đồng tiểu thương." []
+is_a: van_hoa_doanh_nghiep
+
+[Term]
+id: tieu_chi_danh_gia_thanh_cong_noi_bo
+name: Tiêu chí đánh giá thành công nội bộ
+def: "Thước đo mà tổ chức dùng để xác định ai đang làm tốt và điều gì được coi là thành tích đáng khen ngợi.\nVí dụ thực tế từ dữ liệu: không để xảy ra sự cố y tế là thành công trong bệnh viện, doanh thu tăng là thành công với tiệm tạp hóa, \ngiao công trình đúng hạn là thành công với đội xây dựng." []
+is_a: van_hoa_doanh_nghiep
+
+[Term]
+id: moi_quan_he_xa_hoi_nghe_nghiep
+name: Mối quan hệ xã hội nghề nghiệp
+def: "Mạng lưới các kết nối giữa cá nhân với đồng nghiệp, cấp trên, cấp dưới, đối tác và khách hàng trong bối cảnh công việc. \nBao gồm cả chất lượng tin tưởng, mức độ hợp tác và động lực quyền lực trong các mối quan hệ đó." []
+is_a: moi_truong_lam_viec
+relationship: influences muc_tieu_chuyen_di ! thúc đẩy
+relationship: influences muc_dich_ket_noi_xa_hoi ! thúc đẩy
+relationship: correlated_with dong_luc_ket_noi_cong_dong_sang_tao ! tương quan với
+relationship: influences hanh_vi_chia_se_am_thuc ! thúc đẩy
+relationship: correlated_with hanh_vi_tham_gia_cong_dong ! tương quan với
+
+[Term]
+id: quan_he_voi_dong_nghiep
+name: Quan hệ với đồng nghiệp
+def: "Chất lượng kết nối và mức độ hợp tác giữa cá nhân với những người cùng vị trí hoặc cùng nhóm làm việc.\nVí dụ thực tế từ dữ liệu: đồng nghiệp cùng chơi cầu lông sau giờ làm, phối hợp ăn ý với nhóm thi công, chia sẻ kinh nghiệm với đồng nghiệp điều dưỡng." []
+is_a: van_hoa_doanh_nghiep
+
+[Term]
+id: quan_he_voi_cap_tren_va_cap_duoi
+name: Quan hệ với cấp trên và cấp dưới
+def: "Tính chất của mối quan hệ quyền lực dọc trong tổ chức và cách cá nhân điều hướng sự khác biệt về thẩm quyền.\nVí dụ thực tế từ dữ liệu: điều dưỡng phối hợp và báo cáo cho bác sĩ, quản lý dự án điều phối nhóm người phía dưới." []
+is_a: van_hoa_doanh_nghiep
+
+[Term]
+id: quan_he_voi_doi_tac_va_khach_hang
+name: Quan hệ với đối tác và khách hàng
+def: "Chất lượng kết nối giữa cá nhân với các bên bên ngoài tổ chức có liên quan đến hoạt động nghề nghiệp.\nVí dụ thực tế từ dữ liệu: khách hàng quen mua tạp hóa nhiều năm, bệnh nhân tin tưởng điều dưỡng, nhà cung cấp hàng quen của tiệm." []
+is_a: van_hoa_doanh_nghiep
+
+[Term]
+id: dong_luc_quyen_luc_trong_quan_he
+name: Động lực quyền lực trong quan hệ
+def: "Sự phân bổ ảnh hưởng và thẩm quyền trong mạng lưới quan hệ nghề nghiệp của cá nhân.\nPhản ánh ai có tiếng nói quyết định, ai phụ thuộc vào ai và cách cá nhân điều hướng sự chênh lệch quyền lực đó." []
+is_a: van_hoa_doanh_nghiep
+
+[Term]
+id: dieu_kien_to_chuc
+name: Điều kiện tổ chức
+def: "Các yếu tố cấu trúc và vận hành của tổ chức mà cá nhân phải làm việc trong đó. Bao gồm quy mô công ty, \nmô hình quản trị, quy trình ra quyết định, nguồn lực được cấp phát và mức độ tự chủ trong công việc." []
+is_a: moi_truong_lam_viec
+relationship: influences tinh_trang_tham_gia_the_thao ! ảnh hưởng đến
+
+[Term]
+id: quy_mo_to_chuc
+name: Quy mô tổ chức
+def: "Kích thước của tổ chức nơi cá nhân làm việc tính theo số nhân sự, doanh thu hoặc phạm vi hoạt động.\nVí dụ thực tế từ dữ liệu: hộ kinh doanh gia đình 1–2 người, bệnh viện tư nhân vừa, công ty xây dựng nhiều hạng mục." []
+is_a: dieu_kien_to_chuc
+
+[Term]
+id: mo_hinh_quan_tri
+name: Mô hình quản trị
+def: "Cách thức tổ chức được điều hành và cấu trúc quyền lực được phân bổ trong tổ chức.\nVí dụ thực tế từ dữ liệu: chủ hộ tự quyết toàn bộ trong tiệm tạp hóa, hệ thống phân cấp rõ ràng trong bệnh viện với bác sĩ trưởng và điều dưỡng trưởng." []
+is_a: dieu_kien_to_chuc
+
+[Term]
+id: quy_trinh_ra_quyet_dinh
+name: Quy trình ra quyết định
+def: "Cách thức các quyết định quan trọng được đưa ra trong tổ chức: ai có quyền quyết định, cần phê duyệt những cấp nào.\nVí dụ thực tế từ dữ liệu: điều dưỡng cần y lệnh bác sĩ mới được tiêm thuốc, kỹ sư cần phê duyệt bản vẽ trước khi thi công." []
+is_a: dieu_kien_to_chuc
+
+[Term]
+id: nguon_luc_duoc_cap_phat
+name: Nguồn lực được cấp phát
+def: "Tài nguyên, công cụ, ngân sách và nhân lực mà tổ chức cung cấp cho cá nhân để thực hiện công việc.\nVí dụ thực tế từ dữ liệu: thiết bị y tế bệnh viện cấp cho điều dưỡng, vốn nhập hàng của tiệm tạp hóa, máy móc công trường cấp cho đội thi công." []
+is_a: dieu_kien_to_chuc
+
+[Term]
+id: muc_do_tu_chu_trong_cong_viec
+name: Mức độ tự chủ trong công việc
+def: "Phạm vi quyết định mà cá nhân được trao hoặc tự tạo trong việc thực hiện nhiệm vụ hàng ngày mà không cần xin phép.\nVí dụ thực tế từ dữ liệu: chủ tiệm tạp hóa tự quyết mọi thứ, điều dưỡng phải theo y lệnh bác sĩ, kỹ sư tự thiết kế nhưng cần phê duyệt." []
+is_a: dieu_kien_to_chuc
+
+[Term]
+id: nhiem_vu_nghe_nghiep
+name: Nhiệm vụ nghề nghiệp
+def: "Các công việc, trách nhiệm và đầu ra cụ thể mà một cá nhân được giao hoặc tự xác định cần hoàn thành trong \nphạm vi vai trò nghề nghiệp của mình. Là đơn vị cơ bản tạo nên giá trị đóng góp của cá nhân đối với tổ chức." []
+is_a: moi_truong_lam_viec
+relationship: correlated_with hinh_thuc_tham_gia_the_thao ! tương quan với
+
+[Term]
+id: nhiem_vu_duoc_giao
+name: Nhiệm vụ được giao
+def: "Các trách nhiệm và công việc mà cấp trên hoặc tổ chức chính thức giao cho cá nhân đảm nhận.\nVí dụ thực tế từ dữ liệu: điều dưỡng được phân công phụ trách buồng bệnh cụ thể, kỹ sư được giao hạng mục lắp đặt hệ thống tưới tiêu." []
+is_a: nhiem_vu_nghe_nghiep
+
+[Term]
+id: nhiem_vu_tu_xac_dinh
+name: Nhiệm vụ tự xác định
+def: "Các công việc mà cá nhân chủ động nhận ra và đảm nhận ngoài phạm vi được giao vì trách nhiệm hoặc đam mê.\nVí dụ thực tế từ dữ liệu: dạy nghề truyền thống cho lớp trẻ dù đã nghỉ hưu, tự sửa máy nhỏ trong xưởng không chờ thợ bên ngoài." []
+is_a: nhiem_vu_nghe_nghiep
+
+[Term]
+id: dau_ra_cu_the_can_hoan_thanh
+name: Đầu ra cụ thể cần hoàn thành
+def: "Kết quả hữu hình hoặc có thể đo lường mà nhiệm vụ nghề nghiệp yêu cầu cá nhân tạo ra.\nVí dụ thực tế từ dữ liệu: mẻ bánh đa thành phẩm, hồ sơ bệnh nhân được cập nhật đầy đủ, hạng mục công trình được nghiệm thu." []
+is_a: nhiem_vu_nghe_nghiep
+
+[Term]
+id: gia_tri_dong_gop_ca_nhan
+name: Giá trị đóng góp cá nhân
+def: "Tác động và ý nghĩa của việc hoàn thành nhiệm vụ đối với tổ chức hoặc cộng đồng mà cá nhân phục vụ.\nVí dụ thực tế từ dữ liệu: bệnh nhân phục hồi tốt nhờ chăm sóc đúng, công trình hoàn thành đúng tiến độ phục vụ người dân, truyền nghề giữ gìn ẩm thực truyền thống." []
+is_a: nhiem_vu_nghe_nghiep
+
+[Term]
+id: sports_persona
+name: sports_persona
+def: "Hình mẫu thể thao mô tả xu hướng và sở thích vận động, mức độ tham gia thể thao, \nmục đích vận động, các câu lạc bộ hoặc đội tuyển thể thao yêu thích, \ncùng phương pháp tập luyện và chế độ giữ gìn vóc dáng của một cá nhân." []
+
+[Term]
+id: xu_huong_va_so_thich_van_dong
+name: Xu hướng và sở thích vận động
+def: "Sự ưu tiên, thiên hướng lựa chọn và mức độ hứng thú của một cá nhân đối với các loại hình hoạt động thể chất \nhoặc các môn thể thao cụ thể." []
+is_a: sports_persona
+
+[Term]
+id: su_uu_tien_van_dong
+name: Sự ưu tiên vận động
+def: "Thứ tự xếp hạng các loại hình hoạt động thể chất mà một cá nhân chủ động lựa chọn thực hiện \ntrước khi xem xét các lựa chọn khác. \nPhản ánh giá trị cá nhân gắn với sức khỏe, thẩm mỹ hay tính cạnh tranh." []
+is_a: xu_huong_va_so_thich_van_dong
+
+[Term]
+id: thu_tu_xep_hang_hoat_dong_the_chat
+name: Thứ tự xếp hạng hoạt động thể chất
+def: "Cách cá nhân sắp xếp ưu tiên giữa các loại hình vận động khi phải lựa chọn trong điều kiện thời gian và sức lực có hạn." []
+is_a: su_uu_tien_van_dong
+
+[Term]
+id: gia_tri_ca_nhan_gan_voi_van_dong
+name: Giá trị cá nhân gắn với vận động
+def: "Lý do sâu xa khiến cá nhân đặt một loại hình vận động lên hàng đầu, phản ánh điều cá nhân trân trọng nhất qua hoạt động thể chất.\nPhân biệt giữa người vận động vì sức khỏe, vì hình thể hay vì tính cạnh tranh đua tranh." []
+is_a: su_uu_tien_van_dong
+
+[Term]
+id: thien_huong_loai_hinh_van_dong
+name: Thiên hướng loại hình vận động
+def: "Xu thế tự nhiên của cá nhân khi lựa chọn giữa các nhóm hoạt động thể chất khác nhau về cường độ và tính chất. \nVí dụ: ưa vận động nhẹ nhàng (đi bộ, yoga) hay cường độ cao (bóng đá, bơi lội), \nthể thao cá nhân hay đồng đội, trong nhà hay ngoài trời." []
+is_a: xu_huong_va_so_thich_van_dong
+
+[Term]
+id: cuong_do_van_dong_uu_tien
+name: Cường độ vận động ưu tiên
+def: "Mức gắng sức thể chất mà cá nhân cảm thấy phù hợp và chủ động tìm kiếm trong hoạt động vận động." []
+is_a: thien_huong_loai_hinh_van_dong
+
+[Term]
+id: tinh_chat_ca_nhan_hay_dong_doi
+name: Tính chất cá nhân hay đồng đội
+def: "Thiên hướng của cá nhân trong việc lựa chọn vận động một mình hay cùng tập thể." []
+is_a: thien_huong_loai_hinh_van_dong
+
+[Term]
+id: khong_gian_van_dong_uu_tien
+name: Không gian vận động ưu tiên
+def: "Thiên hướng của cá nhân về môi trường vật lý khi thực hiện hoạt động thể chất: trong nhà hay ngoài trời." []
+is_a: thien_huong_loai_hinh_van_dong
+
+[Term]
+id: muc_do_hung_thu_van_dong
+name: Mức độ hứng thú vận động
+def: "Cường độ cảm xúc tích cực và động lực nội tại mà một cá nhân cảm nhận khi tham gia hoặc theo dõi các hoạt động thể chất. \nĐược đo lường qua tần suất chủ động tham gia và mức độ kiên trì duy trì hoạt động theo thời gian." []
+is_a: xu_huong_va_so_thich_van_dong
+
+[Term]
+id: cuong_do_cam_xuc_tich_cuc_voi_van_dong
+name: Cường độ cảm xúc tích cực với vận động
+def: "Mức độ niềm vui, hứng khởi và sự thỏa mãn mà cá nhân cảm nhận được khi tham gia hoặc nghĩ đến hoạt động thể chất.\nPhân biệt giữa người vận động vì bắt buộc và người thực sự yêu thích cảm giác vận động." []
+is_a: muc_do_hung_thu_van_dong
+
+[Term]
+id: tan_suat_chu_dong_tham_gia
+name: Tần suất chủ động tham gia
+def: "Số lần trong tuần hoặc tháng mà cá nhân tự nguyện thực hiện hoạt động thể chất mà không cần ai nhắc nhở hay ép buộc." []
+is_a: muc_do_hung_thu_van_dong
+
+[Term]
+id: muc_do_kien_tri_duy_tri_van_dong
+name: Mức độ kiên trì duy trì vận động
+def: "Khả năng duy trì thói quen vận động ổn định qua thời gian dù gặp trở ngại như thời tiết xấu, bận rộn hay mệt mỏi.\nPhản ánh sức mạnh của động lực nội tại với hoạt động thể chất." []
+is_a: muc_do_hung_thu_van_dong
+
+[Term]
+id: mon_the_thao_yeu_thich
+name: Môn thể thao yêu thích
+def: "Hoạt động thể chất có quy tắc và hình thức cụ thể mà cá nhân chủ động lựa chọn để tập luyện hoặc thi đấu thường xuyên. \nVí dụ thực tế: bóng đá, cầu lông, bơi lội, đi bộ, bóng bàn, yoga." []
+is_a: xu_huong_va_so_thich_van_dong
+relationship: correlated_with loai_hinh_so_thich ! tương quan với
+
+[Term]
+id: ten_mon_the_thao_cu_the
+name: Tên môn thể thao cụ thể
+def: "Hoạt động thể chất có tên gọi và quy tắc xác định mà cá nhân lựa chọn làm môn ưu tiên.\nVí dụ thực tế từ dữ liệu: bóng đá, cầu lông, bơi lội, đi bộ, bóng bàn, yoga, đạp xe." []
+is_a: mon_the_thao_yeu_thich
+
+[Term]
+id: muc_dich_tap_luyen_hay_thi_dau
+name: Mục đích tập luyện hay thi đấu
+def: "Lý do chính mà cá nhân chọn một môn thể thao cụ thể: để rèn luyện sức khỏe thường ngày hay để tranh tài có kết quả thắng thua.\nXác định mức độ nghiêm túc và đầu tư vào môn đó." []
+is_a: mon_the_thao_yeu_thich
+
+[Term]
+id: muc_do_tham_gia_the_thao
+name: Mức độ tham gia thể thao
+def: "Mức độ và hình thức cụ thể mà một cá nhân thực sự tham gia vào các hoạt động thể thao trong cuộc sống thực tế. \nBao gồm cả trường hợp không tham gia, tham gia thụ động (xem, cổ vũ) đến tham gia chủ động (tự tập, thi đấu)." []
+is_a: sports_persona
+
+[Term]
+id: tinh_trang_tham_gia_the_thao
+name: Tình trạng tham gia thể thao
+def: "Xác nhận cá nhân có hay không tham gia bất kỳ hoạt động thể chất nào trong sinh hoạt thường ngày. \nPhân biệt giữa người hoàn toàn không vận động và người có tham gia ở bất kỳ mức độ nào." []
+is_a: muc_do_tham_gia_the_thao
+
+[Term]
+id: co_hay_khong_tham_gia_van_dong
+name: Có hay không tham gia vận động
+def: "Xác định nhị phân liệu cá nhân có thực hiện bất kỳ hình thức hoạt động thể chất nào trong sinh hoạt thường ngày hay không.\nLà bước phân loại đầu tiên trước khi xét đến hình thức và mức độ cụ thể." []
+is_a: tinh_trang_tham_gia_the_thao
+
+[Term]
+id: nguong_toi_thieu_van_dong
+name: Ngưỡng tối thiểu vận động
+def: "Mức hoạt động thể chất thấp nhất mà cá nhân duy trì, dù chỉ là đi bộ nhẹ hoặc leo cầu thang hàng ngày.\nPhân biệt người hoàn toàn tĩnh tại với người có chút vận động trong sinh hoạt." []
+is_a: tinh_trang_tham_gia_the_thao
+
+[Term]
+id: hinh_thuc_tham_gia_the_thao
+name: Hình thức tham gia thể thao
+def: "Cách thức cụ thể mà cá nhân tương tác với hoạt động thể thao. \nBao gồm tự tập một mình, chơi cùng bạn bè, tham gia câu lạc bộ có tổ chức, \nthi đấu chính thức hoặc chỉ theo dõi cổ vũ." []
+is_a: muc_do_tham_gia_the_thao
+
+[Term]
+id: tu_tap_ca_nhan
+name: Tự tập cá nhân
+def: "Hình thức vận động mà cá nhân tự thực hiện một mình không có người hướng dẫn hay cùng tập.\nVí dụ thực tế từ dữ liệu: tự đi bộ buổi sáng, tự chạy bộ trong công viên, tự tập bài yoga ở nhà." []
+is_a: hinh_thuc_tham_gia_the_thao
+
+[Term]
+id: tham_gia_cung_ban_be_khong_to_chuc
+name: Tham gia cùng bạn bè không tổ chức
+def: "Hình thức vận động có tính xã hội nhưng không có cấu trúc hay lịch trình cố định, dựa trên sự rủ rê tự phát.\nVí dụ thực tế từ dữ liệu: rủ nhau đá bóng cuối tuần, cùng bạn đi bơi khi rảnh." []
+is_a: hinh_thuc_tham_gia_the_thao
+
+[Term]
+id: tham_gia_cau_lac_bo_co_to_chuc
+name: Tham gia câu lạc bộ có tổ chức
+def: "Hình thức tham gia thể thao trong một tổ chức có cấu trúc, lịch tập cố định và người hướng dẫn.\nVí dụ thực tế từ dữ liệu: đăng ký lớp bơi tại hồ bơi quận, tham gia câu lạc bộ cầu lông khu phố." []
+is_a: hinh_thuc_tham_gia_the_thao
+
+[Term]
+id: thi_dau_chinh_thuc
+name: Thi đấu chính thức
+def: "Hình thức tham gia thể thao trong các cuộc tranh tài có quy tắc, trọng tài và kết quả chính thức được ghi nhận.\nVí dụ thực tế từ dữ liệu: tham gia giải bóng đá phong trào cấp quận, thi bơi lội trong hội thao công ty." []
+is_a: hinh_thuc_tham_gia_the_thao
+
+[Term]
+id: theo_doi_va_co_vu
+name: Theo dõi và cổ vũ
+def: "Hình thức tương tác với thể thao qua việc xem, cổ vũ cho các vận động viên hay đội tuyển mà không trực tiếp thi đấu.\nVí dụ thực tế từ dữ liệu: xem bóng đá trên tivi, đến sân cổ vũ đội địa phương." []
+is_a: hinh_thuc_tham_gia_the_thao
+
+[Term]
+id: tan_suat_tham_gia_the_thao
+name: Tần suất tham gia thể thao
+def: "Mức độ đều đặn và số lần mà cá nhân thực hiện hoạt động thể chất trong một đơn vị thời gian nhất định. \nVí dụ thực tế: đi bộ buổi sáng hàng ngày, đá bóng mỗi cuối tuần, thỉnh thoảng khi có dịp." []
+is_a: muc_do_tham_gia_the_thao
+
+[Term]
+id: so_lan_tap_trong_tuan
+name: Số lần tập trong tuần
+def: "Tổng số buổi tập luyện hoặc vận động mà cá nhân thực hiện trong vòng 7 ngày.\nVí dụ thực tế từ dữ liệu: đi bộ 7 ngày/tuần, đá bóng 1 lần/tuần vào cuối tuần, bơi lội 3 lần/tuần." []
+is_a: tan_suat_tham_gia_the_thao
+
+[Term]
+id: muc_do_deu_dan_duy_tri
+name: Mức độ đều đặn duy trì
+def: "Tính ổn định theo thời gian của thói quen vận động, phân biệt giữa người tập đều đặn không ngắt quãng và người tập theo đợt rồi bỏ.\nVí dụ thực tế từ dữ liệu: duy trì đi bộ sáng đều đặn cả năm với chỉ tập mạnh trước dịp hè rồi bỏ." []
+is_a: tan_suat_tham_gia_the_thao
+
+[Term]
+id: boi_canh_tham_gia_the_thao
+name: Bối cảnh tham gia thể thao
+def: "Hoàn cảnh và môi trường xã hội xung quanh việc tập luyện của cá nhân. \nVí dụ: tập cùng bạn bè, trong cộng đồng khu phố, tại câu lạc bộ địa phương hay tự tập một mình." []
+is_a: muc_do_tham_gia_the_thao
+relationship: influences boi_canh_giai_tri ! định hình
+
+[Term]
+id: moi_truong_xa_hoi_tap_luyen
+name: Môi trường xã hội tập luyện
+def: "Tính chất các mối quan hệ xã hội xung quanh hoạt động tập luyện của cá nhân.\nVí dụ thực tế từ dữ liệu: tập cùng nhóm bạn thân, trong đội thể thao khu phố, hay hoàn toàn một mình không giao lưu." []
+is_a: boi_canh_tham_gia_the_thao
+
+[Term]
+id: dia_diem_tap_luyen_thuong_xuyen
+name: Địa điểm tập luyện thường xuyên
+def: "Nơi cố định mà cá nhân thực hiện hoạt động thể chất định kỳ.\nVí dụ thực tế từ dữ liệu: công viên gần nhà, hồ bơi quận, sân bóng khu phố, phòng gym, hay tại nhà." []
+is_a: boi_canh_tham_gia_the_thao
+
+[Term]
+id: muc_dich_van_dong
+name: Mục đích vận động
+def: "Lý do và kỳ vọng cụ thể thúc đẩy một cá nhân tham gia các hoạt động thể chất. \nĐịnh hướng cho việc lựa chọn môn thể thao, cường độ tập luyện \nvà mức độ cam kết duy trì hoạt động theo thời gian." []
+is_a: sports_persona
+relationship: correlated_with quan_niem_hanh_phuc ! tương quan với
+
+[Term]
+id: muc_dich_suc_khoe
+name: Mục đích sức khỏe
+def: "Động lực tham gia vận động xuất phát từ nhu cầu duy trì hoặc cải thiện các chỉ số thể chất \nnhư tim mạch, xương khớp, hệ miễn dịch và tuổi thọ. \nVí dụ thực tế: đi bộ buổi sáng để giữ sức khỏe, tập nhẹ nhàng để tránh bệnh." []
+is_a: muc_dich_van_dong
+
+[Term]
+id: muc_tieu_suc_khoe_tim_mach
+name: Mục tiêu sức khỏe tim mạch
+def: "Vận động nhằm cải thiện hoặc duy trì chức năng hệ tuần hoàn và sức bền tim phổi.\nVí dụ thực tế từ dữ liệu: đi bộ nhanh buổi sáng để giữ huyết áp ổn định, bơi lội để tăng sức bền tim mạch." []
+is_a: muc_dich_suc_khoe
+
+[Term]
+id: muc_tieu_suc_khoe_xuong_khop
+name: Mục tiêu sức khỏe xương khớp
+def: "Vận động nhằm duy trì độ linh hoạt, mật độ xương và giảm nguy cơ thoái hóa khớp.\nVí dụ thực tế từ dữ liệu: tập yoga để giữ linh hoạt khớp gối, đi bộ nhẹ để tránh loãng xương khi lớn tuổi." []
+is_a: muc_dich_suc_khoe
+
+[Term]
+id: muc_tieu_tang_cuong_he_mien_dich
+name: Mục tiêu tăng cường hệ miễn dịch
+def: "Vận động nhằm nâng cao khả năng phòng bệnh và phục hồi của cơ thể.\nVí dụ thực tế từ dữ liệu: tập thể dục đều đặn để ít ốm vặt, vận động ngoài trời để tăng sức đề kháng." []
+is_a: muc_dich_suc_khoe
+
+[Term]
+id: muc_tieu_keo_dai_tuoi_tho
+name: Mục tiêu kéo dài tuổi thọ
+def: "Vận động với mong muốn sống lâu hơn và duy trì chất lượng sức khỏe ở tuổi già.\nVí dụ thực tế từ dữ liệu: người lớn tuổi đi bộ đều đặn để sống khỏe đến già, tập nhẹ nhàng để không phụ thuộc vào thuốc." []
+is_a: muc_dich_suc_khoe
+
+[Term]
+id: muc_dich_giai_tri_tinh_than
+name: Mục đích giải trí tinh thần
+def: "Động lực tham gia thể thao nhằm thư giãn, giảm stress, tìm niềm vui hoặc duy trì tinh thần sôi động. \nVí dụ thực tế: chơi cầu lông cùng bạn bè để thư giãn sau giờ làm." []
+is_a: muc_dich_van_dong
+relationship: correlated_with chuc_nang_giai_tri_doi_voi_ca_nhan ! tương quan với
+relationship: influences hoat_dong_giai_tri_cu_the ! định hình
+
+[Term]
+id: thu_gian_qua_van_dong
+name: Thư giãn qua vận động
+def: "Trạng thái thả lỏng thể chất và tinh thần đạt được khi cơ thể chuyển động nhẹ nhàng sau giờ làm việc căng thẳng.\nVí dụ thực tế từ dữ liệu: đi bộ buổi chiều để xả hơi, bơi lội để quên chuyện công việc." []
+is_a: muc_dich_giai_tri_tinh_than
+
+[Term]
+id: giam_stress_bang_the_chat
+name: Giảm stress bằng thể chất
+def: "Cơ chế sử dụng vận động như công cụ giải phóng căng thẳng tâm lý tích tụ.\nVí dụ thực tế từ dữ liệu: đá bóng mạnh để xả stress, chạy bộ một mình để đầu óc trống rỗng." []
+is_a: muc_dich_giai_tri_tinh_than
+
+[Term]
+id: tim_kiem_niem_vui_qua_the_thao
+name: Tìm kiếm niềm vui qua thể thao
+def: "Động lực tham gia vận động thuần túy vì cảm giác thích thú và vui vẻ mà hoạt động đó mang lại.\nVí dụ thực tế từ dữ liệu: chơi cầu lông cùng bạn bè vì vui, nhảy truyền thống vào sáng Chủ Nhật vì thích." []
+is_a: muc_dich_giai_tri_tinh_than
+
+[Term]
+id: duy_tri_tinh_than_soi_dong
+name: Duy trì tinh thần sôi động
+def: "Vận động như cách giữ cho năng lượng và tinh thần tích cực, tránh cảm giác uể oải hay trì trệ.\nVí dụ thực tế từ dữ liệu: tập thể dục buổi sáng để vào ngày mới với năng lượng tốt." []
+is_a: muc_dich_giai_tri_tinh_than
+
+[Term]
+id: muc_dich_thi_dau_canh_tranh
+name: Mục đích thi đấu cạnh tranh
+def: "Động lực tham gia thể thao hướng đến việc đo sức, tranh tài và đạt thành tích trong các trận đấu có tổ chức. \nVí dụ thực tế: tham gia trận cầu tại câu lạc bộ địa phương vào cuối tuần." []
+is_a: muc_dich_van_dong
+relationship: influences xu_huong_lac_quan_voi_bi_quan ! định hình
+
+[Term]
+id: nhu_cau_do_suc_voi_nguoi_khac
+name: Nhu cầu đo sức với người khác
+def: "Động lực muốn biết mình đứng ở đâu so với các đối thủ cùng trình độ.\nVí dụ thực tế từ dữ liệu: tham gia giải cầu lông phong trào để thử sức, thi đấu bóng đá khu phố để đo trình độ." []
+is_a: muc_dich_thi_dau_canh_tranh
+
+[Term]
+id: mong_muon_dat_thanh_tich
+name: Mong muốn đạt thành tích
+def: "Khao khát giành chiến thắng hoặc đạt kết quả cụ thể có thể đo lường được trong thi đấu thể thao.\nVí dụ thực tế từ dữ liệu: muốn vào vòng chung kết giải phong trào, muốn cải thiện thứ hạng trong đội." []
+is_a: muc_dich_thi_dau_canh_tranh
+
+[Term]
+id: muc_dich_giu_voc_dang
+name: Mục đích giữ vóc dáng
+def: "Động lực vận động gắn với mong muốn kiểm soát ngoại hình, cân nặng và tỷ lệ cơ thể theo tiêu chuẩn thẩm mỹ cá nhân. \nKhác với mục đích sức khỏe ở chỗ ưu tiên yếu tố hình thể hơn chỉ số sinh lý." []
+is_a: muc_dich_van_dong
+
+[Term]
+id: kiem_soat_ngoai_hinh
+name: Kiểm soát ngoại hình
+def: "Mong muốn duy trì hoặc thay đổi vẻ bề ngoài tổng thể của cơ thể thông qua vận động.\nPhản ánh chuẩn hình thể mà cá nhân tự đặt ra cho bản thân." []
+is_a: muc_dich_giu_voc_dang
+
+[Term]
+id: quan_ly_can_nang_vi_tham_my
+name: Quản lý cân nặng vì thẩm mỹ
+def: "Vận động nhằm đạt và duy trì số cân cụ thể xuất phát từ tiêu chí ngoại hình, không chỉ vì sức khỏe.\nVí dụ thực tế từ dữ liệu: tập cardio để giảm 3kg trước hè, duy trì cân nặng để mặc vừa quần áo ưa thích." []
+is_a: muc_dich_giu_voc_dang
+
+[Term]
+id: ty_le_co_the_mong_muon
+name: Tỷ lệ cơ thể mong muốn
+def: "Hình thể lý tưởng mà cá nhân hướng đến thể hiện qua tỷ lệ giữa các phần cơ thể theo tiêu chuẩn thẩm mỹ riêng.\nVí dụ thực tế từ dữ liệu: muốn thon vòng eo, muốn cánh tay săn chắc, muốn bụng phẳng." []
+is_a: muc_dich_giu_voc_dang
+
+[Term]
+id: muc_dich_ket_noi_xa_hoi
+name: Mục đích kết nối xã hội
+def: "Động lực tham gia thể thao xuất phát từ nhu cầu giao lưu, duy trì mối quan hệ \nvà hòa nhập vào cộng đồng thông qua hoạt động thể chất chung. \nVí dụ thực tế: chơi bóng đá cùng bạn bè, tham gia đội thể thao khu phố." []
+is_a: muc_dich_van_dong
+relationship: influences vi_tri_ca_nhan_trong_the_gioi ! củng cố
+relationship: influences moi_quan_he_xa_hoi_nghe_nghiep ! thúc đẩy
+relationship: correlated_with dong_luc_ket_noi_cong_dong_sang_tao ! tương quan với
+relationship: influences hanh_vi_tham_gia_cong_dong ! củng cố
+
+[Term]
+id: giao_luu_qua_the_thao
+name: Giao lưu qua thể thao
+def: "Việc sử dụng hoạt động thể chất như cầu nối để gặp gỡ và làm quen với người mới.\nVí dụ thực tế từ dữ liệu: tham gia câu lạc bộ chạy bộ để quen thêm bạn, tham gia đội bóng khu phố để biết hàng xóm." []
+is_a: muc_dich_ket_noi_xa_hoi
+
+[Term]
+id: duy_tri_moi_quan_he_qua_the_thao
+name: Duy trì mối quan hệ qua thể thao
+def: "Việc sử dụng hoạt động thể chất định kỳ như dịp gặp gỡ và củng cố các mối quan hệ đã có.\nVí dụ thực tế từ dữ liệu: đá bóng cùng nhóm bạn cũ mỗi cuối tuần, đi bơi cùng đồng nghiệp sau giờ làm." []
+is_a: muc_dich_ket_noi_xa_hoi
+
+[Term]
+id: hoa_nhap_cong_dong_qua_the_thao
+name: Hòa nhập cộng đồng qua thể thao
+def: "Sử dụng hoạt động thể chất như phương tiện để trở thành thành viên được chấp nhận trong một cộng đồng địa phương.\nVí dụ thực tế từ dữ liệu: tham gia đội thể thao khu phố để gắn bó với cộng đồng nơi ở mới." []
+is_a: muc_dich_ket_noi_xa_hoi
+
+[Term]
+id: cau_lac_bo_hoac_doi_tuyen_the_thao_yeu_thich
+name: Câu lạc bộ hoặc đội tuyển thể thao yêu thích
+def: "Tổ chức, câu lạc bộ hoặc đội thể thao chuyên nghiệp/bán chuyên mà một cá nhân đặc biệt quan tâm, \ntheo dõi sát sao và dành sự ủng hộ tinh thần lâu dài." []
+is_a: sports_persona
+
+[Term]
+id: to_chuc_the_thao_yeu_thich
+name: Tổ chức thể thao yêu thích
+def: "Câu lạc bộ, đội tuyển hoặc tổ chức thể thao cụ thể mà cá nhân dành sự quan tâm và ủng hộ tinh thần bền vững. \nBao gồm câu lạc bộ địa phương, đội tuyển tỉnh/thành hoặc đội tuyển quốc gia." []
+is_a: cau_lac_bo_hoac_doi_tuyen_the_thao_yeu_thich
+
+[Term]
+id: cap_do_to_chuc_yeu_thich
+name: Cấp độ tổ chức yêu thích
+def: "Quy mô và tầm ảnh hưởng của đội hoặc câu lạc bộ mà cá nhân gắn bó: từ cấp địa phương, tỉnh/thành đến quốc gia hay quốc tế.\nVí dụ thực tế từ dữ liệu: ủng hộ câu lạc bộ bóng đá khu phố, theo dõi đội tuyển quốc gia Việt Nam." []
+is_a: to_chuc_the_thao_yeu_thich
+
+[Term]
+id: ten_to_chuc_the_thao_cu_the
+name: Tên tổ chức thể thao cụ thể
+def: "Danh xưng cụ thể của câu lạc bộ, đội tuyển hoặc tổ chức thể thao mà cá nhân dành sự ủng hộ.\nVí dụ thực tế từ dữ liệu: CLB bóng đá khu phố Nghi Sơn, đội tuyển bóng bàn quận Bình Thạnh." []
+is_a: to_chuc_the_thao_yeu_thich
+
+[Term]
+id: muc_do_quan_tam_theo_doi
+name: Mức độ quan tâm theo dõi
+def: "Tần suất và chiều sâu mà một cá nhân chủ động cập nhật thông tin, xem trực tiếp hoặc \nphân tích kết quả thi đấu của một đội hoặc câu lạc bộ. \nTừ mức thỉnh thoảng xem qua đến mức theo dõi sát sao từng trận đấu." []
+is_a: cau_lac_bo_hoac_doi_tuyen_the_thao_yeu_thich
+
+[Term]
+id: tan_suat_cap_nhat_thong_tin_the_thao
+name: Tần suất cập nhật thông tin thể thao
+def: "Số lần cá nhân chủ động tìm hiểu kết quả, lịch thi đấu và tin tức về đội hoặc câu lạc bộ yêu thích trong một đơn vị thời gian.\nVí dụ thực tế: xem highlights sau mỗi trận, kiểm tra bảng xếp hạng hàng tuần hay chỉ hỏi kết quả khi có ai đề cập." []
+is_a: muc_do_quan_tam_theo_doi
+
+[Term]
+id: chieu_sau_phan_tich_thi_dau
+name: Chiều sâu phân tích thi đấu
+def: "Mức độ tìm hiểu kỹ thuật, chiến thuật và dữ liệu thi đấu mà cá nhân đào sâu khi theo dõi thể thao.\nPhân biệt giữa người chỉ xem kết quả thắng thua và người phân tích đội hình, cách chơi từng trận." []
+is_a: muc_do_quan_tam_theo_doi
+
+[Term]
+id: su_ung_ho_tinh_than
+name: Sự ủng hộ tinh thần
+def: "Trạng thái gắn bó cảm xúc và lòng trung thành bền vững mà một cá nhân dành cho một đội thể thao qua thời gian. \nThể hiện qua việc cổ vũ, tham dự sự kiện và duy trì ủng hộ bất kể kết quả thắng thua." []
+is_a: cau_lac_bo_hoac_doi_tuyen_the_thao_yeu_thich
+
+[Term]
+id: gan_bo_cam_xuc_voi_doi_the_thao
+name: Gắn bó cảm xúc với đội thể thao
+def: "Mức độ đồng nhất cảm xúc của cá nhân với thành tích và vận mệnh của đội yêu thích: vui khi đội thắng, buồn khi đội thua.\nPhản ánh đội không chỉ là đối tượng theo dõi mà là một phần trong danh tính của người hâm mộ." []
+is_a: su_ung_ho_tinh_than
+
+[Term]
+id: tham_du_su_kien_the_thao_truc_tiep
+name: Tham dự sự kiện thể thao trực tiếp
+def: "Hành động đến xem thi đấu tại sân, trường hoặc địa điểm tổ chức thay vì xem qua màn hình.\nVí dụ thực tế từ dữ liệu: ra sân cổ vũ đội địa phương dịp cuối tuần, tham dự giải đấu phong trào trong khu phố." []
+is_a: su_ung_ho_tinh_than
+
+[Term]
+id: trung_thanh_bat_ke_ket_qua
+name: Trung thành bất kể kết quả
+def: "Đặc tính duy trì sự ủng hộ liên tục với đội yêu thích kể cả khi đội thua liên tiếp hay đang ở giai đoạn khó khăn.\nPhân biệt người hâm mộ trung thành với người chỉ ủng hộ khi đội thắng." []
+is_a: su_ung_ho_tinh_than
+
+[Term]
+id: phuong_phap_tap_luyen
+name: Phương pháp tập luyện
+def: "Hệ thống các bài tập, nguyên tắc, lịch trình và kỹ thuật vận động được áp dụng một cách có kế hoạch \nnhằm cải thiện thể lực hoặc kỹ năng thể thao." []
+is_a: sports_persona
+
+[Term]
+id: he_thong_bai_tap
+name: Hệ thống bài tập
+def: "Tập hợp các động tác, bài tập được sắp xếp có trật tự và logic nhằm tác động có chủ đích \nlên các nhóm cơ, hệ thống năng lượng hoặc kỹ năng vận động cụ thể. \nKhác với tập luyện ngẫu nhiên ở chỗ các bài tập bổ trợ và kế thừa lẫn nhau." []
+is_a: phuong_phap_tap_luyen
+
+[Term]
+id: danh_sach_dong_tac_va_bai_tap
+name: Danh sách động tác và bài tập
+def: "Tập hợp các hoạt động vận động cụ thể được chọn lọc và đưa vào chương trình tập luyện.\nVí dụ thực tế từ dữ liệu: squat, plank, bơi sải, đi bộ nhanh, đá bóng rondo luyện phản xạ." []
+is_a: he_thong_bai_tap
+
+[Term]
+id: trat_tu_va_logic_sap_xep_bai_tap
+name: Trật tự và logic sắp xếp bài tập
+def: "Nguyên tắc xếp thứ tự các bài tập để chúng bổ trợ và kế thừa nhau, tránh mâu thuẫn hoặc gây chấn thương.\nVí dụ thực tế: khởi động trước khi tập nặng, tập cơ lớn trước cơ nhỏ, giãn cơ sau tập." []
+is_a: he_thong_bai_tap
+
+[Term]
+id: nhom_co_muc_tieu
+name: Nhóm cơ mục tiêu
+def: "Các nhóm cơ cụ thể mà hệ thống bài tập nhắm đến để tác động và phát triển.\nVí dụ thực tế: nhóm cơ ngực và tay trong tập tạ, nhóm cơ lõi trong yoga, cơ tim và phổi trong cardio." []
+is_a: he_thong_bai_tap
+
+[Term]
+id: he_thong_nang_luong_su_dung
+name: Hệ thống năng lượng sử dụng
+def: "Cơ chế sinh lý cung cấp năng lượng cho cơ thể trong quá trình vận động: hệ ưa khí cho bài tập bền lâu hay hệ yếm khí cho bài tập cường độ cao ngắn.\nẢnh hưởng trực tiếp đến loại bài tập phù hợp với mục tiêu." []
+is_a: he_thong_bai_tap
+
+[Term]
+id: nguyen_tac_tap_luyen
+name: Nguyên tắc tập luyện
+def: "Các quy tắc và triết lý nền tảng chi phối cách thiết kế và điều chỉnh chương trình luyện tập. \nVí dụ: nguyên tắc tăng tải dần, nguyên tắc phục hồi, nguyên tắc đặc hiệu hóa hay nguyên tắc cá nhân hóa." []
+is_a: phuong_phap_tap_luyen
+
+[Term]
+id: nguyen_tac_tang_tai_dan
+name: Nguyên tắc tăng tải dần
+def: "Quy tắc tập luyện yêu cầu tăng dần khối lượng hoặc cường độ theo thời gian để cơ thể tiếp tục thích nghi và tiến bộ.\nVí dụ: tuần này chạy 3km, tuần sau tăng lên 3.5km để không bị giậm chân tại chỗ." []
+is_a: nguyen_tac_tap_luyen
+
+[Term]
+id: nguyen_tac_phuc_hoi
+name: Nguyên tắc phục hồi
+def: "Quy tắc đảm bảo cơ thể có đủ thời gian nghỉ ngơi giữa các buổi tập để tái tạo và phát triển mạnh hơn.\nVí dụ: xen kẽ ngày tập và ngày nghỉ, ngủ đủ giấc, không tập cùng một nhóm cơ liên tiếp hai ngày." []
+is_a: nguyen_tac_tap_luyen
+
+[Term]
+id: nguyen_tac_dac_hieu_hoa
+name: Nguyên tắc đặc hiệu hóa
+def: "Quy tắc chỉ tập đúng các kỹ năng và nhóm cơ liên quan đến môn thể thao hoặc mục tiêu cụ thể.\nVí dụ: cầu thủ bóng đá tập chạy nước rút và xử lý bóng, không tập nâng tạ nặng không liên quan." []
+is_a: nguyen_tac_tap_luyen
+
+[Term]
+id: nguyen_tac_ca_nhan_hoa
+name: Nguyên tắc cá nhân hóa
+def: "Quy tắc điều chỉnh chương trình tập phù hợp với thể trạng, mục tiêu và giới hạn riêng của từng người.\nVí dụ: người mới tập không áp dụng giáo án của vận động viên chuyên nghiệp." []
+is_a: nguyen_tac_tap_luyen
+
+[Term]
+id: lich_trinh_tap_luyen
+name: Lịch trình tập luyện
+def: "Kế hoạch phân bổ thời gian tập luyện theo ngày, tuần hoặc chu kỳ dài hạn. \nXác định tần suất tập, thời lượng mỗi buổi, các ngày nghỉ phục hồi \nvà sự luân phiên giữa các nhóm bài tập khác nhau." []
+is_a: phuong_phap_tap_luyen
+
+[Term]
+id: tan_suat_tap_trong_lich_trinh
+name: Tần suất tập trong lịch trình
+def: "Số buổi tập được lên kế hoạch trong một tuần hoặc chu kỳ nhất định.\nVí dụ thực tế từ dữ liệu: tập 3 buổi/tuần xen kẽ ngày nghỉ, tập mỗi ngày với cường độ thay đổi." []
+is_a: lich_trinh_tap_luyen
+
+[Term]
+id: thoi_luong_moi_buoi_tap
+name: Thời lượng mỗi buổi tập
+def: "Số phút hoặc giờ dành cho một buổi tập luyện từ khởi động đến giãn cơ.\nVí dụ thực tế từ dữ liệu: 30 phút đi bộ buổi sáng, 90 phút đá bóng cuối tuần, 45 phút bơi lội chiều tối." []
+is_a: lich_trinh_tap_luyen
+
+[Term]
+id: ngay_nghi_phuc_hoi_trong_lich
+name: Ngày nghỉ phục hồi trong lịch
+def: "Các ngày được dành để cơ thể phục hồi hoàn toàn, không tập hoặc chỉ vận động nhẹ.\nLà thành phần bắt buộc trong lịch trình khoa học để tránh chấn thương và tăng hiệu quả tập." []
+is_a: lich_trinh_tap_luyen
+
+[Term]
+id: su_luan_phien_nhom_bai_tap
+name: Sự luân phiên nhóm bài tập
+def: "Cách sắp xếp xen kẽ các nhóm bài tập khác nhau trong lịch để tránh tập quá tải một nhóm cơ và duy trì sự đa dạng.\nVí dụ: ngày chẵn tập thân trên, ngày lẻ tập thân dưới, cuối tuần tập cardio." []
+is_a: lich_trinh_tap_luyen
+
+[Term]
+id: ky_thuat_van_dong
+name: Kỹ thuật vận động
+def: "Cách thức thực hiện chính xác một động tác hoặc chuỗi động tác theo đúng cơ học cơ thể \nvà yêu cầu của môn thể thao. \nKỹ thuật đúng giúp tối đa hóa hiệu suất và giảm thiểu nguy cơ chấn thương." []
+is_a: phuong_phap_tap_luyen
+
+[Term]
+id: do_chinh_xac_dong_tac
+name: Độ chính xác động tác
+def: "Mức độ thực hiện đúng hình thức kỹ thuật của một động tác so với chuẩn mực của môn thể thao.\nVí dụ thực tế: đúng tư thế squat không gù lưng, đúng kỹ thuật bơi sải không vặn hông." []
+is_a: ky_thuat_van_dong
+
+[Term]
+id: co_hoc_co_the_trong_van_dong
+name: Cơ học cơ thể trong vận động
+def: "Cách các phần cơ thể phối hợp và di chuyển để tạo ra lực và chuyển động hiệu quả nhất.\nVí dụ thực tế: sử dụng đúng trọng tâm khi chạy, phối hợp tay chân nhịp nhàng khi bơi." []
+is_a: ky_thuat_van_dong
+
+[Term]
+id: giam_thieu_nguy_co_chan_thuong
+name: Giảm thiểu nguy cơ chấn thương
+def: "Tác dụng bảo vệ cơ thể của việc thực hiện đúng kỹ thuật, tránh các tư thế xấu gây áp lực quá mức lên khớp và cơ.\nVí dụ thực tế: kỹ thuật nâng tạ đúng tránh chấn thương lưng, kỹ thuật chạy đúng tránh đau đầu gối." []
+is_a: ky_thuat_van_dong
+
+[Term]
+id: ke_hoach_tap_luyen
+name: Kế hoạch tập luyện
+def: "Chiến lược tổng thể xác định mục tiêu, phương pháp và lộ trình phát triển thể chất trong một giai đoạn nhất định. \nLà cầu nối giữa mục tiêu thể thao của cá nhân và các hành động cụ thể hàng ngày." []
+is_a: phuong_phap_tap_luyen
+
+[Term]
+id: muc_tieu_the_thao_trong_ke_hoach
+name: Mục tiêu thể thao trong kế hoạch
+def: "Đích đến cụ thể và có thể đo lường mà cá nhân muốn đạt được sau một giai đoạn tập luyện.\nVí dụ thực tế từ dữ liệu: chạy được 5km liên tục sau 2 tháng, giảm 5kg trong 3 tháng, bơi đúng kỹ thuật sải tay." []
+is_a: ke_hoach_tap_luyen
+relationship: correlated_with moc_thoi_gian_muc_tieu ! tương quan với
+
+[Term]
+id: lo_trinh_phat_trien_the_chat
+name: Lộ trình phát triển thể chất
+def: "Chuỗi các giai đoạn và mốc tiến bộ được sắp xếp có thứ tự dẫn từ trạng thái hiện tại đến mục tiêu thể thao.\nLà bản đồ chỉ đường để cá nhân biết mình đang ở đâu và bước tiếp theo là gì." []
+is_a: ke_hoach_tap_luyen
+
+[Term]
+id: hanh_dong_tap_luyen_hang_ngay
+name: Hành động tập luyện hàng ngày
+def: "Các việc làm cụ thể và có thể thực hiện ngay trong từng buổi tập, là biểu hiện trực tiếp của kế hoạch tổng thể.\nVí dụ thực tế từ dữ liệu: hôm nay chạy 20 phút, làm 3 hiệp plank 30 giây, bơi 20 vòng hồ 25m." []
+is_a: ke_hoach_tap_luyen
+
+[Term]
+id: cai_thien_the_luc
+name: Cải thiện thể lực
+def: "Quá trình nâng cao các chỉ số sức khỏe thể chất như sức mạnh cơ bắp, sức bền tim mạch, \nđộ linh hoạt và tốc độ phản ứng. \nLà kết quả đo lường được từ quá trình tập luyện có hệ thống và kiên trì." []
+is_a: phuong_phap_tap_luyen
+
+[Term]
+id: cai_thien_suc_manh_co_bap
+name: Cải thiện sức mạnh cơ bắp
+def: "Quá trình tăng khả năng tạo lực tối đa của cơ trong một lần co cơ thông qua tập luyện kháng lực.\nVí dụ thực tế từ dữ liệu: nâng tạ nặng hơn sau 2 tháng tập, đẩy tạ ngực tăng từ 40kg lên 50kg." []
+is_a: cai_thien_the_luc
+
+[Term]
+id: cai_thien_suc_ben_tim_mach
+name: Cải thiện sức bền tim mạch
+def: "Quá trình nâng cao khả năng tim phổi duy trì cung cấp oxy cho cơ trong thời gian dài mà không mệt sớm.\nVí dụ thực tế từ dữ liệu: chạy bộ 30 phút không nghỉ sau khi luyện tập đều đặn." []
+is_a: cai_thien_the_luc
+
+[Term]
+id: cai_thien_do_linh_hoat
+name: Cải thiện độ linh hoạt
+def: "Quá trình tăng biên độ cử động của khớp và độ mềm dẻo của cơ thông qua tập giãn cơ và yoga.\nVí dụ thực tế từ dữ liệu: sau 1 tháng tập yoga có thể ngồi xổm phẳng lòng bàn chân." []
+is_a: cai_thien_the_luc
+
+[Term]
+id: cai_thien_toc_do_phan_ung
+name: Cải thiện tốc độ phản ứng
+def: "Quá trình rút ngắn thời gian từ khi nhận kích thích đến khi cơ thể phản ứng, quan trọng trong các môn thể thao đòi hỏi phản xạ nhanh.\nVí dụ thực tế từ dữ liệu: phản xạ đỡ bóng nhanh hơn sau nhiều buổi tập cầu lông." []
+is_a: cai_thien_the_luc
+
+[Term]
+id: ky_nang_the_thao
+name: Kỹ năng thể thao
+def: "Khả năng thực hiện thành thục các kỹ thuật, chiến thuật và phản xạ đặc thù của một môn thể thao nhất định. \nĐược phát triển qua quá trình lặp lại, phản hồi và điều chỉnh liên tục trong tập luyện." []
+is_a: phuong_phap_tap_luyen
+
+[Term]
+id: ky_thuat_dac_thu_mon_the_thao
+name: Kỹ thuật đặc thù môn thể thao
+def: "Các thao tác vận động có quy tắc và chuẩn mực riêng chỉ xuất hiện trong một môn thể thao cụ thể.\nVí dụ thực tế từ dữ liệu: kỹ thuật smash cầu lông, kỹ thuật lộn vòng khi bơi sải, kỹ thuật sút phạt góc trong bóng đá." []
+is_a: ky_nang_the_thao
+
+[Term]
+id: chien_thuat_trong_thi_dau
+name: Chiến thuật trong thi đấu
+def: "Cách lựa chọn và phối hợp các hành động trong khi thi đấu để tối ưu hóa cơ hội chiến thắng.\nVí dụ thực tế từ dữ liệu: chơi phòng thủ chắc khi đang dẫn điểm, khai thác điểm yếu đối thủ trong cầu lông." []
+is_a: ky_nang_the_thao
+
+[Term]
+id: phan_xa_the_thao
+name: Phản xạ thể thao
+def: "Khả năng phản ứng tức thời và chính xác với các kích thích trong môn thể thao mà không cần suy nghĩ ý thức.\nVí dụ thực tế từ dữ liệu: đỡ bóng phản xạ trong bóng bàn, phán đoán đúng hướng bóng trong cầu lông." []
+is_a: ky_nang_the_thao
+
+[Term]
+id: qua_trinh_lap_lai_va_dieu_chinh
+name: Quá trình lặp lại và điều chỉnh
+def: "Cơ chế học kỹ năng thể thao thông qua thực hành nhiều lần kết hợp nhận phản hồi để sửa sai và hoàn thiện.\nVí dụ thực tế từ dữ liệu: tập đi tập lại kỹ thuật sút bóng và điều chỉnh theo lời huấn luyện viên." []
+is_a: ky_nang_the_thao
+
+[Term]
+id: che_do_giu_gin_voc_dang
+name: Chế độ giữ gìn vóc dáng
+def: "Sự kết hợp giữa hoạt động thể chất và thói quen dinh dưỡng được duy trì đều đặn \nnhằm kiểm soát cân nặng, phát triển cơ bắp và tối ưu hóa chỉ số hình thể." []
+is_a: sports_persona
+relationship: correlated_with nhan_sinh_quan ! tương quan với
+
+[Term]
+id: hoat_dong_the_chat_giu_voc_dang
+name: Hoạt động thể chất giữ vóc dáng
+def: "Các bài tập và vận động cơ thể được thực hiện đều đặn với mục tiêu chính là duy trì \nhoặc cải thiện hình thể theo tiêu chuẩn cá nhân. \nKhác với tập luyện thể thao ở chỗ ưu tiên kết quả hình thể hơn hiệu suất thi đấu." []
+is_a: che_do_giu_gin_voc_dang
+
+[Term]
+id: muc_tieu_duy_tri_hinh_the
+name: Mục tiêu duy trì hình thể
+def: "Vận động nhằm giữ nguyên vóc dáng hiện tại mà không để thay đổi theo hướng không mong muốn.\nVí dụ thực tế từ dữ liệu: tập cardio nhẹ đều đặn để không tăng cân dù ăn uống bình thường." []
+is_a: hoat_dong_the_chat_giu_voc_dang
+
+[Term]
+id: muc_tieu_cai_thien_hinh_the
+name: Mục tiêu cải thiện hình thể
+def: "Vận động nhằm thay đổi cơ thể theo hướng gần hơn với tiêu chuẩn thẩm mỹ cá nhân mong muốn.\nVí dụ thực tế từ dữ liệu: tập bụng để có cơ bụng phẳng, tập tay để có cánh tay săn chắc." []
+is_a: hoat_dong_the_chat_giu_voc_dang
+
+[Term]
+id: tieu_chuan_ca_nhan_ve_hinh_the
+name: Tiêu chuẩn cá nhân về hình thể
+def: "Hình mẫu vóc dáng lý tưởng mà cá nhân tự đặt ra làm mục tiêu hướng đến, xuất phát từ quan niệm thẩm mỹ riêng.\nPhân biệt với tiêu chuẩn y tế ở chỗ được xác định bởi sở thích và văn hóa cá nhân hơn là chỉ số sức khỏe." []
+is_a: hoat_dong_the_chat_giu_voc_dang
+
+[Term]
+id: thoi_quen_dinh_duong
+name: Thói quen dinh dưỡng
+def: "Các hành vi ăn uống lặp đi lặp lại của một cá nhân liên quan đến loại thực phẩm tiêu thụ, \nthời điểm ăn và khẩu phần. \nCó ảnh hưởng trực tiếp đến hiệu suất thể chất và thành phần cơ thể." []
+is_a: che_do_giu_gin_voc_dang
+relationship: influences che_do_an_uong_ca_nhan ! định hình
+relationship: influences cai_thien_the_luc ! ảnh hưởng đến
+
+[Term]
+id: loai_thuc_pham_tieu_thu
+name: Loại thực phẩm tiêu thụ
+def: "Các nhóm và loại thức ăn cụ thể mà cá nhân thường xuyên đưa vào chế độ ăn nhằm hỗ trợ mục tiêu vóc dáng.\nVí dụ thực tế từ dữ liệu: ăn nhiều rau xanh và cá, hạn chế đồ chiên rán và đường, bổ sung protein sau buổi tập." []
+is_a: thoi_quen_dinh_duong
+
+[Term]
+id: thoi_diem_an_uong_trong_ngay
+name: Thời điểm ăn uống trong ngày
+def: "Giờ giấc và sự phân bổ các bữa ăn trong ngày được lên kế hoạch để hỗ trợ quá trình tập luyện và phục hồi.\nVí dụ thực tế từ dữ liệu: ăn nhẹ trước tập 1 tiếng, ăn protein ngay sau tập, tránh ăn khuya." []
+is_a: thoi_quen_dinh_duong
+
+[Term]
+id: khau_phan_an_uong
+name: Khẩu phần ăn uống
+def: "Lượng thức ăn và calo được kiểm soát trong mỗi bữa nhằm đạt mục tiêu cân nặng và hình thể.\nVí dụ thực tế từ dữ liệu: ăn vừa đủ no không ăn thừa, đếm calo khi cần giảm cân, tăng khẩu phần khi tập tăng cơ." []
+is_a: thoi_quen_dinh_duong
+
+[Term]
+id: kiem_soat_can_nang
+name: Kiểm soát cân nặng
+def: "Quá trình chủ động điều tiết khối lượng cơ thể thông qua cân bằng giữa năng lượng nạp vào \nvà năng lượng tiêu hao qua vận động. \nBao gồm mục tiêu giảm cân, tăng cân hoặc duy trì cân nặng ở ngưỡng mong muốn." []
+is_a: che_do_giu_gin_voc_dang
+
+[Term]
+id: nang_luong_nap_vao
+name: Năng lượng nạp vào
+def: "Tổng lượng calo từ thức ăn và đồ uống mà cơ thể nhận được trong một ngày, là một vế của phương trình cân bằng năng lượng.\nViệc kiểm soát năng lượng nạp vào là yếu tố then chốt trong quản lý cân nặng." []
+is_a: kiem_soat_can_nang
+
+[Term]
+id: nang_luong_tieu_hao_qua_van_dong
+name: Năng lượng tiêu hao qua vận động
+def: "Lượng calo cơ thể đốt cháy thông qua các hoạt động thể chất từ nhẹ nhàng đến cường độ cao.\nVí dụ thực tế từ dữ liệu: đi bộ 30 phút tiêu thụ khoảng 150 calo, bơi 45 phút tiêu thụ khoảng 400 calo." []
+is_a: kiem_soat_can_nang
+
+[Term]
+id: muc_tieu_giam_tang_hay_duy_tri_can
+name: Mục tiêu giảm, tăng hay duy trì cân
+def: "Hướng điều chỉnh cân nặng mà cá nhân đặt ra làm đích đến của quá trình kiểm soát.\nVí dụ thực tế từ dữ liệu: giảm 3kg trước hè, tăng 2kg cơ sau 3 tháng tập tạ, duy trì cân nặng hiện tại ổn định." []
+is_a: kiem_soat_can_nang
+
+[Term]
+id: phat_trien_co_bap
+name: Phát triển cơ bắp
+def: "Quá trình tăng trưởng kích thước và sức mạnh các nhóm cơ thông qua tập luyện kháng lực \nkết hợp với chế độ dinh dưỡng phù hợp. \nĐòi hỏi cân bằng giữa kích thích cơ học từ bài tập và phục hồi sinh học sau tập." []
+is_a: che_do_giu_gin_voc_dang
+
+[Term]
+id: tang_kich_thuoc_co_bap
+name: Tăng kích thước cơ bắp
+def: "Mục tiêu gia tăng thể tích và khối lượng cơ bắp nhìn thấy được, thường được thực hiện qua tập tạ cường độ trung bình đến cao với số lần nhiều.\nVí dụ thực tế từ dữ liệu: tập tay để cánh tay to hơn, tập ngực để lồng ngực nở hơn." []
+is_a: phat_trien_co_bap
+
+[Term]
+id: tap_luyen_khang_luc
+name: Tập luyện kháng lực
+def: "Hình thức tập luyện sử dụng lực cản bên ngoài như tạ, dây kháng lực hay trọng lượng cơ thể để kích thích cơ bắp phát triển.\nVí dụ thực tế từ dữ liệu: tập tạ đòn, tập với dây kháng lực, hít đất, kéo xà." []
+is_a: phat_trien_co_bap
+
+[Term]
+id: phuc_hoi_sinh_hoc_sau_tap
+name: Phục hồi sinh học sau tập
+def: "Quá trình cơ thể sửa chữa và tái tạo sợi cơ bị phá vỡ sau tập luyện kháng lực, là giai đoạn thực sự tạo ra tăng trưởng cơ bắp.\nĐòi hỏi đủ thời gian nghỉ ngơi, ngủ đủ giấc và dinh dưỡng protein phù hợp." []
+is_a: phat_trien_co_bap
+
+[Term]
+id: chi_so_hinh_the
+name: Chỉ số hình thể
+def: "Các thông số đo lường định lượng về cấu trúc cơ thể của một cá nhân. \nBao gồm tỷ lệ mỡ cơ thể, cân nặng, vòng eo, chỉ số BMI \nvà tỷ lệ cơ xương so với tổng khối lượng cơ thể." []
+is_a: che_do_giu_gin_voc_dang
+
+[Term]
+id: ty_le_mo_co_the
+name: Tỷ lệ mỡ cơ thể
+def: "Phần trăm khối lượng mỡ so với tổng trọng lượng cơ thể, là chỉ số phản ánh thành phần cơ thể chính xác hơn cân nặng đơn thuần.\nVí dụ thực tế: vận động viên nặng 70kg có thể chỉ có 10% mỡ, trong khi người ít tập cùng cân nặng có thể có 25% mỡ." []
+is_a: chi_so_hinh_the
+
+[Term]
+id: can_nang_co_the
+name: Cân nặng cơ thể
+def: "Tổng khối lượng cơ thể tính bằng kg, là chỉ số dễ đo lường nhất nhưng không phản ánh đầy đủ thành phần cơ thể.\nThường được dùng như tham chiếu ban đầu trong quản lý vóc dáng." []
+is_a: chi_so_hinh_the
+
+[Term]
+id: vong_eo
+name: Vòng eo
+def: "Chu vi đo tại phần eo nhỏ nhất của cơ thể, phản ánh lượng mỡ nội tạng và là chỉ số thẩm mỹ được nhiều người theo dõi.\nVí dụ thực tế từ dữ liệu: mục tiêu giữ vòng eo dưới 70cm, đo vòng eo hàng tháng để theo dõi tiến độ." []
+is_a: chi_so_hinh_the
+
+[Term]
+id: chi_so_bmi
+name: Chỉ số BMI
+def: "Tỷ số giữa cân nặng và bình phương chiều cao, được dùng như thước đo sơ bộ để đánh giá người thiếu cân, bình thường, thừa cân hay béo phì.\nCó giới hạn khi không phân biệt được mỡ và cơ." []
+is_a: chi_so_hinh_the
+
+[Term]
+id: ty_le_co_xuong
+name: Tỷ lệ cơ xương
+def: "Phần trăm khối lượng cơ và xương so với tổng khối lượng cơ thể, phản ánh mức độ phát triển cơ bắp và mật độ xương.\nChỉ số quan trọng với người tập tạ muốn đánh giá hiệu quả tăng cơ thực sự." []
+is_a: chi_so_hinh_the
+
+[Term]
+id: arts_persona
+name: arts_persona
+def: "Hình mẫu nghệ thuật xác định mức độ gắn kết của một cá nhân với các hình thức biểu đạt sáng tạo, đồng thời mô tả \ncách thức nghệ thuật tác động và định hình bản sắc cá nhân." []
+
+[Term]
+id: muc_do_gan_ket_nghe_thuat
+name: Mức độ gắn kết nghệ thuật
+def: "Chỉ số đo lường tần suất, sự chú tâm và chiều sâu trong việc tương tác của một cá nhân đối với nghệ thuật.\nBao gồm các hoạt động từ thưởng thức thụ động đến trực tiếp tham gia sáng tạo." []
+is_a: arts_persona
+
+[Term]
+id: tan_suat_tiep_xuc_nghe_thuat
+name: Tần suất tiếp xúc nghệ thuật
+def: "Số lần và mức độ đều đặn mà một cá nhân chủ động hoặc bị động tiếp xúc với các sản phẩm, sự kiện hoặc hoạt động nghệ thuật trong một đơn vị thời gian.\nVí dụ thực tế: xem phim mỗi tuần, thỉnh thoảng đi xem hòa nhạc, hiếm khi ghé triển lãm." []
+is_a: muc_do_gan_ket_nghe_thuat
+
+[Term]
+id: tan_suat_tiep_xuc_dinh_ky
+name: Tần suất tiếp xúc định kỳ
+def: "Mức độ tiếp xúc nghệ thuật diễn ra thường xuyên và đều đặn trong lịch sinh hoạt.\nVí dụ thực tế: xem phim mỗi tuần, nghe nhạc mỗi ngày." []
+is_a: tan_suat_tiep_xuc_nghe_thuat
+
+[Term]
+id: tan_suat_tiep_xuc_khong_thuong_xuyen
+name: Tần suất tiếp xúc không thường xuyên
+def: "Mức độ tiếp xúc nghệ thuật xảy ra theo dịp hoặc cảm hứng, không có lịch cố định.\nVí dụ thực tế: thỉnh thoảng đi xem hòa nhạc khi có chương trình hay." []
+is_a: tan_suat_tiep_xuc_nghe_thuat
+
+[Term]
+id: tan_suat_tiep_xuc_hiem_khi
+name: Tần suất tiếp xúc hiếm khi
+def: "Mức độ tiếp xúc nghệ thuật rất thấp, gần như không chủ động tìm kiếm.\nVí dụ thực tế: hiếm khi ghé triển lãm, chỉ tiếp xúc nghệ thuật khi được rủ hoặc tình cờ gặp." []
+is_a: tan_suat_tiep_xuc_nghe_thuat
+
+[Term]
+id: muc_do_chu_tam_nghe_thuat
+name: Mức độ chú tâm nghệ thuật
+def: "Chất lượng sự tập trung và cảm nhận sâu mà cá nhân dành cho một tác phẩm hoặc trải nghiệm nghệ thuật cụ thể. \nPhân biệt giữa người thưởng thức qua loa và người cảm thụ có chiều sâu, chú ý đến chi tiết nghệ thuật, kỹ thuật và thông điệp." []
+is_a: muc_do_gan_ket_nghe_thuat
+
+[Term]
+id: tiep_nhan_nghe_thuat_qua_loa
+name: Tiếp nhận nghệ thuật qua loa
+def: "Cách thưởng thức bề mặt, không chú ý đến chi tiết kỹ thuật hay thông điệp ẩn.\nNghệ thuật chỉ là nền hoặc giải trí thoáng qua, không để lại dấu ấn nhận thức." []
+is_a: muc_do_chu_tam_nghe_thuat
+
+[Term]
+id: cam_thu_nghe_thuat_chieu_sau
+name: Cảm thụ nghệ thuật chiều sâu
+def: "Cách thưởng thức chú ý đến chi tiết nghệ thuật, kỹ thuật và thông điệp của tác phẩm.\nCá nhân chủ động suy nghĩ, cảm nhận và tìm hiểu ý nghĩa phía sau những gì được thể hiện." []
+is_a: muc_do_chu_tam_nghe_thuat
+
+[Term]
+id: vai_tro_tiep_nhan_nghe_thuat
+name: Vai trò tiếp nhận nghệ thuật
+def: "Vị trí mà cá nhân đảm nhận trong quá trình tương tác với nghệ thuật: thưởng thức thụ động (khán giả, độc giả, người nghe) \nhoặc tham gia chủ động sáng tạo (diễn viên, họa sĩ, nhạc công). Xác định mức độ đầu tư thực sự của cá nhân vào thế giới nghệ thuật." []
+is_a: muc_do_gan_ket_nghe_thuat
+
+[Term]
+id: vai_tro_thu_dong_khan_gia
+name: Vai trò thụ động khán giả
+def: "Vị trí tiếp nhận nghệ thuật một chiều: xem, nghe, đọc mà không tham gia vào quá trình sản xuất.\nVí dụ thực tế: khán giả xem phim, người nghe nhạc, độc giả đọc sách." []
+is_a: vai_tro_tiep_nhan_nghe_thuat
+
+[Term]
+id: vai_tro_chu_dong_sang_tao
+name: Vai trò chủ động sáng tạo
+def: "Vị trí trực tiếp tạo ra hoặc biểu diễn tác phẩm nghệ thuật.\nVí dụ thực tế: họa sĩ vẽ tranh, nhạc công chơi đàn, diễn viên biểu diễn, nhà văn viết truyện." []
+is_a: vai_tro_tiep_nhan_nghe_thuat
+
+[Term]
+id: pham_vi_loai_hinh_nghe_thuat_tiep_can
+name: Phạm vi loại hình nghệ thuật tiếp cận
+def: "Độ rộng của các hình thức nghệ thuật mà một cá nhân có kinh nghiệm tương tác. Người có phạm vi hẹp chỉ gắn với một \nthể loại (ví dụ: chỉ nghe nhạc dân ca), trong khi người có phạm vi rộng trải nghiệm đa dạng từ điện ảnh, âm nhạc đến hội họa và sân khấu." []
+is_a: muc_do_gan_ket_nghe_thuat
+
+[Term]
+id: pham_vi_loai_hinh_hep
+name: Phạm vi loại hình hẹp
+def: "Cá nhân chỉ gắn bó với một hoặc một vài thể loại nghệ thuật nhất định.\nVí dụ thực tế: chỉ nghe nhạc dân ca, chỉ xem phim hành động, không quan tâm đến hội họa hay sân khấu." []
+is_a: pham_vi_loai_hinh_nghe_thuat_tiep_can
+
+[Term]
+id: pham_vi_loai_hinh_rong
+name: Phạm vi loại hình rộng
+def: "Cá nhân trải nghiệm đa dạng nhiều hình thức nghệ thuật khác nhau.\nVí dụ thực tế: vừa xem phim, nghe nhạc, đi triển lãm hội họa, xem kịch và đọc văn học." []
+is_a: pham_vi_loai_hinh_nghe_thuat_tiep_can
+
+[Term]
+id: hinh_thuc_bieu_dat_sang_tao
+name: Hình thức biểu đạt sáng tạo
+def: "Các phương thức, phương tiện hoặc loại hình nghệ thuật khác nhau mà con người sử dụng để truyền tải ý tưởng, cảm xúc.\nVí dụ như hội họa, âm nhạc, văn học, điện ảnh hay nghệ thuật biểu diễn." []
+is_a: arts_persona
+
+[Term]
+id: loai_hinh_nghe_thuat_thuc_hanh
+name: Loại hình nghệ thuật thực hành
+def: "Hình thức nghệ thuật cụ thể mà một cá nhân trực tiếp thực hành hoặc sáng tác.\nVí dụ thực tế: vẽ tranh, chơi đàn, viết văn, chụp ảnh, múa, ca hát, làm gốm." []
+is_a: hinh_thuc_bieu_dat_sang_tao
+
+[Term]
+id: phuong_tien_bieu_dat_nghe_thuat
+name: Phương tiện biểu đạt nghệ thuật
+def: "Chất liệu, công cụ hoặc nền tảng vật lý / kỹ thuật số được sử dụng để hiện thực hóa một tác phẩm nghệ thuật.\nVí dụ: màu sơn dầu, nhạc cụ truyền thống, phần mềm chỉnh ảnh, sân khấu biểu diễn." []
+is_a: hinh_thuc_bieu_dat_sang_tao
+
+[Term]
+id: phuong_tien_vat_ly_truyen_thong
+name: Phương tiện vật lý truyền thống
+def: "Chất liệu và công cụ hữu hình được dùng để tạo ra tác phẩm nghệ thuật.\nVí dụ: màu sơn dầu, than chì, nhạc cụ truyền thống, sân khấu biểu diễn, đất sét." []
+is_a: phuong_tien_bieu_dat_nghe_thuat
+
+[Term]
+id: phuong_tien_ky_thuat_so
+name: Phương tiện kỹ thuật số
+def: "Nền tảng và phần mềm kỹ thuật số được dùng để sáng tác, chỉnh sửa hoặc phân phối tác phẩm.\nVí dụ: phần mềm chỉnh ảnh, DAW thu âm, công cụ vẽ kỹ thuật số, nền tảng xuất bản trực tuyến." []
+is_a: phuong_tien_bieu_dat_nghe_thuat
+
+[Term]
+id: muc_do_thuan_thuc_sang_tao
+name: Mức độ thuần thục sáng tạo
+def: "Trình độ kỹ thuật và kinh nghiệm của cá nhân trong một hình thức nghệ thuật cụ thể.\nTừ mức nghiệp dư (học để vui), bán chuyên (có kỹ năng rõ ràng) đến chuyên nghiệp (có thể biểu diễn hoặc triển lãm công khai)." []
+is_a: hinh_thuc_bieu_dat_sang_tao
+relationship: correlated_with ky_nang_thu_cong_va_nghe_truyen_thong ! tương quan với
+
+[Term]
+id: trinh_do_nghiep_du
+name: Trình độ nghiệp dư
+def: "Mức kỹ năng ban đầu, thực hành nghệ thuật để vui hoặc khám phá sở thích, chưa có nền tảng kỹ thuật hệ thống.\nSản phẩm chủ yếu để tự thưởng thức hoặc chia sẻ trong vòng bạn bè." []
+is_a: muc_do_thuan_thuc_sang_tao
+
+[Term]
+id: trinh_do_ban_chuyen
+name: Trình độ bán chuyên
+def: "Mức kỹ năng có nền tảng kỹ thuật rõ ràng, đã đầu tư thời gian học tập bài bản, tạo ra sản phẩm có chất lượng nhưng chưa hoạt động chuyên nghiệp toàn thời gian." []
+is_a: muc_do_thuan_thuc_sang_tao
+
+[Term]
+id: trinh_do_chuyen_nghiep
+name: Trình độ chuyên nghiệp
+def: "Mức kỹ năng đủ để biểu diễn, triển lãm hoặc xuất bản công khai và nhận thù lao.\nHoạt động nghệ thuật gắn với danh tiếng hoặc thu nhập chính thức." []
+is_a: muc_do_thuan_thuc_sang_tao
+
+[Term]
+id: dong_luc_sang_tao_nghe_thuat
+name: Động lực sáng tạo nghệ thuật
+def: "Nguồn thúc đẩy nội tâm khiến cá nhân theo đuổi hoặc thực hành một hình thức biểu đạt sáng tạo.\nCó thể xuất phát từ nhu cầu giải tỏa cảm xúc, mong muốn truyền tải thông điệp, tìm kiếm niềm vui hoặc kết nối với cộng đồng sáng tạo." []
+is_a: hinh_thuc_bieu_dat_sang_tao
+relationship: influences khat_vong_dong_gop_xa_hoi ! thúc đẩy
+
+[Term]
+id: dong_luc_giai_toa_cam_xuc
+name: Động lực giải tỏa cảm xúc
+def: "Nhu cầu dùng sáng tạo như kênh giải phóng cảm xúc tích tụ — buồn bã, căng thẳng, hạnh phúc — thay vì mục tiêu nghệ thuật thuần túy." []
+is_a: dong_luc_sang_tao_nghe_thuat
+
+[Term]
+id: dong_luc_truyen_tai_thong_diep
+name: Động lực truyền tải thông điệp
+def: "Mong muốn dùng nghệ thuật để bày tỏ quan điểm, phản ánh xã hội hoặc kể câu chuyện có ý nghĩa với người khác." []
+is_a: dong_luc_sang_tao_nghe_thuat
+
+[Term]
+id: dong_luc_tim_kiem_niem_vui
+name: Động lực tìm kiếm niềm vui
+def: "Sáng tạo nghệ thuật xuất phát từ niềm vui thuần túy của quá trình làm — không áp lực kết quả hay đánh giá từ người ngoài." []
+is_a: dong_luc_sang_tao_nghe_thuat
+
+[Term]
+id: dong_luc_ket_noi_cong_dong_sang_tao
+name: Động lực kết nối cộng đồng sáng tạo
+def: "Mong muốn tham gia vào cộng đồng người cùng đam mê, tìm kiếm sự đồng điệu và chia sẻ trải nghiệm sáng tạo với người khác." []
+is_a: dong_luc_sang_tao_nghe_thuat
+
+[Term]
+id: cach_thuc_nghe_thuat_tac_dong
+name: Cách thức nghệ thuật tác động
+def: "Cơ chế mà các tác phẩm hoặc hoạt động nghệ thuật khơi gợi cảm xúc, thay đổi nhận thức hoặc thúc đẩy tư duy.\nGóp phần hình thành nên thế giới quan và tâm lý cá nhân." []
+is_a: arts_persona
+
+[Term]
+id: co_che_khoi_goi_cam_xuc
+name: Cơ chế khơi gợi cảm xúc
+def: "Cách thức cụ thể mà một tác phẩm hoặc trải nghiệm nghệ thuật kích hoạt và dẫn dắt phản ứng cảm xúc của người tiếp nhận.\nVí dụ: giai điệu buồn gợi nỗi nhớ, màu sắc tương phản tạo căng thẳng thị giác, lời thoại chạm đến ký ức cá nhân." []
+is_a: cach_thuc_nghe_thuat_tac_dong
+relationship: correlated_with muc_dich_giai_tri_tinh_than ! tương quan với
+
+[Term]
+id: khoi_goi_cam_xuc_qua_am_thanh
+name: Khơi gợi cảm xúc qua âm thanh
+def: "Các đặc tính âm nhạc hoặc âm thanh kích hoạt phản ứng cảm xúc của người nghe.\nVí dụ: giai điệu buồn gợi nỗi nhớ, nhịp điệu hối hả tạo phấn khích, âm sắc nhạc cụ đặc trưng gợi ký ức." []
+is_a: co_che_khoi_goi_cam_xuc
+relationship: correlated_with dong_luc_sang_tao_nghe_thuat ! tương quan với
+
+[Term]
+id: khoi_goi_cam_xuc_qua_hinh_anh
+name: Khơi gợi cảm xúc qua hình ảnh
+def: "Các đặc tính thị giác của tác phẩm tạo ra phản ứng cảm xúc.\nVí dụ: màu sắc tương phản tạo căng thẳng, bố cục bất cân xứng gây bất an, ánh sáng ấm áp gợi cảm giác an toàn." []
+is_a: co_che_khoi_goi_cam_xuc
+
+[Term]
+id: khoi_goi_cam_xuc_qua_tu_su
+name: Khơi gợi cảm xúc qua tự sự
+def: "Các yếu tố kể chuyện trong tác phẩm tạo ra sự đồng cảm hoặc xúc động.\nVí dụ: tình tiết chạm đến ký ức cá nhân, nhân vật phản chiếu cuộc đời người xem, cái kết bất ngờ làm thay đổi cách hiểu toàn bộ câu chuyện." []
+is_a: co_che_khoi_goi_cam_xuc
+
+[Term]
+id: tac_dong_nhan_thuc_nghe_thuat
+name: Tác động nhận thức nghệ thuật
+def: "Mức độ mà việc tiếp xúc với nghệ thuật thay đổi cách tư duy, mở rộng góc nhìn hoặc thách thức các quan điểm cũ của cá nhân.\nThể hiện qua việc cá nhân đặt câu hỏi mới, nhìn nhận sự vật khác đi hoặc nhận ra các chiều kích mà trước đó chưa chú ý." []
+is_a: cach_thuc_nghe_thuat_tac_dong
+
+[Term]
+id: anh_huong_nghe_thuat_den_the_gioi_quan
+name: Ảnh hưởng nghệ thuật đến thế giới quan
+def: "Mức độ mà các trải nghiệm nghệ thuật tích lũy theo thời gian định hình nên hệ thống giá trị, niềm tin và cách nhìn nhận cuộc sống của một cá nhân.\nVí dụ thực tế: đọc nhiều văn học khiến người ta đồng cảm hơn với người khác, tiếp xúc với nghệ thuật phản kháng hình thành ý thức xã hội." []
+is_a: cach_thuc_nghe_thuat_tac_dong
+relationship: influences the_gioi_quan ! củng cố
+relationship: influences nhan_thuc_ca_nhan_van_hoa ! định hình
+
+[Term]
+id: nghe_thuat_hinh_thanh_dong_cam_xa_hoi
+name: Nghệ thuật hình thành đồng cảm xã hội
+def: "Mức độ mà tiếp xúc với văn học, điện ảnh hay nghệ thuật nhân văn giúp cá nhân đồng cảm và thấu hiểu người khác hơn trong cuộc sống thực." []
+is_a: anh_huong_nghe_thuat_den_the_gioi_quan
+
+[Term]
+id: nghe_thuat_hinh_thanh_y_thuc_xa_hoi
+name: Nghệ thuật hình thành ý thức xã hội
+def: "Mức độ mà tiếp xúc với nghệ thuật phản kháng hoặc chính trị hình thành nên nhận thức và thái độ của cá nhân đối với các vấn đề bất công, quyền lực và cộng đồng." []
+is_a: anh_huong_nghe_thuat_den_the_gioi_quan
+
+[Term]
+id: ban_sac_ca_nhan
+name: Bản sắc cá nhân
+def: "Tập hợp các đặc điểm, niềm tin, giá trị sống và nét tính cách độc nhất định hình nên cái tôi của một người.\nGiúp cá nhân tự nhận thức và phân biệt bản thân trong xã hội." []
+is_a: arts_persona
+relationship: influences nhan_sinh_quan ! định hình
+relationship: influences phong_cach_dich_chuyen ! định hình
+relationship: influences gu_trai_nghiem_van_hoa_am_thuc ! định hình
+relationship: correlated_with muc_do_tu_hao_ban_sac_van_hoa ! tương quan với
+
+[Term]
+id: dac_diem_tinh_cach_noi_bat
+name: Đặc điểm tính cách nổi bật
+def: "Các nét tính cách ổn định, nhất quán và rõ ràng định hình cách cá nhân tư duy, cảm nhận và hành xử.\nVí dụ: hướng ngoại / hướng nội, cầu toàn, sáng tạo, thực dụng, đồng cảm cao." []
+is_a: ban_sac_ca_nhan
+relationship: correlated_with phuong_tien_bieu_dat_nghe_thuat ! tương quan với
+
+[Term]
+id: he_thong_niem_tin_ca_nhan
+name: Hệ thống niềm tin cá nhân
+def: "Tập hợp các xác tín mà một cá nhân xem là đúng đắn về bản thân, con người và thế giới — dù có hay không có bằng chứng kiểm chứng.\nĐóng vai trò là bộ lọc diễn giải mọi sự kiện và định hướng hành vi thường ngày." []
+is_a: ban_sac_ca_nhan
+
+[Term]
+id: niem_tin_ve_ban_than
+name: Niềm tin về bản thân
+def: "Các xác tín cốt lõi mà cá nhân nắm giữ về năng lực, giá trị và vị trí của mình trong thế giới.\nVí dụ: tin rằng mình có thể thay đổi và phát triển, hay tin rằng năng lực là cố định từ khi sinh ra." []
+is_a: he_thong_niem_tin_ca_nhan
+
+[Term]
+id: niem_tin_ve_the_gioi_va_nguoi_khac
+name: Niềm tin về thế giới và người khác
+def: "Quan điểm của cá nhân về bản chất con người và cách vận hành của xã hội.\nVí dụ: tin vào lòng tốt phổ quát và sự hợp tác, hay hoài nghi về động cơ ẩn sau mọi hành vi xã hội." []
+is_a: he_thong_niem_tin_ca_nhan
+
+[Term]
+id: gia_tri_song_ca_nhan
+name: Giá trị sống cá nhân
+def: "Những điều mà cá nhân cho là quan trọng nhất và sẵn sàng ưu tiên, hy sinh hoặc bảo vệ trong cuộc sống.\nVí dụ: tự do cá nhân, gia đình, sự thành đạt, lòng trung thực, sự an toàn hoặc kết nối cộng đồng." []
+is_a: ban_sac_ca_nhan
+relationship: influences loai_hinh_so_thich ! định hình
+
+[Term]
+id: tu_nhan_thuc_ban_than
+name: Tự nhận thức bản thân
+def: "Khả năng cá nhân nhìn nhận, hiểu rõ và mô tả chính xác các điểm mạnh, điểm yếu, cảm xúc và động lực của bản thân.\nLà nền tảng để cá nhân đưa ra quyết định phù hợp với giá trị thực của mình." []
+is_a: ban_sac_ca_nhan
+
+[Term]
+id: nhan_thuc_nang_luc_ban_than
+name: Nhận thức năng lực bản thân
+def: "Khả năng cá nhân xác định chính xác điểm mạnh và điểm yếu của mình trong công việc, học tập và các lĩnh vực cụ thể." []
+is_a: tu_nhan_thuc_ban_than
+
+[Term]
+id: nhan_thuc_cam_xuc_va_dong_luc_noi_tam
+name: Nhận thức cảm xúc và động lực nội tâm
+def: "Khả năng cá nhân nhận biết trạng thái cảm xúc hiện tại và hiểu điều gì thực sự thúc đẩy mình hành động trong các tình huống khác nhau." []
+is_a: tu_nhan_thuc_ban_than
+
+[Term]
+id: su_phan_biet_ban_than_trong_xa_hoi
+name: Sự phân biệt bản thân trong xã hội
+def: "Cách thức cá nhân xác định mình khác biệt hoặc thuộc về một nhóm nhất định trong cộng đồng xã hội.\nThể hiện qua các lựa chọn về phong cách sống, ngôn ngữ, ngoại hình và mối quan hệ xã hội được chủ động chọn lọc." []
+is_a: ban_sac_ca_nhan
+
+[Term]
+id: phan_biet_ban_than_qua_phong_cach_song
+name: Phân biệt bản thân qua phong cách sống
+def: "Cách thức cá nhân thể hiện cái tôi thông qua các lựa chọn sinh hoạt thường ngày — ăn mặc, tiêu dùng, thói quen và nơi lui tới." []
+is_a: su_phan_biet_ban_than_trong_xa_hoi
+
+[Term]
+id: phan_biet_ban_than_qua_ngon_ngu_giao_tiep
+name: Phân biệt bản thân qua ngôn ngữ giao tiếp
+def: "Cách thức cá nhân dùng từ ngữ, giọng điệu và phong cách diễn đạt để tạo dấu ấn riêng và phân biệt bản thân trong mắt người khác." []
+is_a: su_phan_biet_ban_than_trong_xa_hoi
+
+[Term]
+id: phan_biet_ban_than_qua_moi_truong_xa_hoi
+name: Phân biệt bản thân qua môi trường xã hội
+def: "Xu hướng chủ động chọn lọc các nhóm, cộng đồng và mối quan hệ phù hợp với bản sắc của mình, đồng thời tránh xa các môi trường không tương thích." []
+is_a: su_phan_biet_ban_than_trong_xa_hoi
+
+[Term]
+id: travel_persona
+name: travel_persona
+def: "Hình mẫu du lịch định hình các sở thích đặc trưng, xu hướng trải nghiệm và phong cách dịch chuyển khi tham gia các hoạt động hành trình hoặc lữ hành của một cá nhân." []
+
+[Term]
+id: so_thich_dac_trung_du_lich
+name: Sở thích đặc trưng du lịch
+def: "Những thiên hướng, lựa chọn ưu tiên mang tính cá nhân đối với các yếu tố trong chuyến đi.\nBao gồm sở thích về điểm đến, ẩm thực bản địa, loại hình lưu trú hoặc phương tiện di chuyển." []
+is_a: travel_persona
+
+[Term]
+id: so_thich_diem_den
+name: Sở thích điểm đến
+def: "Loại địa điểm hoặc môi trường địa lý mà cá nhân ưu tiên lựa chọn khi lên kế hoạch chuyến đi.\nVí dụ thực tế: thích biển hơn núi, ưa thành phố nhộn nhịp hơn vùng nông thôn yên tĩnh, hoặc đặc biệt quan tâm đến các điểm có giá trị lịch sử văn hóa." []
+is_a: so_thich_dac_trung_du_lich
+
+[Term]
+id: uu_tien_diem_den_thien_nhien
+name: Ưu tiên điểm đến thiên nhiên
+def: "Xu hướng chọn địa điểm gắn với môi trường tự nhiên — biển, núi, rừng, hồ — thay cho đô thị hay khu du lịch nhân tạo." []
+is_a: so_thich_diem_den
+
+[Term]
+id: uu_tien_diem_den_do_thi
+name: Ưu tiên điểm đến đô thị
+def: "Xu hướng chọn thành phố sầm uất với bảo tàng, kiến trúc, ẩm thực đường phố và đời sống văn hóa đa dạng.\nVí dụ thực tế: thích Hà Nội cổ kính, Sài Gòn năng động, Tokyo hiện đại hơn các vùng nông thôn yên tĩnh." []
+is_a: so_thich_diem_den
+
+[Term]
+id: uu_tien_diem_den_lich_su_van_hoa
+name: Ưu tiên điểm đến lịch sử văn hóa
+def: "Xu hướng đặc biệt quan tâm đến các địa điểm có giá trị di sản, lịch sử hoặc bản sắc văn hóa đặc trưng.\nVí dụ thực tế: phố cổ Hội An, thánh địa Mỹ Sơn, các làng nghề truyền thống." []
+is_a: so_thich_diem_den
+
+[Term]
+id: so_thich_loai_hinh_luu_tru
+name: Sở thích loại hình lưu trú
+def: "Tiêu chuẩn và thiên hướng lựa chọn nơi ở khi đi du lịch.\nVí dụ thực tế: ưa khách sạn tiện nghi, thích homestay gần gũi địa phương, chọn hostel để tiết kiệm và gặp gỡ khách du lịch khác." []
+is_a: so_thich_dac_trung_du_lich
+
+[Term]
+id: luu_tru_khach_san_tien_nghi
+name: Lưu trú khách sạn tiện nghi
+def: "Thiên hướng chọn khách sạn với tiện ích đầy đủ, dịch vụ chuyên nghiệp và mức độ thoải mái cao khi đi du lịch." []
+is_a: so_thich_loai_hinh_luu_tru
+
+[Term]
+id: luu_tru_homestay_gan_gui_dia_phuong
+name: Lưu trú homestay gần gũi địa phương
+def: "Thiên hướng chọn ở nhà dân hoặc homestay để có trải nghiệm gần gũi với lối sống và con người bản địa hơn là môi trường khách sạn tách biệt." []
+is_a: so_thich_loai_hinh_luu_tru
+
+[Term]
+id: luu_tru_hostel_tiet_kiem_giao_luu
+name: Lưu trú hostel tiết kiệm và giao lưu
+def: "Thiên hướng chọn hostel để tiết kiệm chi phí và có cơ hội gặp gỡ, giao lưu với những khách du lịch khác đến từ nhiều nơi." []
+is_a: so_thich_loai_hinh_luu_tru
+
+[Term]
+id: so_thich_am_thuc_dia_phuong
+name: Sở thích ẩm thực địa phương
+def: "Mức độ hứng thú và xu hướng khám phá, thử nghiệm các món ăn đặc sản vùng miền tại điểm đến.\nVí dụ thực tế: chủ động tìm quán vỉa hè bình dân, thử đặc sản địa phương thay vì ăn đồ quen thuộc." []
+is_a: so_thich_dac_trung_du_lich
+relationship: influences gu_trai_nghiem_van_hoa_am_thuc ! ảnh hưởng đến
+relationship: influences so_thich_diem_den ! định hình
+
+[Term]
+id: so_thich_phuong_tien_di_chuyen
+name: Sở thích phương tiện di chuyển
+def: "Loại phương tiện mà cá nhân ưu tiên sử dụng để di chuyển giữa các điểm đến trong chuyến đi.\nVí dụ thực tế: thuê xe máy khám phá tự do, đi tàu hỏa để ngắm cảnh, chọn máy bay để tiết kiệm thời gian." []
+is_a: so_thich_dac_trung_du_lich
+
+[Term]
+id: phuong_tien_linh_hoat_kham_pha
+name: Phương tiện linh hoạt khám phá
+def: "Ưu tiên phương tiện cho phép tự do thay đổi lịch trình và khám phá ngoài kế hoạch.\nVí dụ thực tế: thuê xe máy, thuê xe đạp, đi bộ." []
+is_a: so_thich_phuong_tien_di_chuyen
+
+[Term]
+id: phuong_tien_ngam_canh_trai_nghiem
+name: Phương tiện ngắm cảnh trải nghiệm
+def: "Ưu tiên phương tiện mang lại trải nghiệm di chuyển thú vị và cảnh quan đẹp dọc đường, không chỉ đơn thuần để đến đích.\nVí dụ thực tế: tàu hỏa ngắm cảnh, tàu thuyền ven sông." []
+is_a: so_thich_phuong_tien_di_chuyen
+
+[Term]
+id: phuong_tien_tiet_kiem_thoi_gian
+name: Phương tiện tiết kiệm thời gian
+def: "Ưu tiên tốc độ và hiệu quả trong di chuyển để dành tối đa thời gian cho điểm đến.\nVí dụ thực tế: máy bay, tàu cao tốc." []
+is_a: so_thich_phuong_tien_di_chuyen
+
+[Term]
+id: xu_huong_trai_nghiem_du_lich
+name: Xu hướng trải nghiệm du lịch
+def: "Cách thức một cá nhân tương tác, cảm nhận và khám phá các giá trị tại điểm đến.\nVí dụ như xu hướng du lịch nghỉ dưỡng, du lịch khám phá mạo hiểm, hay du lịch tìm hiểu văn hóa - lịch sử." []
+is_a: travel_persona
+
+[Term]
+id: kieu_trai_nghiem_uu_tien
+name: Kiểu trải nghiệm ưu tiên
+def: "Loại hoạt động hoặc hình thức khám phá mà cá nhân chủ động tìm kiếm tại điểm đến.\nVí dụ thực tế: du lịch nghỉ dưỡng (nằm biển thư giãn), du lịch khám phá (leo núi, lặn biển), du lịch văn hóa (thăm bảo tàng, làng nghề) hay du lịch ẩm thực (tour chợ, lớp nấu ăn)." []
+is_a: xu_huong_trai_nghiem_du_lich
+relationship: influences tieu_chuan_lua_chon_quan_an ! định hình
+
+[Term]
+id: kieu_trai_nghiem_nghi_duong
+name: Kiểu trải nghiệm nghỉ dưỡng
+def: "Ưu tiên nghỉ ngơi và tái tạo năng lượng — nằm biển, spa, ngủ đủ giấc — thay vì lịch trình tham quan dày đặc." []
+is_a: kieu_trai_nghiem_uu_tien
+
+[Term]
+id: kieu_trai_nghiem_kham_pha_mao_hiem
+name: Kiểu trải nghiệm khám phá mạo hiểm
+def: "Ưu tiên các hoạt động có yếu tố thách thức thể chất hoặc tinh thần — leo núi, lặn biển, đi rừng, vượt thác." []
+is_a: kieu_trai_nghiem_uu_tien
+
+[Term]
+id: kieu_trai_nghiem_van_hoa_lich_su
+name: Kiểu trải nghiệm văn hóa lịch sử
+def: "Ưu tiên tìm hiểu di sản và bản sắc văn hóa tại điểm đến — thăm bảo tàng, làng nghề, di tích và sinh hoạt cộng đồng bản địa." []
+is_a: kieu_trai_nghiem_uu_tien
+
+[Term]
+id: kieu_trai_nghiem_am_thuc
+name: Kiểu trải nghiệm ẩm thực
+def: "Ưu tiên khám phá văn hóa ẩm thực địa phương là hoạt động trọng tâm của chuyến đi.\nVí dụ thực tế: tour chợ, lớp nấu ăn, tìm quán đặc sản ít người biết." []
+is_a: kieu_trai_nghiem_uu_tien
+
+[Term]
+id: muc_do_kham_pha_tu_phat
+name: Mức độ khám phá tự phát
+def: "Xu hướng của cá nhân trong việc rời bỏ lịch trình cố định để tự do khám phá hoặc thử nghiệm những điều ngoài kế hoạch trong chuyến đi.\nPhản ánh sự cân bằng giữa thích có kế hoạch chi tiết hay thích linh hoạt theo cảm hứng." []
+is_a: xu_huong_trai_nghiem_du_lich
+relationship: influences muc_do_chap_nhan_vi_la ! thúc đẩy
+relationship: influences dinh_huong_phat_trien_ban_than ! mở rộng
+
+[Term]
+id: kham_pha_co_dinh_huong_ke_hoach
+name: Khám phá có định hướng kế hoạch
+def: "Xu hướng bám sát lịch trình đã chuẩn bị, ít rời bỏ kế hoạch dù gặp cơ hội ngẫu nhiên — cần sự chắc chắn để cảm thấy an tâm." []
+is_a: muc_do_kham_pha_tu_phat
+
+[Term]
+id: kham_pha_tu_phat_linh_hoat
+name: Khám phá tự phát linh hoạt
+def: "Xu hướng sẵn sàng rời bỏ lịch trình để thử những điều ngoài kế hoạch khi gặp gợi ý hay hoặc cảm hứng nhất thời trong chuyến đi." []
+is_a: muc_do_kham_pha_tu_phat
+
+[Term]
+id: muc_do_hoa_nhap_van_hoa_ban_dia
+name: Mức độ hòa nhập văn hóa bản địa
+def: "Mức độ mà một cá nhân chủ động tìm hiểu, tương tác và trải nghiệm lối sống của người dân địa phương tại điểm đến.\nVí dụ thực tế: học vài câu tiếng địa phương, ở homestay nhà dân, tham gia sinh hoạt cộng đồng thay vì chỉ tham quan bề mặt." []
+is_a: xu_huong_trai_nghiem_du_lich
+relationship: influences su_coi_mo_voi_am_thuc_quoc_te ! thúc đẩy
+relationship: influences the_gioi_quan ! làm phong phú thêm
+relationship: correlated_with ky_nang_giao_tiep_va_ung_xu ! tương quan với
+
+[Term]
+id: hoc_ngon_ngu_phong_tuc_ban_dia
+name: Học ngôn ngữ phong tục bản địa
+def: "Chủ động tìm hiểu tiếng địa phương, nghi lễ và quy tắc ứng xử trước và trong chuyến đi để giao tiếp và hòa nhập tốt hơn." []
+is_a: muc_do_hoa_nhap_van_hoa_ban_dia
+
+[Term]
+id: luu_tru_va_sinh_hoat_cung_nguoi_ban_dia
+name: Lưu trú và sinh hoạt cùng người bản địa
+def: "Chủ động chọn ở nhà dân và tham gia sinh hoạt thường ngày của người địa phương thay vì tách biệt trong môi trường du lịch." []
+is_a: muc_do_hoa_nhap_van_hoa_ban_dia
+
+[Term]
+id: tham_gia_hoat_dong_cong_dong_ban_dia
+name: Tham gia hoạt động cộng đồng bản địa
+def: "Dự lễ hội làng, tham gia sự kiện địa phương hoặc các sinh hoạt tập thể của người dân bản địa để trải nghiệm văn hóa từ bên trong." []
+is_a: muc_do_hoa_nhap_van_hoa_ban_dia
+
+[Term]
+id: phong_cach_dich_chuyen
+name: Phong cách dịch chuyển
+def: "Nhịp điệu, thói quen và phương thức tổ chức hành trình của một người khi đi lữ hành.\nThể hiện qua việc thích đi tự túc hay theo tour, đi một mình hay theo nhóm, lịch trình dày đặc hay thong thả." []
+is_a: travel_persona
+
+[Term]
+id: hinh_thuc_to_chuc_hanh_trinh
+name: Hình thức tổ chức hành trình
+def: "Cách thức cá nhân lập kế hoạch và thực hiện chuyến đi: tự túc tự đặt từng hạng mục, đặt tour trọn gói, hay kết hợp linh hoạt cả hai.\nPhản ánh mức độ kiểm soát và sự chủ động trong quá trình đi lại." []
+is_a: phong_cach_dich_chuyen
+
+[Term]
+id: tu_tuc_tu_dat_tung_hang_muc
+name: Tự túc tự đặt từng hạng mục
+def: "Tự lên kế hoạch và đặt riêng lẻ vé, phòng, phương tiện mà không qua công ty lữ hành — phản ánh nhu cầu kiểm soát và chủ động cao." []
+is_a: hinh_thuc_to_chuc_hanh_trinh
+
+[Term]
+id: dat_tour_tron_goi
+name: Đặt tour trọn gói
+def: "Sử dụng dịch vụ lữ hành tổ chức toàn bộ hành trình theo chương trình định sẵn — phù hợp người muốn tiết kiệm công sức lên kế hoạch." []
+is_a: hinh_thuc_to_chuc_hanh_trinh
+
+[Term]
+id: ket_hop_linh_hoat_tu_tuc_va_tour
+name: Kết hợp linh hoạt tự túc và tour
+def: "Kết hợp tự đặt một số hạng mục và dùng tour cho phần còn lại — cân bằng giữa sự chủ động và tiện lợi." []
+is_a: hinh_thuc_to_chuc_hanh_trinh
+
+[Term]
+id: quy_mo_nhom_du_lich
+name: Quy mô nhóm du lịch
+def: "Số lượng người cùng tham gia chuyến đi và mối quan hệ giữa các thành viên.\nVí dụ thực tế: đi một mình để tự do tuyệt đối, đi cặp đôi, đi cùng gia đình nhỏ, hay đi theo nhóm bạn đông người." []
+is_a: phong_cach_dich_chuyen
+
+[Term]
+id: du_lich_mot_minh
+name: Du lịch một mình
+def: "Đi solo, tự do hoàn toàn về lịch trình và quyết định, không phụ thuộc vào sở thích của người khác.\nThường gắn với nhu cầu khám phá bản thân hoặc tận hưởng sự tự do tuyệt đối." []
+is_a: quy_mo_nhom_du_lich
+
+[Term]
+id: du_lich_cap_doi
+name: Du lịch cặp đôi
+def: "Đi cùng người thân thiết — bạn đời, vợ/chồng — lịch trình ưu tiên trải nghiệm chung và kết nối tình cảm." []
+is_a: quy_mo_nhom_du_lich
+
+[Term]
+id: du_lich_gia_dinh_nho
+name: Du lịch gia đình nhỏ
+def: "Đi cùng gia đình nhỏ 3–5 người, lịch trình cần cân bằng nhu cầu của các thành viên khác nhau, thường ưu tiên an toàn và tiện lợi." []
+is_a: quy_mo_nhom_du_lich
+
+[Term]
+id: du_lich_nhom_ban_be
+name: Du lịch nhóm bạn bè
+def: "Đi cùng nhóm bạn từ 4 người trở lên, lịch trình sôi động, ưu tiên hoạt động tập thể và trải nghiệm chung, đòi hỏi sự phối hợp trong quyết định." []
+is_a: quy_mo_nhom_du_lich
+
+[Term]
+id: nhip_do_hanh_trinh
+name: Nhịp độ hành trình
+def: "Tốc độ và mật độ hoạt động trong một chuyến đi.\nPhân biệt giữa người thích lịch trình dày đặc (tham quan nhiều điểm, tối ưu thời gian) và người ưa nhịp thong thả (ở lâu một nơi, thấm sâu hơn)." []
+is_a: phong_cach_dich_chuyen
+
+[Term]
+id: nhip_do_day_dac_nhieu_diem
+name: Nhịp độ dày đặc nhiều điểm
+def: "Lịch trình tham quan tối đa số địa điểm trong thời gian ngắn nhất — di chuyển liên tục, tối ưu thời gian để không bỏ lỡ điểm nào." []
+is_a: nhip_do_hanh_trinh
+
+[Term]
+id: nhip_do_tham_sau_tung_diem
+name: Nhịp độ thấm sâu từng điểm
+def: "Ở lâu tại ít điểm đến để trải nghiệm sâu thay vì đi nhiều nơi qua loa — dành nhiều ngày tại một nơi, khám phá từng góc nhỏ và tích lũy cảm nhận theo thời gian." []
+is_a: nhip_do_hanh_trinh
+
+[Term]
+id: muc_do_linh_hoat_ke_hoach
+name: Mức độ linh hoạt kế hoạch
+def: "Khả năng và xu hướng của cá nhân trong việc điều chỉnh lịch trình khi gặp thay đổi hoặc cơ hội mới trong chuyến đi.\nTừ người cần kế hoạch cứng nhắc chi tiết đến người sẵn sàng thay đổi hoàn toàn theo cảm hứng." []
+is_a: phong_cach_dich_chuyen
+
+[Term]
+id: ke_hoach_cung_nhac
+name: Kế hoạch cứng nhắc
+def: "Xu hướng giữ nguyên lịch trình đã định dù gặp thay đổi ngoài ý muốn — cần sự chắc chắn và trật tự để cảm thấy an tâm trong chuyến đi." []
+is_a: muc_do_linh_hoat_ke_hoach
+
+[Term]
+id: ke_hoach_linh_hoat
+name: Kế hoạch linh hoạt
+def: "Sẵn sàng điều chỉnh lịch trình khi gặp thời tiết xấu, cơ hội mới hay gợi ý hay từ người địa phương — xem thay đổi là phần tự nhiên của chuyến đi." []
+is_a: muc_do_linh_hoat_ke_hoach
+
+[Term]
+id: hoat_dong_hanh_trinh_hoac_lu_hanh
+name: Hoạt động hành trình hoặc lữ hành
+def: "Toàn bộ các chuỗi hành động thực tế được thực hiện trong quá trình di chuyển và lưu trú ngoài nơi ở thường xuyên.\nNhằm mục đích giải trí, nghỉ ngơi, khám phá hoặc công tác." []
+is_a: travel_persona
+
+[Term]
+id: hoat_dong_tham_quan
+name: Hoạt động tham quan
+def: "Các hành động cụ thể nhằm khám phá và tiếp nhận giá trị tại điểm đến.\nVí dụ thực tế: đi bộ khám phá phố cổ, thăm bảo tàng, tham quan di tích lịch sử, chụp ảnh cảnh quan." []
+is_a: hoat_dong_hanh_trinh_hoac_lu_hanh
+
+[Term]
+id: hoat_dong_giai_tri_khi_du_lich
+name: Hoạt động giải trí khi du lịch
+def: "Các việc làm mang tính thư giãn và vui chơi được thực hiện trong thời gian đi du lịch.\nVí dụ thực tế: tắm biển, leo núi, tham gia lễ hội địa phương, mua sắm tại chợ truyền thống." []
+is_a: hoat_dong_hanh_trinh_hoac_lu_hanh
+relationship: correlated_with hanh_vi_chia_se_am_thuc ! tương quan với
+
+[Term]
+id: hoat_dong_luu_tru_va_di_chuyen
+name: Hoạt động lưu trú và di chuyển
+def: "Các hành động liên quan đến việc sắp xếp nơi ở và phương tiện trong suốt hành trình.\nBao gồm đặt phòng, check-in, di chuyển giữa các địa điểm và quản lý hành lý." []
+is_a: hoat_dong_hanh_trinh_hoac_lu_hanh
+
+[Term]
+id: quan_ly_dat_phong_va_hanh_ly
+name: Quản lý đặt phòng và hành lý
+def: "Các tác vụ hành chính trong chuyến đi liên quan đến đặt và check-in nơi lưu trú, bảo quản và vận chuyển hành lý giữa các điểm dừng chân." []
+is_a: hoat_dong_luu_tru_va_di_chuyen
+
+[Term]
+id: di_chuyen_giua_cac_dia_diem
+name: Di chuyển giữa các địa điểm
+def: "Cách thức và phương tiện cá nhân sử dụng để di chuyển giữa các điểm trong cùng vùng hoặc thành phố — taxi, xe buýt, thuê xe, đi bộ." []
+is_a: hoat_dong_luu_tru_va_di_chuyen
+
+[Term]
+id: muc_tieu_chuyen_di
+name: Mục tiêu chuyến đi
+def: "Lý do và kỳ vọng cụ thể thúc đẩy cá nhân thực hiện một chuyến đi nhất định.\nVí dụ thực tế: nghỉ ngơi tái tạo năng lượng, công tác kết hợp du lịch, kỷ niệm đặc biệt, hay khám phá địa danh trong danh sách ước mơ." []
+is_a: hoat_dong_hanh_trinh_hoac_lu_hanh
+
+[Term]
+id: muc_tieu_nghi_ngoi_tai_tao
+name: Mục tiêu nghỉ ngơi tái tạo
+def: "Mục đích chính là phục hồi thể lực và tinh thần sau thời gian căng thẳng — không đặt lịch trình áp lực, ưu tiên nghỉ ngơi hoàn toàn." []
+is_a: muc_tieu_chuyen_di
+
+[Term]
+id: muc_tieu_cong_tac_ket_hop_du_lich
+name: Mục tiêu công tác kết hợp du lịch
+def: "Chuyến đi xuất phát từ lý do công việc nhưng tranh thủ thêm thời gian khám phá điểm đến ngoài giờ làm." []
+is_a: muc_tieu_chuyen_di
+
+[Term]
+id: muc_tieu_ky_niem_dac_biet
+name: Mục tiêu kỷ niệm đặc biệt
+def: "Chuyến đi gắn với một dịp có ý nghĩa cá nhân — sinh nhật, kỷ niệm ngày cưới, tốt nghiệp hoặc cột mốc quan trọng trong cuộc sống." []
+is_a: muc_tieu_chuyen_di
+
+[Term]
+id: muc_tieu_kham_pha_dia_danh_uoc_mo
+name: Mục tiêu khám phá địa danh ước mơ
+def: "Chuyến đi thực hiện mong muốn đến một nơi đã nằm trong danh sách ước mơ từ lâu — khám phá điều mới, tích lũy trải nghiệm chưa từng có." []
+is_a: muc_tieu_chuyen_di
+
+[Term]
+id: culinary_persona
+name: culinary_persona
+def: "Hình mẫu ẩm thực mô tả cụ thể về khẩu vị, sở thích ăn uống cá nhân, năng lực nấu nướng cùng xu hướng và gu trải nghiệm văn hóa ẩm thực." []
+
+[Term]
+id: khau_vi_ca_nhan
+name: Khẩu vị cá nhân
+def: "Sự ưu tiên hoặc nhạy cảm đặc trưng của các giác quan đối với các tầng hương vị trong món ăn.\nThể hiện qua thói quen thích ăn mặn, ngọt, chua, cay, nhạt hoặc xu hướng lựa chọn kết cấu thực phẩm." []
+is_a: culinary_persona
+
+[Term]
+id: do_nhay_cam_vi_giac
+name: Độ nhạy cảm vị giác
+def: "Mức độ mà hệ thống cảm giác của một cá nhân phát hiện và phản ứng với các kích thích vị giác.\nNgười nhạy cảm cao dễ nhận ra sự khác biệt tinh tế giữa các vị, trong khi người ít nhạy cảm hơn chấp nhận đa dạng hương vị mà không có phản ứng mạnh." []
+is_a: khau_vi_ca_nhan
+
+[Term]
+id: vi_giac_nhay_cam_cao
+name: Vị giác nhạy cảm cao
+def: "Hệ thống cảm giác phát hiện và phản ứng mạnh với các kích thích vị giác tinh tế.\nCá nhân dễ nhận ra sự khác biệt nhỏ giữa các vị, dễ bị ảnh hưởng bởi hương vị lạ hoặc quá đậm." []
+is_a: do_nhay_cam_vi_giac
+
+[Term]
+id: vi_uu_tien_ca_nhan
+name: Vị ưu tiên cá nhân
+def: "Các tầng hương vị cụ thể mà một cá nhân chủ động tìm kiếm và cảm thấy thỏa mãn khi thưởng thức.\nVí dụ thực tế: thích vị ngọt đậm, ưa cay nồng, chuộng vị thanh nhạt hoặc đặc biệt thích vị umami đậm đà." []
+is_a: khau_vi_ca_nhan
+
+[Term]
+id: uu_tien_vi_ngot
+name: Ưu tiên vị ngọt
+def: "Thiên hướng tìm kiếm và cảm thấy thỏa mãn với hương vị ngọt trong bữa ăn — từ ngọt thanh tự nhiên đến ngọt đậm từ đường hoặc nước cốt." []
+is_a: vi_uu_tien_ca_nhan
+
+[Term]
+id: uu_tien_vi_cay
+name: Ưu tiên vị cay
+def: "Thiên hướng tìm kiếm và cảm thấy thỏa mãn với độ cay nồng trong món ăn — từ cay nhẹ đến cay mạnh kích thích." []
+is_a: vi_uu_tien_ca_nhan
+
+[Term]
+id: uu_tien_vi_thanh_nhat
+name: Ưu tiên vị thanh nhạt
+def: "Thiên hướng ưa hương vị nhẹ nhàng, không đậm đà — thích cảm nhận vị tự nhiên của nguyên liệu hơn là gia vị nổi bật." []
+is_a: vi_uu_tien_ca_nhan
+
+[Term]
+id: uu_tien_vi_umami_dam_da
+name: Ưu tiên vị umami đậm đà
+def: "Thiên hướng tìm kiếm vị savory sâu, béo ngậy hoặc đậm đà từ nước hầm xương, mắm, tương, pho mát hoặc nấm." []
+is_a: vi_uu_tien_ca_nhan
+
+[Term]
+id: ket_cau_thuc_pham_ua_thich
+name: Kết cấu thực phẩm ưa thích
+def: "Thiên hướng của cá nhân đối với cấu trúc vật lý của thực phẩm khi ăn.\nVí dụ thực tế: thích đồ giòn rau ráu, ưa thức ăn mềm dễ nhai, chuộng kết cấu dai sần hoặc không thích đồ nhão bột." []
+is_a: khau_vi_ca_nhan
+
+[Term]
+id: muc_do_chap_nhan_vi_la
+name: Mức độ chấp nhận vị lạ
+def: "Sự sẵn sàng của cá nhân trong việc thử nghiệm và chấp nhận các hương vị xa lạ, khác biệt so với thói quen ăn uống thông thường.\nPhân biệt giữa người ăn uống bảo thủ (chỉ ăn món quen) và người cởi mở (háo hức thử món mới)." []
+is_a: khau_vi_ca_nhan
+
+[Term]
+id: an_uong_bao_thu_mon_quen
+name: Ăn uống bảo thủ món quen
+def: "Xu hướng chỉ ăn các món đã quen thuộc, ít sẵn sàng thử hương vị xa lạ hoặc khác biệt so với thói quen hàng ngày." []
+is_a: muc_do_chap_nhan_vi_la
+
+[Term]
+id: an_uong_coi_mo_thu_vi_moi
+name: Ăn uống cởi mở thử vị mới
+def: "Xu hướng háo hức khám phá hương vị chưa từng thử — sẵn sàng ăn món lạ, đặc sản địa phương hoặc ẩm thực nước ngoài xa lạ." []
+is_a: muc_do_chap_nhan_vi_la
+
+[Term]
+id: so_thich_an_uong_ca_nhan
+name: Sở thích ăn uống cá nhân
+def: "Thiên hướng lựa chọn các loại nguyên liệu, món ăn hoặc chế độ dinh dưỡng cụ thể mang lại sự thỏa mãn cho cá nhân.\nBao gồm cả việc ưu tiên các nhóm thực phẩm nhất định hoặc các thói quen kiêng khem." []
+is_a: culinary_persona
+
+[Term]
+id: nhom_thuc_pham_uu_tien
+name: Nhóm thực phẩm ưu tiên
+def: "Các loại nguyên liệu hoặc nhóm thực phẩm mà cá nhân chủ động lựa chọn tiêu thụ thường xuyên.\nVí dụ thực tế: ưu tiên rau xanh và cá, thường chọn thịt đỏ, hoặc đặc biệt thích các chế phẩm từ sữa." []
+is_a: so_thich_an_uong_ca_nhan
+
+[Term]
+id: mon_an_yeu_thich
+name: Món ăn yêu thích
+def: "Các món ăn cụ thể mang lại sự thỏa mãn cao nhất cho cá nhân và được chủ động tìm kiếm hoặc nấu thường xuyên.\nVí dụ thực tế từ dữ liệu: hủ tiếu, bánh mì, cơm tấm, phở, bánh cuốn." []
+is_a: so_thich_an_uong_ca_nhan
+
+[Term]
+id: che_do_an_uong_ca_nhan
+name: Chế độ ăn uống cá nhân
+def: "Tổng thể các nguyên tắc, quy tắc hoặc thói quen định hướng cách cá nhân lựa chọn và tiêu thụ thực phẩm hàng ngày.\nBao gồm cả việc kiêng khem (kiêng đường, ăn chay), ưu tiên dinh dưỡng hoặc ăn theo văn hóa truyền thống." []
+is_a: so_thich_an_uong_ca_nhan
+relationship: correlated_with che_do_giu_gin_voc_dang ! tương quan với
+relationship: correlated_with phong_tuc_tap_quan_gia_dinh ! tương quan với
+
+[Term]
+id: che_do_kieng_thuc_pham
+name: Chế độ kiêng thực phẩm
+def: "Tập hợp quy tắc loại trừ hoặc hạn chế các nhóm thực phẩm nhất định khỏi bữa ăn.\nVí dụ thực tế: kiêng đường, ăn chay hoàn toàn, không ăn gluten, hạn chế dầu mỡ." []
+is_a: che_do_an_uong_ca_nhan
+
+[Term]
+id: che_do_dinh_duong_co_chu_dich
+name: Chế độ dinh dưỡng có chủ đích
+def: "Cách ăn uống được thiết kế có chủ đích nhằm đạt mục tiêu sức khỏe cụ thể — tăng cơ, giảm cân, tăng sức đề kháng hoặc cân bằng dinh dưỡng." []
+is_a: che_do_an_uong_ca_nhan
+
+[Term]
+id: che_do_an_theo_van_hoa_truyen_thong
+name: Chế độ ăn theo văn hóa truyền thống
+def: "Cách ăn uống tuân theo thói quen và nguyên tắc ẩm thực được truyền lại từ gia đình hoặc cộng đồng văn hóa gốc.\nVí dụ thực tế: ăn cơm 3 bữa theo nếp gia đình, giữ các món ăn truyền thống ngày lễ." []
+is_a: che_do_an_uong_ca_nhan
+
+[Term]
+id: tan_suat_va_gio_giac_an_uong
+name: Tần suất và giờ giấc ăn uống
+def: "Số bữa ăn trong ngày và thời điểm cố định mà cá nhân duy trì thói quen ăn uống.\nVí dụ thực tế: ăn 3 bữa đúng giờ, bỏ bữa sáng, ăn khuya thường xuyên hoặc ăn vặt rải rác cả ngày." []
+is_a: so_thich_an_uong_ca_nhan
+
+[Term]
+id: an_dung_gio_ba_bua
+name: Ăn đúng giờ ba bữa
+def: "Duy trì thói quen ăn sáng, trưa, tối đều đặn tại các khung giờ cố định — phản ánh lối sống có nề nếp và ưu tiên sức khỏe tiêu hóa." []
+is_a: tan_suat_va_gio_giac_an_uong
+
+[Term]
+id: bo_bua_sang_thuong_xuyen
+name: Bỏ bữa sáng thường xuyên
+def: "Thói quen không ăn sáng hoặc chỉ ăn rất ít vào buổi sáng — do bận rộn, không có thói quen, hoặc chủ động nhịn để kiểm soát calo." []
+is_a: tan_suat_va_gio_giac_an_uong
+
+[Term]
+id: an_khuya_thuong_xuyen
+name: Ăn khuya thường xuyên
+def: "Thói quen ăn hoặc ăn vặt sau 9 giờ tối — gắn với lịch sinh hoạt muộn, thức khuya làm việc hoặc thói quen giải trí ban đêm." []
+is_a: tan_suat_va_gio_giac_an_uong
+
+[Term]
+id: an_vat_rai_rac_ca_ngay
+name: Ăn vặt rải rác cả ngày
+def: "Thói quen ăn nhiều lần nhỏ trong ngày thay vì tập trung vào 3 bữa chính — thường gắn với công việc bận rộn hoặc sở thích ăn vặt liên tục." []
+is_a: tan_suat_va_gio_giac_an_uong
+
+[Term]
+id: nang_luc_nau_nuong
+name: Năng lực nấu nướng
+def: "Tập hợp kiến thức, kỹ năng thực hành và mức độ thuần thục của một cá nhân trong việc chế biến thực phẩm.\nĐi từ mức độ cơ bản như chuẩn bị bữa ăn hàng ngày đến mức độ chuyên sâu như am hiểu kỹ thuật nấu phức tạp." []
+is_a: culinary_persona
+relationship: influences loai_hinh_so_thich ! định hình
+relationship: correlated_with ky_nang_thu_cong_va_nghe_truyen_thong ! tương quan với
+
+[Term]
+id: trinh_do_ky_thuat_nau_an
+name: Trình độ kỹ thuật nấu ăn
+def: "Mức độ thành thạo của cá nhân trong việc thực hiện các kỹ thuật chế biến thực phẩm.\nTừ mức cơ bản (luộc, chiên đơn giản) đến trung cấp (kho, hầm, làm bánh) và nâng cao (kỹ thuật Âu, phân tử ẩm thực, tạo hình tinh xảo)." []
+is_a: nang_luc_nau_nuong
+
+[Term]
+id: ky_thuat_nau_co_ban
+name: Kỹ thuật nấu cơ bản
+def: "Mức thành thạo các thao tác chế biến đơn giản nhất — luộc, chiên, xào, kho đơn giản — đủ để chuẩn bị bữa ăn hàng ngày." []
+is_a: trinh_do_ky_thuat_nau_an
+
+[Term]
+id: ky_thuat_nau_trung_cap
+name: Kỹ thuật nấu trung cấp
+def: "Mức thành thạo các kỹ thuật chế biến phức tạp hơn — hầm, kho lâu, làm bánh, phối hương liệu — tạo ra món ăn có chiều sâu hương vị." []
+is_a: trinh_do_ky_thuat_nau_an
+
+[Term]
+id: ky_thuat_nau_nang_cao
+name: Kỹ thuật nấu nâng cao
+def: "Mức thành thạo các kỹ thuật chuyên sâu như ẩm thực Âu, phân tử ẩm thực, tạo hình tinh xảo hoặc chế biến nguyên liệu đặc biệt đòi hỏi đào tạo bài bản." []
+is_a: trinh_do_ky_thuat_nau_an
+
+[Term]
+id: kho_tang_cong_thuc_va_mon_an_biet_nau
+name: Kho tàng công thức và món ăn biết nấu
+def: "Tập hợp các công thức và món ăn cụ thể mà cá nhân đã nắm vững và có thể thực hiện một cách tự tin.\nVí dụ thực tế từ dữ liệu: biết làm bánh cuốn, nấu phở chuẩn vị Hà Nội, nấu hủ tiếu, làm bánh mì." []
+is_a: nang_luc_nau_nuong
+
+[Term]
+id: nguon_hoc_nau_an
+name: Nguồn học nấu ăn
+def: "Cách thức mà cá nhân tiếp thu kiến thức và kỹ năng nấu ăn.\nVí dụ thực tế: học từ bà hoặc mẹ truyền lại, tự học qua video YouTube, tham gia lớp học nấu ăn chính thức, hay thử nghiệm sáng tạo theo bản năng." []
+is_a: nang_luc_nau_nuong
+
+[Term]
+id: hoc_nau_tu_gia_dinh_truyen_lai
+name: Học nấu từ gia đình truyền lại
+def: "Tiếp thu kỹ năng và công thức nấu ăn qua việc quan sát và thực hành cùng người thân trong gia đình — bà, mẹ hoặc các thế hệ trước." []
+is_a: nguon_hoc_nau_an
+
+[Term]
+id: hoc_nau_tu_video_truc_tuyen
+name: Học nấu từ video trực tuyến
+def: "Tự học nấu ăn qua nội dung video trên YouTube, TikTok hoặc các nền tảng ẩm thực trực tuyến mà không cần hướng dẫn trực tiếp." []
+is_a: nguon_hoc_nau_an
+
+[Term]
+id: hoc_nau_qua_lop_hoc_chinh_thuc
+name: Học nấu qua lớp học chính thức
+def: "Tiếp thu kỹ năng nấu ăn qua các khóa học có cấu trúc với giảng viên hướng dẫn — từ lớp nấu ăn cộng đồng đến trường đào tạo đầu bếp chuyên nghiệp." []
+is_a: nguon_hoc_nau_an
+
+[Term]
+id: hoc_nau_bang_thu_nghiem_ban_nang
+name: Học nấu bằng thử nghiệm bản năng
+def: "Tự khám phá và sáng tạo công thức thông qua thử nghiệm trực tiếp — không theo công thức cố định, phụ thuộc vào cảm nhận và phán đoán cá nhân." []
+is_a: nguon_hoc_nau_an
+
+[Term]
+id: thiet_bi_va_dung_cu_nau_an_su_dung
+name: Thiết bị và dụng cụ nấu ăn sử dụng
+def: "Các công cụ và thiết bị bếp núc mà cá nhân quen dùng và có khả năng vận hành thành thục.\nVí dụ thực tế từ dữ liệu: nồi đất truyền thống, bếp gas thông thường, hoặc thiết bị hiện đại như lò nướng, nồi áp suất điện." []
+is_a: nang_luc_nau_nuong
+
+[Term]
+id: dung_cu_bep_truyen_thong
+name: Dụng cụ bếp truyền thống
+def: "Các công cụ và thiết bị nấu ăn thủ công hoặc cổ điển — nồi đất, bếp củi, bếp gas thông thường, chảo gang, cối đá." []
+is_a: thiet_bi_va_dung_cu_nau_an_su_dung
+
+[Term]
+id: thiet_bi_bep_hien_dai
+name: Thiết bị bếp hiện đại
+def: "Các thiết bị nấu ăn điện tử và công nghệ cao — lò nướng, nồi áp suất điện, máy xay sinh tố, lò vi sóng, bếp từ." []
+is_a: thiet_bi_va_dung_cu_nau_an_su_dung
+
+[Term]
+id: gu_trai_nghiem_van_hoa_am_thuc
+name: Gu trải nghiệm văn hóa ẩm thực
+def: "Phong cách và tiêu chuẩn mang tính thẩm mỹ của một cá nhân khi thưởng thức và khám phá các giá trị văn hóa gắn liền với món ăn.\nThể hiện qua cách lựa chọn không gian quán ăn, sự hứng thú với ẩm thực truyền thống bản địa hoặc ẩm thực fine-dining tinh tế." []
+is_a: culinary_persona
+relationship: influences the_gioi_quan ! làm phong phú thêm
+relationship: influences kieu_trai_nghiem_uu_tien ! định hình
+
+[Term]
+id: tieu_chuan_lua_chon_quan_an
+name: Tiêu chuẩn lựa chọn quán ăn
+def: "Các yếu tố mà cá nhân cân nhắc khi quyết định chọn một địa điểm ăn uống.\nVí dụ thực tế: ưu tiên quán vỉa hè bình dân đúng chất địa phương, chọn nhà hàng sạch sẽ có điều hòa, hay tìm kiếm trải nghiệm fine-dining cao cấp." []
+is_a: gu_trai_nghiem_van_hoa_am_thuc
+
+[Term]
+id: tieu_chuan_quan_via_he_binh_dan
+name: Tiêu chuẩn quán vỉa hè bình dân
+def: "Ưu tiên chọn quán ăn đường phố, hàng chợ hoặc quán bình dân đúng chất địa phương — coi trọng vị thật hơn không gian sang trọng." []
+is_a: tieu_chuan_lua_chon_quan_an
+
+[Term]
+id: tieu_chuan_sach_se_tien_nghi
+name: Tiêu chuẩn sạch sẽ tiện nghi
+def: "Ưu tiên chọn quán ăn đảm bảo vệ sinh, không gian thoải mái có điều hòa — cân bằng giữa chất lượng món ăn và điều kiện ăn uống dễ chịu." []
+is_a: tieu_chuan_lua_chon_quan_an
+
+[Term]
+id: tieu_chuan_fine_dining_cao_cap
+name: Tiêu chuẩn fine-dining cao cấp
+def: "Ưu tiên trải nghiệm ẩm thực cao cấp với không gian sang trọng, dịch vụ chuyên nghiệp và thực đơn được chăm chút tỉ mỉ về kỹ thuật và thẩm mỹ." []
+is_a: tieu_chuan_lua_chon_quan_an
+
+[Term]
+id: muc_do_quan_tam_am_thuc_truyen_thong
+name: Mức độ quan tâm ẩm thực truyền thống
+def: "Sự chú trọng và trân trọng của cá nhân đối với các món ăn mang giá trị văn hóa, lịch sử của vùng miền hoặc quốc gia.\nVí dụ thực tế: đặc biệt tìm phở đúng vị Hà Nội, coi trọng công thức gia truyền hơn công thức hiện đại." []
+is_a: gu_trai_nghiem_van_hoa_am_thuc
+
+[Term]
+id: su_coi_mo_voi_am_thuc_quoc_te
+name: Sự cởi mở với ẩm thực quốc tế
+def: "Mức độ sẵn sàng của cá nhân trong việc khám phá và đánh giá cao các nền ẩm thực từ các quốc gia hoặc văn hóa khác.\nVí dụ thực tế: thích thử sushi Nhật, đi tìm quán Thái hay Ý ở Hà Nội, hoặc hoàn toàn trung thành với ẩm thực Việt." []
+is_a: gu_trai_nghiem_van_hoa_am_thuc
+
+[Term]
+id: coi_mo_voi_am_thuc_quoc_te
+name: Cởi mở với ẩm thực quốc tế
+def: "Sẵn sàng và hứng thú khám phá các nền ẩm thực từ nhiều quốc gia và văn hóa khác nhau — thích thử sushi Nhật, mì Ý, cà ri Thái hay các món ít phổ biến hơn." []
+is_a: su_coi_mo_voi_am_thuc_quoc_te
+
+[Term]
+id: trung_thanh_am_thuc_viet
+name: Trung thành ẩm thực Việt
+def: "Thiên hướng gắn bó với ẩm thực Việt Nam và ít quan tâm đến ẩm thực nước ngoài — coi món Việt là tiêu chuẩn và cảm thấy thỏa mãn nhất với hương vị quen thuộc từ nhỏ." []
+is_a: su_coi_mo_voi_am_thuc_quoc_te
+
+[Term]
+id: hanh_vi_chia_se_am_thuc
+name: Hành vi chia sẻ ẩm thực
+def: "Cách thức cá nhân lan truyền trải nghiệm hoặc kiến thức ẩm thực cho người khác.\nVí dụ thực tế từ dữ liệu: chia sẻ công thức trong gia đình, dạy cháu nấu ăn, đăng ảnh món ăn lên mạng xã hội, hay rủ bạn bè cùng đi thử quán mới." []
+is_a: gu_trai_nghiem_van_hoa_am_thuc
+
+[Term]
+id: chia_se_cong_thuc_trong_gia_dinh
+name: Chia sẻ công thức trong gia đình
+def: "Truyền đạt kiến thức nấu ăn cho người thân trong gia đình — dạy con, cháu hoặc chia sẻ công thức gia truyền để giữ gìn truyền thống ẩm thực." []
+is_a: hanh_vi_chia_se_am_thuc
+
+[Term]
+id: chia_se_am_thuc_tren_mang_xa_hoi
+name: Chia sẻ ẩm thực trên mạng xã hội
+def: "Đăng ảnh món ăn, viết review quán hoặc chia sẻ công thức lên các nền tảng mạng xã hội — Facebook, Instagram, TikTok — để lan truyền trải nghiệm ẩm thực." []
+is_a: hanh_vi_chia_se_am_thuc
+
+[Term]
+id: rủ_ban_be_cung_kham_pha_am_thuc
+name: Rủ bạn bè cùng khám phá ẩm thực
+def: "Chủ động tìm quán mới và rủ bạn bè hoặc đồng nghiệp cùng đi thử — chia sẻ trải nghiệm ẩm thực qua hình thức gặp gỡ trực tiếp." []
+is_a: hanh_vi_chia_se_am_thuc
+
+[Term]
+id: giang_day_ky_nang_nau_an
+name: Giảng dạy kỹ năng nấu ăn
+def: "Chủ động dạy người khác cách nấu — từ hướng dẫn không chính thức cho cháu hay bạn bè đến tổ chức buổi học nấu ăn có cấu trúc." []
+is_a: hanh_vi_chia_se_am_thuc
+
+[Term]
+id: persona
+name: persona
+def: "Hình mẫu tổng thể khái quát một cách ngắn gọn, đúc kết các giá trị cốt lõi trong thế giới quan, nhân sinh quan và cách thức tiếp cận cuộc sống của một cá nhân." []
+
+[Term]
+id: gia_tri_cot_loi
+name: Giá trị cốt lõi
+def: "Hệ thống các nguyên tắc, niềm tin sâu sắc và tiêu chuẩn đạo đức nền tảng định hướng cho mọi suy nghĩ và hành động của một người.\nĐây là kim chỉ nam không thay đổi theo thời gian và tác động trực tiếp đến việc lựa chọn ưu tiên trong cuộc sống." []
+is_a: persona
+relationship: influences khat_vong_nghe_nghiep ! định hướng
+relationship: influences muc_dich_van_dong ! định hướng
+
+[Term]
+id: nguyen_tac_song_nen_tang
+name: Nguyên tắc sống nền tảng
+def: "Các quy tắc hành xử bất di bất dịch mà cá nhân tự đặt ra và luôn tuân theo bất kể hoàn cảnh thay đổi.\nVí dụ thực tế: không bao giờ nói dối, luôn đặt gia đình lên trên sự nghiệp, sống tự lập không nhờ vả người khác." []
+is_a: gia_tri_cot_loi
+relationship: influences muc_tieu_vi_tri_nghe_nghiep ! định hướng
+
+[Term]
+id: tieu_chuan_dao_duc_ca_nhan
+name: Tiêu chuẩn đạo đức cá nhân
+def: "Hệ thống phân biệt đúng — sai, tốt — xấu mà cá nhân áp dụng để đánh giá hành vi của bản thân và người khác.\nHình thành từ văn hóa, tôn giáo, giáo dục gia đình và trải nghiệm cá nhân theo thời gian." []
+is_a: gia_tri_cot_loi
+
+[Term]
+id: dao_duc_hinh_thanh_tu_van_hoa
+name: Đạo đức hình thành từ văn hóa
+def: "Tiêu chuẩn đúng sai được hấp thụ từ các chuẩn mực, phong tục và giá trị của cộng đồng văn hóa mà cá nhân lớn lên và sinh sống." []
+is_a: tieu_chuan_dao_duc_ca_nhan
+
+[Term]
+id: dao_duc_hinh_thanh_tu_ton_giao
+name: Đạo đức hình thành từ tôn giáo
+def: "Tiêu chuẩn đúng sai dựa trên giáo lý, điều răn và hệ thống đạo đức của một tín ngưỡng hoặc tôn giáo cụ thể mà cá nhân theo." []
+is_a: tieu_chuan_dao_duc_ca_nhan
+
+[Term]
+id: dao_duc_hinh_thanh_tu_giao_duc_gia_dinh
+name: Đạo đức hình thành từ giáo dục gia đình
+def: "Tiêu chuẩn đúng sai được truyền dạy trực tiếp từ cha mẹ, ông bà và môi trường gia đình — thường là nền tảng đạo đức sớm nhất và ổn định nhất." []
+is_a: tieu_chuan_dao_duc_ca_nhan
+
+[Term]
+id: dao_duc_hinh_thanh_tu_trai_nghiem_ca_nhan
+name: Đạo đức hình thành từ trải nghiệm cá nhân
+def: "Tiêu chuẩn đúng sai được đúc kết từ các sự kiện, va chạm và bài học trong cuộc sống riêng của cá nhân — có thể khác biệt hoặc bổ sung cho những gì được dạy từ bên ngoài." []
+is_a: tieu_chuan_dao_duc_ca_nhan
+
+[Term]
+id: thu_tu_uu_tien_gia_tri
+name: Thứ tự ưu tiên giá trị
+def: "Sự sắp xếp có thứ bậc giữa các giá trị sống khi chúng xung đột với nhau trong một tình huống cụ thể.\nVí dụ thực tế: khi phải chọn giữa sự nghiệp và gia đình, cá nhân luôn ưu tiên điều nào trước — thể hiện giá trị nào được đặt cao hơn." []
+is_a: gia_tri_cot_loi
+relationship: influences muc_do_dau_tu_vao_so_thich ! ảnh hưởng đến
+
+[Term]
+id: the_gioi_quan
+name: Thế giới quan
+def: "Hệ thống quan điểm, khái niệm và cách nhìn nhận tổng thể của một cá nhân về toàn bộ thế giới xung quanh.\nBao gồm cả nhận thức về tự nhiên, xã hội, các hiện tượng khách quan và vị trí của con người trong thế giới đó." []
+is_a: persona
+relationship: influences nguon_goc_hinh_thanh_so_thich ! định hình
+relationship: influences pham_vi_chuyen_mon_hoa ! định hình
+
+[Term]
+id: nhan_thuc_ve_tu_nhien_va_xa_hoi
+name: Nhận thức về tự nhiên và xã hội
+def: "Cách cá nhân hiểu và diễn giải các quy luật vận hành của thế giới tự nhiên và cấu trúc xã hội xung quanh.\nVí dụ: tin vào nhân quả, coi xã hội là hệ thống công bằng hay bất công, nhìn tự nhiên như nguồn nuôi dưỡng hay môi trường cần chinh phục." []
+is_a: the_gioi_quan
+
+[Term]
+id: nhan_thuc_quy_luat_nhan_qua
+name: Nhận thức quy luật nhân quả
+def: "Niềm tin vào mối liên hệ tất yếu giữa hành động và kết quả — tin rằng điều tốt sinh ra điều tốt, hành động xấu sẽ dẫn đến hệ quả tiêu cực." []
+is_a: nhan_thuc_ve_tu_nhien_va_xa_hoi
+
+[Term]
+id: nhan_thuc_ve_cong_bang_xa_hoi
+name: Nhận thức về công bằng xã hội
+def: "Quan điểm của cá nhân về mức độ công bằng trong cơ hội, phân phối tài nguyên và quyền lực trong xã hội — từ tin xã hội về cơ bản công bằng đến nhận thức rõ các bất bình đẳng có hệ thống." []
+is_a: nhan_thuc_ve_tu_nhien_va_xa_hoi
+
+[Term]
+id: nhan_thuc_vai_tro_tu_nhien
+name: Nhận thức vai trò tự nhiên
+def: "Cách cá nhân nhìn nhận mối quan hệ giữa con người và thiên nhiên — từ coi tự nhiên là nguồn nuôi dưỡng cần bảo vệ đến xem đó là môi trường cần chinh phục và khai thác." []
+is_a: nhan_thuc_ve_tu_nhien_va_xa_hoi
+
+[Term]
+id: vi_tri_ca_nhan_trong_the_gioi
+name: Vị trí cá nhân trong thế giới
+def: "Cảm nhận của cá nhân về vai trò và ý nghĩa của bản thân trong bức tranh lớn hơn của xã hội và vũ trụ.\nVí dụ thực tế: cảm thấy mình là một phần nhỏ trong cộng đồng, hoặc tin rằng mình có sứ mệnh riêng cần hoàn thành." []
+is_a: the_gioi_quan
+
+[Term]
+id: tu_nhan_la_mot_phan_cong_dong
+name: Tự nhận là một phần cộng đồng
+def: "Cảm nhận bản thân là mắt xích trong một tập thể — gia đình, làng xóm, xã hội — và ý nghĩa của mình gắn liền với sự đóng góp cho cộng đồng đó." []
+is_a: vi_tri_ca_nhan_trong_the_gioi
+
+[Term]
+id: tu_nhan_co_su_menh_rieng
+name: Tự nhận có sứ mệnh riêng
+def: "Cảm nhận bản thân có mục tiêu hoặc vai trò độc đáo cần hoàn thành — không chỉ là một phần của đám đông mà có đóng góp riêng biệt và không thể thay thế." []
+is_a: vi_tri_ca_nhan_trong_the_gioi
+
+[Term]
+id: niem_tin_ve_su_thay_doi
+name: Niềm tin về sự thay đổi
+def: "Quan điểm của cá nhân về khả năng và giới hạn của sự thay đổi trong cuộc sống con người và xã hội.\nPhân biệt giữa người tin rằng mọi thứ có thể cải thiện nếu cố gắng và người cho rằng số phận hoặc hoàn cảnh là bất biến." []
+is_a: the_gioi_quan
+
+[Term]
+id: tin_vao_kha_nang_thay_doi
+name: Tin vào khả năng thay đổi
+def: "Quan điểm rằng con người và hoàn cảnh có thể cải thiện nếu có nỗ lực và chiến lược đúng đắn — không có gì là cố định vĩnh viễn." []
+is_a: niem_tin_ve_su_thay_doi
+
+[Term]
+id: tin_so_phan_kho_thay_doi
+name: Tin số phận khó thay đổi
+def: "Quan điểm rằng hoàn cảnh xuất phát điểm, số phận hoặc bản chất con người là bất biến hoặc rất khó thay đổi dù có cố gắng." []
+is_a: niem_tin_ve_su_thay_doi
+
+[Term]
+id: nhan_sinh_quan
+name: Nhân sinh quan
+def: "Hệ thống các quan niệm mang tính triết lý của một cá nhân về ý nghĩa, mục đích, giá trị và cách sống của con người.\nGiải quyết các câu hỏi cốt lõi về việc con người sống vì cái gì, sống như thế nào là hạnh phúc và đúng đắn." []
+is_a: persona
+
+[Term]
+id: quan_niem_hanh_phuc
+name: Quan niệm hạnh phúc
+def: "Định nghĩa cá nhân về trạng thái sống được xem là viên mãn và thỏa mãn nhất.\nVí dụ thực tế: hạnh phúc là gia đình sum vầy, là tự do tài chính, là sức khỏe tốt, hay là được làm điều mình yêu thích mỗi ngày." []
+is_a: nhan_sinh_quan
+relationship: influences hoat_dong_giai_tri_cu_the ! thúc đẩy
+relationship: influences muc_dich_giai_tri_tinh_than ! thúc đẩy
+
+[Term]
+id: hanh_phuc_la_gia_dinh_sum_vay
+name: Hạnh phúc là gia đình sum vầy
+def: "Định nghĩa hạnh phúc gắn với sự gần gũi, hòa thuận và đầy đủ của các thành viên gia đình — coi gia đình là nguồn ý nghĩa và sự thỏa mãn cao nhất." []
+is_a: quan_niem_hanh_phuc
+
+[Term]
+id: hanh_phuc_la_tu_do_tai_chinh
+name: Hạnh phúc là tự do tài chính
+def: "Định nghĩa hạnh phúc gắn với việc đạt được mức tài chính đủ để không bị ràng buộc bởi tiền bạc và có thể lựa chọn cuộc sống theo ý muốn." []
+is_a: quan_niem_hanh_phuc
+
+[Term]
+id: hanh_phuc_la_suc_khoe_tot
+name: Hạnh phúc là sức khỏe tốt
+def: "Định nghĩa hạnh phúc gắn với thể trạng khỏe mạnh và tinh thần an ổn — coi sức khỏe là nền tảng của mọi thứ khác trong cuộc sống." []
+is_a: quan_niem_hanh_phuc
+
+[Term]
+id: hanh_phuc_la_lam_dieu_minh_yeu
+name: Hạnh phúc là làm điều mình yêu
+def: "Định nghĩa hạnh phúc gắn với việc được theo đuổi đam mê và làm công việc có ý nghĩa với bản thân mỗi ngày — không bị ép buộc bởi áp lực ngoài ý muốn." []
+is_a: quan_niem_hanh_phuc
+
+[Term]
+id: quan_niem_y_nghia_cuoc_song
+name: Quan niệm ý nghĩa cuộc sống
+def: "Câu trả lời cá nhân cho câu hỏi mình sống vì điều gì và điều gì làm cho cuộc đời trở nên đáng sống.\nCó thể là cống hiến cho xã hội, nuôi dạy con cái, tự hoàn thiện bản thân, hay tìm kiếm trải nghiệm phong phú." []
+is_a: nhan_sinh_quan
+relationship: influences khat_vong_dong_gop_xa_hoi ! thúc đẩy
+
+[Term]
+id: song_de_cong_hien_cho_xa_hoi
+name: Sống để cống hiến cho xã hội
+def: "Quan niệm ý nghĩa cuộc sống nằm ở việc tạo ra giá trị cho người khác và cộng đồng — sự đóng góp và để lại dấu ấn tích cực là mục tiêu tối thượng." []
+is_a: quan_niem_y_nghia_cuoc_song
+
+[Term]
+id: song_de_nuoi_day_con_cai
+name: Sống để nuôi dạy con cái
+def: "Quan niệm ý nghĩa cuộc sống gắn với việc làm cha mẹ tốt, nuôi dưỡng và định hướng thế hệ tiếp theo — con cái là lý do và động lực sống lớn nhất." []
+is_a: quan_niem_y_nghia_cuoc_song
+
+[Term]
+id: song_de_tu_hoan_thien_ban_than
+name: Sống để tự hoàn thiện bản thân
+def: "Quan niệm ý nghĩa cuộc sống nằm ở hành trình liên tục học hỏi, phát triển và trở thành phiên bản tốt hơn của chính mình." []
+is_a: quan_niem_y_nghia_cuoc_song
+
+[Term]
+id: song_de_trai_nghiem_phong_phu
+name: Sống để trải nghiệm phong phú
+def: "Quan niệm ý nghĩa cuộc sống nằm ở việc tích lũy càng nhiều trải nghiệm đa dạng càng tốt — du lịch, gặp gỡ, thử nghiệm cái mới là cách sống đáng giá nhất." []
+is_a: quan_niem_y_nghia_cuoc_song
+
+[Term]
+id: thai_do_doi_voi_kho_khan_va_mat_mat
+name: Thái độ đối với khó khăn và mất mát
+def: "Cách cá nhân diễn giải và phản ứng về mặt tinh thần trước nghịch cảnh, thất bại hoặc mất mát trong cuộc sống.\nPhân biệt giữa người nhìn khó khăn như cơ hội trưởng thành và người xem đó là bất công hoặc nguyên nhân bỏ cuộc." []
+is_a: nhan_sinh_quan
+
+[Term]
+id: nhin_kho_khan_la_co_hoi_truong_thanh
+name: Nhìn khó khăn là cơ hội trưởng thành
+def: "Thái độ chuyển hóa nghịch cảnh thành động lực — xem thất bại và mất mát là bài học và bước đệm để phát triển bản thân." []
+is_a: thai_do_doi_voi_kho_khan_va_mat_mat
+
+[Term]
+id: nhin_kho_khan_la_bat_cong_hoac_ly_do_bo_cuoc
+name: Nhìn khó khăn là bất công hoặc lý do bỏ cuộc
+def: "Thái độ quy trách nhiệm khó khăn cho hoàn cảnh bên ngoài — xem nghịch cảnh là bất công và dễ từ bỏ khi gặp trở ngại lớn." []
+is_a: thai_do_doi_voi_kho_khan_va_mat_mat
+
+[Term]
+id: cach_thuc_tiep_can_cuoc_song
+name: Cách thức tiếp cận cuộc sống
+def: "Phương pháp, thái độ và hành động thực tế mà một cá nhân áp dụng để đối mặt, tương tác và xử lý các tình huống diễn ra trong đời sống hàng ngày.\nThể hiện qua xu hướng chủ động hay bị động, lạc quan hay bi quan, thực tế hay lý tưởng hóa." []
+is_a: persona
+relationship: influences chuc_nang_giai_tri_doi_voi_ca_nhan ! ảnh hưởng đến
+
+[Term]
+id: muc_do_chu_dong_voi_bi_dong
+name: Mức độ chủ động với bị động
+def: "Xu hướng hành động của cá nhân trong việc kiểm soát và định hướng cuộc sống của mình.\nNgười chủ động tự tạo cơ hội và chịu trách nhiệm kết quả; người bị động chờ hoàn cảnh dẫn dắt và đổ trách nhiệm cho bên ngoài." []
+is_a: cach_thuc_tiep_can_cuoc_song
+relationship: correlated_with dong_luc_phat_trien_su_nghiep ! tương quan với
+relationship: correlated_with tinh_trang_tham_gia_the_thao ! tương quan với
+relationship: influences hinh_thuc_tich_luy_kinh_nghiem ! định hình
+relationship: correlated_with tinh_nhat_quan_hanh_vi ! tương quan với
+
+[Term]
+id: tiep_can_cuoc_song_chu_dong
+name: Tiếp cận cuộc sống chủ động
+def: "Xu hướng tự tạo cơ hội, chủ động đưa ra quyết định và chịu trách nhiệm về kết quả — không chờ hoàn cảnh dẫn dắt." []
+is_a: muc_do_chu_dong_voi_bi_dong
+
+[Term]
+id: tiep_can_cuoc_song_bi_dong
+name: Tiếp cận cuộc sống bị động
+def: "Xu hướng để hoàn cảnh và người khác định hướng — chờ cơ hội đến thay vì chủ động tạo ra, và có xu hướng đổ trách nhiệm kết quả cho yếu tố bên ngoài." []
+is_a: muc_do_chu_dong_voi_bi_dong
+
+[Term]
+id: xu_huong_lac_quan_voi_bi_quan
+name: Xu hướng lạc quan với bi quan
+def: "Thiên hướng tự nhiên của cá nhân trong việc diễn giải các sự kiện theo hướng tích cực hay tiêu cực.\nNgười lạc quan mặc định kỳ vọng kết quả tốt; người bi quan coi trọng rủi ro và chuẩn bị cho tình huống xấu nhất." []
+is_a: cach_thuc_tiep_can_cuoc_song
+relationship: correlated_with muc_do_kien_tri_dam_me ! tương quan với
+
+[Term]
+id: xu_huong_lac_quan
+name: Xu hướng lạc quan
+def: "Thiên hướng mặc định kỳ vọng kết quả tốt và nhìn nhận sự kiện theo hướng tích cực — tập trung vào cơ hội hơn là rủi ro." []
+is_a: xu_huong_lac_quan_voi_bi_quan
+
+[Term]
+id: xu_huong_bi_quan
+name: Xu hướng bi quan
+def: "Thiên hướng coi trọng rủi ro và chuẩn bị tinh thần cho tình huống xấu nhất — có xu hướng nhìn nhận sự kiện theo chiều hướng tiêu cực hoặc đề phòng." []
+is_a: xu_huong_lac_quan_voi_bi_quan
+
+[Term]
+id: dinh_huong_thuc_te_voi_ly_tuong
+name: Định hướng thực tế với lý tưởng
+def: "Mức độ mà cá nhân dựa vào thực tế hiện tại và những gì khả thi, thay vì theo đuổi một hình mẫu lý tưởng hoàn hảo.\nNgười thiên thực tế ưu tiên giải pháp khả thi; người thiên lý tưởng không thỏa hiệp với những gì kém hoàn hảo." []
+is_a: cach_thuc_tiep_can_cuoc_song
+relationship: influences muc_tieu_tai_chinh_ca_nhan ! ảnh hưởng đến
+relationship: influences muc_tieu_the_thao_trong_ke_hoach ! ảnh hưởng đến
+relationship: influences phuong_phap_xu_ly_van_de ! ảnh hưởng đến
+
+[Term]
+id: dinh_huong_thuc_te
+name: Định hướng thực tế
+def: "Xu hướng ưu tiên các giải pháp khả thi và chấp nhận những gì có thể đạt được trong điều kiện thực tế — sẵn sàng thỏa hiệp để tiến về phía trước." []
+is_a: dinh_huong_thuc_te_voi_ly_tuong
+
+[Term]
+id: dinh_huong_ly_tuong
+name: Định hướng lý tưởng
+def: "Xu hướng theo đuổi hình mẫu hoàn hảo và không thỏa hiệp với những gì kém lý tưởng — giữ vững tiêu chuẩn cao dù điều kiện thực tế không cho phép." []
+is_a: dinh_huong_thuc_te_voi_ly_tuong
+
+[Term]
+id: phuong_thuc_ra_quyet_dinh_ca_nhan
+name: Phương thức ra quyết định cá nhân
+def: "Cách thức một cá nhân đưa ra lựa chọn trước các tình huống trong cuộc sống.\nPhân biệt giữa người ra quyết định dựa trên cảm xúc và trực giác, người phân tích dữ liệu và cân nhắc lý trí, hay người cần tham khảo ý kiến người khác trước khi quyết định." []
+is_a: cach_thuc_tiep_can_cuoc_song
+relationship: influences moc_thoi_gian_muc_tieu ! định hình
+
+[Term]
+id: ra_quyet_dinh_bang_cam_xuc_truc_giac
+name: Ra quyết định bằng cảm xúc trực giác
+def: "Xu hướng đưa ra lựa chọn dựa trên cảm nhận nội tâm, trực giác và cảm xúc tức thời hơn là phân tích dữ liệu có hệ thống." []
+is_a: phuong_thuc_ra_quyet_dinh_ca_nhan
+
+[Term]
+id: ra_quyet_dinh_bang_phan_tich_ly_tri
+name: Ra quyết định bằng phân tích lý trí
+def: "Xu hướng cân nhắc dữ liệu, so sánh phương án và suy luận có hệ thống trước khi đưa ra lựa chọn — ít bị cảm xúc chi phối." []
+is_a: phuong_thuc_ra_quyet_dinh_ca_nhan
+
+[Term]
+id: ra_quyet_dinh_dua_tren_y_kien_nguoi_khac
+name: Ra quyết định dựa trên ý kiến người khác
+def: "Xu hướng tham khảo ý kiến người thân, bạn bè hoặc chuyên gia trước khi quyết định — coi trọng sự đồng thuận và tránh hành động đơn độc." []
+is_a: phuong_thuc_ra_quyet_dinh_ca_nhan
+
+[Term]
+id: cultural_background
+name: cultural_background
+def: "Mô tả chi tiết về bối cảnh, nguồn gốc hoặc nền tảng văn hóa, xã hội truyền thống có ảnh hưởng đến nhận thức và hành vi của một cá nhân." []
+
+[Term]
+id: nguon_goc_hoac_nen_tang_van_hoa
+name: Nguồn gốc hoặc nền tảng văn hóa
+def: "Hệ thống các phong tục, tập quán, ngôn ngữ, tín ngưỡng và di sản nghệ thuật mà một cá nhân được tiếp xúc và kế thừa từ gia đình hoặc cộng đồng gốc.\nĐóng vai trò là cái nôi đầu tiên định hình nên thói quen và lối sống của người đó." []
+is_a: cultural_background
+relationship: influences so_thich_diem_den ! định hình
+relationship: influences dong_luc_sang_tao_nghe_thuat ! định hình
+
+[Term]
+id: dia_danh_va_moi_truong_song_thuo_nho
+name: Địa danh và môi trường sống thuở nhỏ
+def: "Nơi chốn cụ thể mà cá nhân sinh ra, lớn lên và hình thành ký ức đầu đời.\nVí dụ thực tế từ dữ liệu: khu nhà tập thể Hải Phòng, nhà ống 4 tầng khu Nghi Sơn, căn hộ quận Bình Thạnh, phố cổ Hà Nội với những con ngõ uốn quanh." []
+is_a: nguon_goc_hoac_nen_tang_van_hoa
+relationship: influences nhom_thuc_pham_uu_tien ! định hình
+relationship: influences nguyen_tac_song_nen_tang ! định hình
+
+[Term]
+id: phong_tuc_tap_quan_gia_dinh
+name: Phong tục tập quán gia đình
+def: "Các thói quen, nghi lễ và quy tắc ứng xử được thực hành lặp đi lặp lại trong phạm vi gia đình và truyền từ thế hệ này sang thế hệ khác.\nVí dụ thực tế từ dữ liệu: thắp nhang dịp Tết, cả nhà đến rạp hát xem chèo mỗi sáng Chủ Nhật, mẹ dạy nấu ăn từ nhỏ." []
+is_a: nguon_goc_hoac_nen_tang_van_hoa
+relationship: influences che_do_an_uong_ca_nhan ! định hình
+
+[Term]
+id: le_hoi_va_su_kien_van_hoa_gan_bo
+name: Lễ hội và sự kiện văn hóa gắn bó
+def: "Các dịp lễ hội, sự kiện cộng đồng hoặc nghi lễ theo mùa mà cá nhân tham gia thường xuyên và gắn bó cảm xúc sâu sắc.\nVí dụ thực tế từ dữ liệu: lễ hội hoa phượng đỏ Hải Phòng, hội hoa đăng sông Cấm, lễ hội Gióng Sóc Sơn, lễ hội áo dài, lễ hội đâm trâu Cần Thơ." []
+is_a: nguon_goc_hoac_nen_tang_van_hoa
+relationship: influences gu_trai_nghiem_van_hoa_am_thuc ! ảnh hưởng đến
+relationship: influences nguon_goc_hinh_thanh_so_thich ! định hình
+
+[Term]
+id: di_san_nghe_thuat_va_am_nhac_truyen_thong
+name: Di sản nghệ thuật và âm nhạc truyền thống
+def: "Các loại hình nghệ thuật và âm nhạc dân gian của vùng miền mà cá nhân được tiếp xúc từ thời thơ ấu và gắn với bản sắc văn hóa gốc.\nVí dụ thực tế từ dữ liệu: hát chèo, cải lương, hát quan họ, hát xẩm, múa quan họ tại sân đình." []
+is_a: nguon_goc_hoac_nen_tang_van_hoa
+relationship: influences muc_do_quan_tam_am_thuc_truyen_thong ! củng cố
+relationship: influences loai_hinh_nghe_thuat_thuc_hanh ! định hình
+
+[Term]
+id: boi_canh_xa_hoi_truyen_thong
+name: Bối cảnh xã hội truyền thống
+def: "Môi trường sống bao gồm các chuẩn mực đạo đức, cấu trúc gia đình, hệ giá trị cộng đồng và các quy ước xã hội mang tính lâu đời tại địa phương hoặc quốc gia.\nNơi cá nhân sinh ra, lớn lên hoặc chịu sự giáo dục trực tiếp." []
+is_a: cultural_background
+relationship: influences khau_vi_ca_nhan ! định hình
+relationship: influences hinh_thuc_to_chuc_hanh_trinh ! ảnh hưởng đến
+relationship: influences anh_huong_nghe_thuat_den_the_gioi_quan ! định hình
+relationship: influences gia_tri_cot_loi ! định hình
+
+[Term]
+id: cau_truc_gia_dinh
+name: Cấu trúc gia đình
+def: "Hình thức tổ chức của đơn vị gia đình mà cá nhân lớn lên trong đó, bao gồm số thế hệ cùng chung sống và vai trò của từng thành viên.\nVí dụ thực tế từ dữ liệu: gia đình 3 thế hệ, gia đình hạt nhân 2 người, gia đình mà tầng 1 là tiệm tạp hóa mẹ điều hành." []
+is_a: boi_canh_xa_hoi_truyen_thong
+
+[Term]
+id: gia_dinh_da_the_he
+name: Gia đình đa thế hệ
+def: "Hình thức gia đình có từ 3 thế hệ trở lên cùng chung sống dưới một mái nhà — ông bà, cha mẹ, con cái.\nTạo ra môi trường truyền dạy giá trị trực tiếp và gắn kết văn hóa giữa các thế hệ." []
+is_a: cau_truc_gia_dinh
+
+[Term]
+id: gia_dinh_hat_nhan
+name: Gia đình hạt nhân
+def: "Hình thức gia đình chỉ gồm cha mẹ và con cái, không có ông bà hoặc họ hàng cùng chung sống.\nThường gắn với lối sống đô thị hiện đại và mức độ độc lập cao hơn trong các quyết định gia đình." []
+is_a: cau_truc_gia_dinh
+
+[Term]
+id: chuan_muc_cong_dong_dia_phuong
+name: Chuẩn mực cộng đồng địa phương
+def: "Các quy ước, kỳ vọng và tiêu chuẩn hành vi ngầm định được cộng đồng địa phương xung quanh cá nhân chia sẻ và thực thi.\nVí dụ thực tế từ dữ liệu: thói quen tụ tập vỉa hè, văn hóa chợ truyền thống, nếp sống khu phố tập thể, giao lưu hàng xóm trong khu nhà ống." []
+is_a: boi_canh_xa_hoi_truyen_thong
+relationship: influences tieu_chuan_dao_duc_ca_nhan ! định hình
+
+[Term]
+id: anh_huong_ton_giao_va_tin_nguong
+name: Ảnh hưởng tôn giáo và tín ngưỡng
+def: "Mức độ tín ngưỡng dân gian, tôn giáo hoặc tâm linh tác động đến các thực hành sinh hoạt và quan niệm sống của cá nhân.\nVí dụ thực tế từ dữ liệu: thắp nhang ngày Tết, nấu cháo bằng nồi đất giữ hương vị truyền thống, thả đèn hoa đăng đêm trăng rằm." []
+is_a: boi_canh_xa_hoi_truyen_thong
+relationship: influences the_gioi_quan ! định hình
+
+[Term]
+id: moi_truong_kinh_te_xa_hoi_xuat_than
+name: Môi trường kinh tế xã hội xuất thân
+def: "Điều kiện tài chính và vị trí xã hội của gia đình gốc, tác động trực tiếp đến cơ hội tiếp cận giáo dục, nghề nghiệp và phong cách sống của cá nhân.\nVí dụ thực tế từ dữ liệu: gia đình có tiệm tạp hóa nhỏ, sống trong căn nhà cấp bốn cuối ngõ, xuất thân từ gia đình có truyền thống học vấn." []
+is_a: boi_canh_xa_hoi_truyen_thong
+relationship: influences nhan_sinh_quan ! ảnh hưởng đến
+relationship: influences linh_vuc_lam_viec_chinh ! ảnh hưởng đến
+relationship: influences ky_nang_thu_cong_va_nghe_truyen_thong ! định hình
+relationship: influences khat_vong_nghe_nghiep ! định hình
+
+[Term]
+id: xuat_than_gia_dinh_lao_dong
+name: Xuất thân gia đình lao động
+def: "Gia đình gốc làm các nghề lao động chân tay hoặc dịch vụ phổ thông — công nhân, nông dân, thợ thủ công.\nTác động đến định hướng nghề nghiệp, kỳ vọng học vấn và thái độ với công việc tay chân của cá nhân." []
+is_a: moi_truong_kinh_te_xa_hoi_xuat_than
+
+[Term]
+id: xuat_than_gia_dinh_tieu_thuong
+name: Xuất thân gia đình tiểu thương
+def: "Gia đình gốc hoạt động buôn bán nhỏ lẻ — tiệm tạp hóa, hàng chợ, dịch vụ gia đình.\nThường hình thành sớm tư duy kinh doanh, quản lý tài chính và ý thức phục vụ khách hàng từ nhỏ." []
+is_a: moi_truong_kinh_te_xa_hoi_xuat_than
+
+[Term]
+id: xuat_than_gia_dinh_tri_thuc
+name: Xuất thân gia đình tri thức
+def: "Gia đình gốc có truyền thống học vấn cao — giáo viên, bác sĩ, kỹ sư, công chức.\nThường tạo ra môi trường coi trọng bằng cấp, đọc sách và định hướng con cái vào các ngành nghề chuyên môn." []
+is_a: moi_truong_kinh_te_xa_hoi_xuat_than
+
+[Term]
+id: nhan_thuc_ca_nhan_van_hoa
+name: Nhận thức cá nhân văn hóa
+def: "Cách thức một người tư duy, hiểu, giải mã và đánh giá các hiện tượng, sự vật xung quanh dựa trên lăng kính văn hóa mà họ sở hữu.\nẢnh hưởng trực tiếp đến tư duy đúng sai, tốt xấu và các định kiến cá nhân." []
+is_a: cultural_background
+
+[Term]
+id: dinh_kien_va_quan_diem_tiem_an
+name: Định kiến và quan điểm tiềm ẩn
+def: "Các nhận định, thành kiến hoặc kỳ vọng được hình thành từ nền tảng văn hóa và tồn tại ngầm trong tư duy cá nhân mà không phải lúc nào cũng được ý thức rõ ràng.\nVí dụ thực tế: coi trọng bằng cấp chính thức hơn kinh nghiệm thực tế, xem đàn ông là trụ cột kinh tế gia đình." []
+is_a: nhan_thuc_ca_nhan_van_hoa
+relationship: correlated_with niem_tin_ve_su_thay_doi ! tương quan với
+
+[Term]
+id: muc_do_tu_hao_ban_sac_van_hoa
+name: Mức độ tự hào bản sắc văn hóa
+def: "Cường độ cảm giác tự hào và gắn kết của cá nhân với nền văn hóa, vùng miền và truyền thống gốc của mình.\nVí dụ thực tế từ dữ liệu: tự hào truyền dạy bánh đa cua đúng chuẩn Hải Phòng, duy trì giữ hội hoa phượng đỏ dù đã nghỉ hưu." []
+is_a: nhan_thuc_ca_nhan_van_hoa
+relationship: influences muc_do_hoa_nhap_van_hoa_ban_dia ! củng cố
+relationship: influences ban_sac_ca_nhan ! củng cố
+
+[Term]
+id: tu_hao_ban_sac_van_hoa_cao
+name: Tự hào bản sắc văn hóa cao
+def: "Cảm giác gắn kết mạnh mẽ và tự hào sâu sắc với văn hóa, vùng miền và truyền thống gốc — chủ động gìn giữ, truyền dạy và quảng bá bản sắc đó cho thế hệ sau." []
+is_a: muc_do_tu_hao_ban_sac_van_hoa
+
+[Term]
+id: tu_hao_ban_sac_van_hoa_vua_phai
+name: Tự hào bản sắc văn hóa vừa phải
+def: "Cảm giác gắn bó với văn hóa gốc ở mức độ vừa phải — trân trọng nhưng không đặt bản sắc văn hóa làm trung tâm của mọi lựa chọn sống." []
+is_a: muc_do_tu_hao_ban_sac_van_hoa
+
+[Term]
+id: muc_do_tiep_nhan_van_hoa_ben_ngoai
+name: Mức độ tiếp nhận văn hóa bên ngoài
+def: "Sự sẵn sàng của cá nhân trong việc tiếp thu, đánh giá và tích hợp các yếu tố từ văn hóa khác vùng miền hoặc quốc tế vào lối sống của mình.\nVí dụ thực tế: dùng lò vi sóng nhưng vẫn thích nấu nồi đất, thích ẩm thực Việt nhưng cũng tò mò thử đồ ăn mới." []
+is_a: nhan_thuc_ca_nhan_van_hoa
+relationship: influences su_coi_mo_voi_am_thuc_quoc_te ! thúc đẩy
+relationship: influences muc_do_kham_pha_tu_phat ! thúc đẩy
+
+[Term]
+id: coi_mo_tiep_nhan_van_hoa_ben_ngoai
+name: Cởi mở tiếp nhận văn hóa bên ngoài
+def: "Sẵn sàng học hỏi, thử nghiệm và tích hợp các yếu tố từ văn hóa khác vào lối sống — coi đó là sự làm giàu thêm cho bản sắc cá nhân." []
+is_a: muc_do_tiep_nhan_van_hoa_ben_ngoai
+
+[Term]
+id: bao_luu_van_hoa_goc
+name: Bảo lưu văn hóa gốc
+def: "Xu hướng giữ nguyên các thói quen và giá trị văn hóa truyền thống, ít sẵn sàng tiếp nhận hoặc thay đổi theo ảnh hưởng từ văn hóa bên ngoài." []
+is_a: muc_do_tiep_nhan_van_hoa_ben_ngoai
+
+[Term]
+id: hanh_vi_ca_nhan_van_hoa
+name: Hành vi cá nhân văn hóa
+def: "Các hành động, cách ứng xử, giao tiếp và biểu đạt ra bên ngoài của một cá nhân trong đời sống thường nhật.\nChịu sự điều chỉnh ngầm hoặc rõ ràng bởi các quy tắc ứng xử và khuôn mẫu văn hóa mà họ đã tiếp thu." []
+is_a: cultural_background
+relationship: correlated_with phuong_tien_bieu_dat_nghe_thuat ! tương quan với
+
+[Term]
+id: thoi_quen_sinh_hoat_hang_ngay
+name: Thói quen sinh hoạt hàng ngày
+def: "Các hành động lặp đi lặp lại trong cuộc sống thường nhật phản ánh rõ nét nền tảng văn hóa của cá nhân.\nVí dụ thực tế từ dữ liệu: uống trà ấm mỗi sáng xem người qua lại, dùng phin ủ trà, đi chợ nổi mua đồ ăn sáng sớm, nấu cháo nồi đất cuối tuần." []
+is_a: hanh_vi_ca_nhan_van_hoa
+
+[Term]
+id: cach_bieu_dat_ngon_ngu_va_giao_tiep_van_hoa
+name: Cách biểu đạt ngôn ngữ và giao tiếp văn hóa
+def: "Phong cách ngôn ngữ, cách xưng hô, thành ngữ địa phương và cách diễn đạt đặc trưng của vùng miền mà cá nhân sử dụng trong giao tiếp hàng ngày.\nVí dụ thực tế: dùng từ địa phương Hải Phòng, cách gọi tên thân mật theo kiểu Sài Gòn, văn hóa kể chuyện vòng vèo của người Bắc." []
+is_a: hanh_vi_ca_nhan_van_hoa
+
+[Term]
+id: hanh_vi_tham_gia_cong_dong
+name: Hành vi tham gia cộng đồng
+def: "Các hành động cụ thể thể hiện sự gắn bó và đóng góp của cá nhân vào đời sống tập thể của cộng đồng xung quanh.\nVí dụ thực tế từ dữ liệu: tổ chức đèn hoa đăng sông Cấm, tham gia hội đua thuyền trong làng, dạy làm nem cua bể cho lớp trẻ, tham gia lớp múa quan họ sáng thứ Bảy tại sân đình." []
+is_a: hanh_vi_ca_nhan_van_hoa
+relationship: correlated_with quy_mo_nhom_du_lich ! tương quan với
+
+[Term]
+id: tham_gia_to_chuc_su_kien_cong_dong
+name: Tham gia tổ chức sự kiện cộng đồng
+def: "Hành vi chủ động đóng góp vào việc chuẩn bị và tổ chức các hoạt động tập thể — lễ hội làng, đua thuyền, thả đèn hoa đăng — thay vì chỉ tham dự với tư cách khán giả." []
+is_a: hanh_vi_tham_gia_cong_dong
+
+[Term]
+id: truyen_day_ky_nang_van_hoa_cho_the_he_sau
+name: Truyền dạy kỹ năng văn hóa cho thế hệ sau
+def: "Hành vi chủ động chia sẻ và truyền dạy các kỹ năng, nghề truyền thống hoặc giá trị văn hóa cho thế hệ trẻ hơn — dạy làm bánh, dạy múa quan họ, dạy làm đèn hoa đăng." []
+is_a: hanh_vi_tham_gia_cong_dong
+
+[Term]
+id: skills_and_expertise
+name: skills_and_expertise
+def: "Tập hợp các kỹ năng cá nhân và chuyên môn cốt lõi, được trình bày chi tiết dưới dạng một đoạn văn bản tự sự nhằm khái quát năng lực và kinh nghiệm thực tế." []
+
+[Term]
+id: ky_nang_ca_nhan
+name: Kỹ năng cá nhân
+def: "Các năng lực thuộc về tính cách, khả năng tương tác xã hội và quản lý bản thân của một người.\nVí dụ như kỹ năng giao tiếp, giải quyết vấn đề, làm việc nhóm, quản lý thời gian hoặc khả năng thích ứng." []
+is_a: skills_and_expertise
+
+[Term]
+id: ky_nang_giao_tiep_va_ung_xu
+name: Kỹ năng giao tiếp và ứng xử
+def: "Khả năng truyền đạt thông tin, lắng nghe và tương tác hiệu quả với người khác trong các tình huống xã hội khác nhau.\nVí dụ thực tế từ dữ liệu: kỹ năng giao tiếp cơ bản khi bán hàng tạp hóa, thuyết trình trực tiếp, phối hợp điều trị với bác sĩ." []
+is_a: ky_nang_ca_nhan
+relationship: influences phong_cach_giao_tiep_nghe_nghiep ! định hình
+relationship: influences cach_bieu_dat_ngon_ngu_va_giao_tiep_van_hoa ! định hình
+
+[Term]
+id: ky_nang_quan_ly_ban_than
+name: Kỹ năng quản lý bản thân
+def: "Khả năng tự tổ chức, kiểm soát thời gian và duy trì kỷ luật cá nhân trong công việc lẫn sinh hoạt.\nVí dụ thực tế từ dữ liệu: quản lý thời gian cá nhân, làm việc theo quy trình, sắp xếp gọn gàng." []
+is_a: ky_nang_ca_nhan
+
+[Term]
+id: ky_nang_giai_quyet_van_de_thuc_te
+name: Kỹ năng giải quyết vấn đề thực tế
+def: "Khả năng nhận diện và xử lý các tình huống khó khăn cụ thể bằng kinh nghiệm tích lũy hoặc tư duy thực dụng, không nhất thiết dựa trên lý thuyết học thuật.\nVí dụ thực tế từ dữ liệu: tự mài dao, sửa xe đạp, lắp ráp thiết bị gia đình, sửa chữa điện nước cơ bản." []
+is_a: ky_nang_ca_nhan
+relationship: influences phuong_phap_xu_ly_van_de ! củng cố
+relationship: correlated_with muc_do_linh_hoat_ke_hoach ! tương quan với
+
+[Term]
+id: ky_nang_chuyen_mon_cot_loi
+name: Kỹ năng chuyên môn cốt lõi
+def: "Tập hợp các kiến thức kỹ thuật, nghiệp vụ và khả năng làm chủ công cụ chuyên ngành đóng vai trò quyết định trong công việc.\nGiúp cá nhân thực hiện chính xác các tác vụ đặc thù của một ngành nghề cụ thể." []
+is_a: skills_and_expertise
+relationship: influences muc_tieu_vi_tri_nghe_nghiep ! thúc đẩy
+
+[Term]
+id: ky_nang_ky_thuat_chuyen_nganh
+name: Kỹ năng kỹ thuật chuyên ngành
+def: "Các thao tác, quy trình và năng lực kỹ thuật đặc thù của một ngành nghề cụ thể mà cá nhân đã thành thục.\nVí dụ thực tế từ dữ liệu: đọc điện tâm đồ, tiêm bắp, đo huyết áp, thiết kế hệ thống tưới tiêu, sử dụng phần mềm thiết kế 3D, bảo trì máy móc nông nghiệp." []
+is_a: ky_nang_chuyen_mon_cot_loi
+relationship: influences nang_luc_ky_thuat ! củng cố
+
+[Term]
+id: ky_nang_thu_cong_va_nghe_truyen_thong
+name: Kỹ năng thủ công và nghề truyền thống
+def: "Các năng lực làm việc bằng tay, chế tác thủ công hoặc thực hành nghề truyền thống được tích lũy qua học hỏi trực tiếp và luyện tập lâu năm.\nVí dụ thực tế từ dữ liệu: làm bánh đa cua, may vá thạo, làm đèn hoa đăng, nắn bột làm bánh, làm bánh cuốn, nấu phở chuẩn vị Hà Nội." []
+is_a: ky_nang_chuyen_mon_cot_loi
+relationship: influences loai_hinh_so_thich ! định hình
+relationship: influences loai_hinh_nghe_thuat_thuc_hanh ! định hình
+relationship: influences di_san_nghe_thuat_va_am_nhac_truyen_thong ! củng cố
+
+[Term]
+id: ky_nang_cong_nghe_va_cong_cu_so
+name: Kỹ năng công nghệ và công cụ số
+def: "Khả năng vận hành các thiết bị điện tử, phần mềm hoặc nền tảng số trong công việc và sinh hoạt hàng ngày.\nVí dụ thực tế từ dữ liệu: sử dụng máy tính xử lý hành chính, dùng điện thoại thông minh thanh toán và tìm kiếm, sử dụng phần mềm kỹ thuật chuyên ngành." []
+is_a: ky_nang_chuyen_mon_cot_loi
+relationship: correlated_with phuong_tien_ky_thuat_so ! tương quan với
+
+[Term]
+id: su_dung_cong_nghe_muc_hanh_chinh
+name: Sử dụng công nghệ mức hành chính
+def: "Khả năng dùng máy tính và các công cụ số cơ bản phục vụ công tác hành chính, văn phòng — soạn thảo văn bản, bảng tính, in ấn, email." []
+is_a: ky_nang_cong_nghe_va_cong_cu_so
+
+[Term]
+id: su_dung_cong_nghe_muc_tieu_dung
+name: Sử dụng công nghệ mức tiêu dùng
+def: "Khả năng dùng điện thoại thông minh và ứng dụng phổ thông trong sinh hoạt hàng ngày — thanh toán, tìm kiếm, mạng xã hội, đặt hàng trực tuyến." []
+is_a: ky_nang_cong_nghe_va_cong_cu_so
+
+[Term]
+id: su_dung_cong_nghe_muc_chuyen_nganh
+name: Sử dụng công nghệ mức chuyên ngành
+def: "Khả năng vận hành phần mềm hoặc thiết bị kỹ thuật số chuyên biệt của một lĩnh vực nghề nghiệp cụ thể — phần mềm thiết kế, hệ thống quản lý y tế, công cụ kỹ thuật số chuyên ngành." []
+is_a: ky_nang_cong_nghe_va_cong_cu_so
+
+[Term]
+id: ky_nang_quan_ly_va_to_chuc
+name: Kỹ năng quản lý và tổ chức
+def: "Khả năng điều phối nguồn lực, con người và quy trình để đạt mục tiêu trong phạm vi công việc hoặc cộng đồng.\nVí dụ thực tế từ dữ liệu: quản lý hàng tồn kho tiệm tạp hóa, tính toán lợi nhuận, tổ chức sự kiện cộng đồng, quản lý nhóm thi công." []
+is_a: ky_nang_chuyen_mon_cot_loi
+relationship: influences dieu_kien_to_chuc ! củng cố
+relationship: influences hinh_thuc_tham_gia_the_thao ! định hình
+
+[Term]
+id: doan_van_ban_tu_su_nang_luc
+name: Đoạn văn bản tự sự năng lực
+def: "Hình thức trình bày thông tin năng lực dưới dạng một câu chuyện hoặc một đoạn văn liền mạch, có ngữ cảnh.\nThay vì liệt kê danh sách đầu dòng, cách viết này giúp thể hiện rõ nét tư duy và phong cách cá nhân." []
+is_a: skills_and_expertise
+
+[Term]
+id: noi_dung_tu_su_nang_luc
+name: Nội dung tự sự năng lực
+def: "Thông tin thực chất được truyền tải trong đoạn văn mô tả năng lực: bối cảnh làm việc, các kỹ năng nổi bật và thành tích cụ thể.\nVí dụ thực tế từ dữ liệu: 'Có tay nghề nấu ăn từ căn bếp 10m2, khéo tay trang trí nhà cửa với hoa giấy handmade.'" []
+is_a: doan_van_ban_tu_su_nang_luc
+
+[Term]
+id: giong_dieu_va_phong_cach_viet_tu_su
+name: Giọng điệu và phong cách viết tự sự
+def: "Cách thức ngôn ngữ được sử dụng trong đoạn văn tự sự: trang trọng hay thân mật, khiêm tốn hay tự tin, ngắn gọn súc tích hay chi tiết phong phú.\nPhản ánh cá tính và bối cảnh văn hóa của người được mô tả." []
+is_a: doan_van_ban_tu_su_nang_luc
+
+[Term]
+id: giong_dieu_trang_trong
+name: Giọng điệu trang trọng
+def: "Phong cách viết tự sự dùng ngôn ngữ chính thức, lịch sự và có khoảng cách — phù hợp với môi trường chuyên nghiệp hoặc khi muốn tạo ấn tượng nghiêm túc." []
+is_a: giong_dieu_va_phong_cach_viet_tu_su
+
+[Term]
+id: giong_dieu_than_mat_gan_gui
+name: Giọng điệu thân mật gần gũi
+def: "Phong cách viết tự sự dùng ngôn ngữ đời thường, tự nhiên và gần gũi — tạo cảm giác chân thật và dễ đồng cảm với người đọc." []
+is_a: giong_dieu_va_phong_cach_viet_tu_su
+
+[Term]
+id: phong_cach_viet_ngan_gon_suc_tich
+name: Phong cách viết ngắn gọn súc tích
+def: "Cách trình bày năng lực bằng ngôn ngữ cô đọng, chỉ nêu điểm cốt lõi — không dài dòng, không giải thích thừa." []
+is_a: giong_dieu_va_phong_cach_viet_tu_su
+
+[Term]
+id: kinh_nghiem_thuc_te
+name: Kinh nghiệm thực tế
+def: "Toàn bộ những bài học, sự am hiểu và tri thức có được thông qua quá trình trực tiếp tham gia làm việc, cọ xát và xử lý các bài toán trong đời thực.\nĐược đo lường bằng kết quả công việc và các dự án đã hoàn thành." []
+is_a: skills_and_expertise
+relationship: influences ky_nang_thuc_hanh_nghe_nghiep ! ảnh hưởng đến
+relationship: influences muc_tieu_kinh_doanh_hoac_su_nghiep_cu_the ! định hình
+relationship: influences muc_do_thuan_thuc_sang_tao ! củng cố
+relationship: influences the_gioi_quan ! củng cố
+
+[Term]
+id: linh_vuc_kinh_nghiem_tich_luy
+name: Lĩnh vực kinh nghiệm tích lũy
+def: "Các mảng công việc hoặc hoạt động cụ thể mà cá nhân đã dành thời gian đáng kể để thực hành và tích lũy bài học.\nVí dụ thực tế từ dữ liệu: chăm sóc bệnh nhân nhiều năm, quản lý tiệm tạp hóa từ nhỏ, nấu ăn truyền thống từ gia đình." []
+is_a: kinh_nghiem_thuc_te
+relationship: influences dinh_huong_phat_trien_ban_than ! định hướng
+
+[Term]
+id: hinh_thuc_tich_luy_kinh_nghiem
+name: Hình thức tích lũy kinh nghiệm
+def: "Cách thức cá nhân có được kinh nghiệm: học từ người thân, tự mày mò thử nghiệm, làm việc thực tế lâu năm hay được đào tạo bài bản.\nVí dụ thực tế từ dữ liệu: mẹ dạy nấu ăn từ nhỏ, tự học làm bánh đa cua, học qua cháu nội về sửa điện tử cơ bản." []
+is_a: kinh_nghiem_thuc_te
+
+[Term]
+id: hoc_ky_nang_tu_nguoi_than_gia_dinh
+name: Học kỹ năng từ người thân gia đình
+def: "Tiếp thu kinh nghiệm thông qua quan sát và thực hành cùng cha mẹ, ông bà hoặc anh chị em trong bối cảnh sinh hoạt gia đình hàng ngày." []
+is_a: hinh_thuc_tich_luy_kinh_nghiem
+
+[Term]
+id: tu_may_mo_thu_nghiem
+name: Tự mày mò thử nghiệm
+def: "Tích lũy kinh nghiệm bằng cách tự khám phá, thử sai và rút ra bài học mà không có người hướng dẫn trực tiếp — phụ thuộc vào sự kiên trì và trực giác cá nhân." []
+is_a: hinh_thuc_tich_luy_kinh_nghiem
+
+[Term]
+id: lam_viec_thuc_te_lau_nam
+name: Làm việc thực tế lâu năm
+def: "Tích lũy kinh nghiệm qua quá trình trực tiếp tham gia công việc trong thời gian dài — kinh nghiệm hình thành từ thực tế cọ xát, không qua lớp học chính thức." []
+is_a: hinh_thuc_tich_luy_kinh_nghiem
+
+[Term]
+id: dao_tao_bai_ban_co_to_chuc
+name: Đào tạo bài bản có tổ chức
+def: "Tích lũy kiến thức và kỹ năng qua các chương trình học chính thức — trường học, khóa đào tạo nghề, chương trình chứng chỉ có cấu trúc bài bản." []
+is_a: hinh_thuc_tich_luy_kinh_nghiem
+
+[Term]
+id: ket_qua_do_luong_duoc_tu_kinh_nghiem
+name: Kết quả đo lường được từ kinh nghiệm
+def: "Các thành phẩm, năng lực hoặc thành tích cụ thể có thể quan sát được, là bằng chứng của quá trình tích lũy kinh nghiệm.\nVí dụ thực tế từ dữ liệu: nấu phở chuẩn vị Hà Nội, làm được bánh cuốn, quản lý được hàng tồn kho, sửa chữa được hệ thống điện nước cơ bản." []
+is_a: kinh_nghiem_thuc_te
+relationship: correlated_with hieu_qua_thuc_hien_cong_viec ! tương quan với
+relationship: influences dong_luc_phat_trien_su_nghiep ! củng cố
+
+[Term]
+id: hobbies_and_interests
+name: Hobbies_and_interests
+def: "Mô tả về các sở thích cá nhân, đam mê và hoạt động giải trí trong thời gian rảnh rỗi, được trình bày dưới dạng một đoạn văn bản tự sự nhằm thể hiện phong cách sống." []
+
+[Term]
+id: so_thich_ca_nhan
+name: Sở thích cá nhân
+def: "Các hoạt động, đề tài hoặc lĩnh vực mà một người tự nguyện tìm đến nhằm mục đích thư giãn, tìm kiếm niềm vui hoặc thỏa mãn sự tò mò.\nKhông bị ràng buộc bởi trách nhiệm hay áp lực công việc." []
+is_a: hobbies_and_interests
+
+[Term]
+id: loai_hinh_so_thich
+name: Loại hình sở thích
+def: "Nhóm hoạt động hoặc lĩnh vực mà sở thích của cá nhân thuộc về.\nVí dụ thực tế từ dữ liệu: sở thích nghệ thuật thủ công (làm tranh thạch cao, vẽ tranh thủy mặc), sở thích thiên nhiên (nuôi chim bồ câu, chăm vườn rau sân thượng), sở thích cộng đồng (tham gia khiêu vũ truyền thống, sinh hoạt hội nhóm)." []
+is_a: so_thich_ca_nhan
+relationship: correlated_with mon_the_thao_yeu_thich ! tương quan với
+relationship: correlated_with loai_hinh_nghe_thuat_thuc_hanh ! tương quan với
+relationship: influences kieu_trai_nghiem_uu_tien ! định hình
+
+[Term]
+id: so_thich_nghe_thuat_thu_cong
+name: Sở thích nghệ thuật thủ công
+def: "Nhóm sở thích gắn với việc tạo ra sản phẩm bằng tay hoặc thực hành các loại hình nghệ thuật.\nVí dụ thực tế: làm tranh thạch cao, vẽ tranh thủy mặc, thêu thùa, làm đèn hoa đăng, nặn tượng." []
+is_a: loai_hinh_so_thich
+
+[Term]
+id: so_thich_thien_nhien_va_ngoai_troi
+name: Sở thích thiên nhiên và ngoài trời
+def: "Nhóm sở thích gắn với môi trường tự nhiên và các hoạt động ngoài trời.\nVí dụ thực tế: nuôi chim bồ câu, chăm vườn rau sân thượng, chèo xuồng kênh rạch, câu cá." []
+is_a: loai_hinh_so_thich
+
+[Term]
+id: so_thich_cong_dong_va_giao_luu
+name: Sở thích cộng đồng và giao lưu
+def: "Nhóm sở thích gắn với sinh hoạt tập thể và kết nối con người.\nVí dụ thực tế: tham gia khiêu vũ truyền thống, sinh hoạt hội nhóm, tổ chức sự kiện cộng đồng, dạy nghề cho lớp trẻ." []
+is_a: loai_hinh_so_thich
+
+[Term]
+id: nguon_goc_hinh_thanh_so_thich
+name: Nguồn gốc hình thành sở thích
+def: "Yếu tố hoặc hoàn cảnh khởi đầu đã khai sinh nên một sở thích cụ thể của cá nhân.\nVí dụ thực tế từ dữ liệu: lớn lên gần chợ nổi nên thích chèo xuồng, gia đình có truyền thống nghệ thuật sân khấu nên gắn bó với hát chèo, cháu nội dạy dùng công nghệ nên tò mò về nhiếp ảnh kỹ thuật số." []
+is_a: so_thich_ca_nhan
+
+[Term]
+id: so_thich_hinh_thanh_tu_moi_truong_song
+name: Sở thích hình thành từ môi trường sống
+def: "Sở thích nảy sinh từ đặc điểm địa lý, cảnh quan hoặc nhịp sống của nơi cá nhân lớn lên.\nVí dụ thực tế: lớn lên gần chợ nổi nên thích chèo xuồng, sống ven biển nên gắn bó với câu cá và bơi lội." []
+is_a: nguon_goc_hinh_thanh_so_thich
+
+[Term]
+id: so_thich_hinh_thanh_tu_gia_dinh_truyen_thong
+name: Sở thích hình thành từ gia đình truyền thống
+def: "Sở thích được truyền lại hoặc khơi dậy từ môi trường gia đình và truyền thống dòng họ.\nVí dụ thực tế: gia đình có truyền thống nghệ thuật sân khấu nên gắn bó với hát chèo, mẹ làm bánh nên thích nấu nướng từ nhỏ." []
+is_a: nguon_goc_hinh_thanh_so_thich
+
+[Term]
+id: so_thich_hinh_thanh_tu_nguoi_truyen_cam_hung
+name: Sở thích hình thành từ người truyền cảm hứng
+def: "Sở thích được khơi dậy bởi một người cụ thể — người thân, bạn bè hoặc thầy cô — giới thiệu và truyền niềm đam mê.\nVí dụ thực tế: cháu nội dạy dùng điện thoại nên tò mò về nhiếp ảnh kỹ thuật số, bạn rủ đi lớp khiêu vũ rồi mê từ đó." []
+is_a: nguon_goc_hinh_thanh_so_thich
+
+[Term]
+id: muc_do_dau_tu_vao_so_thich
+name: Mức độ đầu tư vào sở thích
+def: "Lượng thời gian, công sức và đôi khi tài chính mà cá nhân thực sự dành cho một sở thích.\nPhân biệt giữa sở thích nhẹ (thỉnh thoảng làm khi có dịp) và sở thích sâu (dành hàng tuần, có mục tiêu rõ ràng).\nVí dụ thực tế từ dữ liệu: mỗi sáng thứ Bảy tham gia lớp múa quan họ, mỗi cuối tuần đến công viên nhảy truyền thống." []
+is_a: so_thich_ca_nhan
+relationship: correlated_with tan_suat_tham_gia_the_thao ! tương quan với
+relationship: correlated_with muc_do_thuan_thuc_sang_tao ! tương quan với
+
+[Term]
+id: so_thich_muc_nhe_thinh_thoang
+name: Sở thích mức nhẹ thỉnh thoảng
+def: "Mức đầu tư thấp — chỉ thực hiện khi có dịp hoặc cảm hứng, không có lịch cố định và không đặt mục tiêu phát triển." []
+is_a: muc_do_dau_tu_vao_so_thich
+
+[Term]
+id: so_thich_muc_sau_co_cam_ket
+name: Sở thích mức sâu có cam kết
+def: "Mức đầu tư cao — dành thời gian đều đặn, có mục tiêu rõ ràng và liên tục tìm cách nâng cao kỹ năng hoặc kiến thức trong lĩnh vực đó.\nVí dụ thực tế: mỗi sáng thứ Bảy tham gia lớp múa quan họ, mỗi cuối tuần đến công viên nhảy truyền thống." []
+is_a: muc_do_dau_tu_vao_so_thich
+
+[Term]
+id: dam_me_ca_nhan
+name: Đam mê cá nhân
+def: "Mức độ quan tâm và yêu thích sâu sắc, mạnh mẽ ở mức độ cao đối với một hoạt động hoặc lĩnh vực cụ thể.\nThúc đẩy cá nhân dành nhiều thời gian, công sức và tâm huyết để theo đuổi, tìm tòi và phát triển lâu dài." []
+is_a: hobbies_and_interests
+relationship: influences muc_do_hung_thu_van_dong ! thúc đẩy
+relationship: influences dong_luc_sang_tao_nghe_thuat ! thúc đẩy
+relationship: influences muc_tieu_chuyen_di ! thúc đẩy
+relationship: influences khat_vong_dong_gop_xa_hoi ! thúc đẩy
+
+[Term]
+id: doi_tuong_dam_me
+name: Đối tượng đam mê
+def: "Hoạt động, lĩnh vực hoặc chủ đề cụ thể là tâm điểm của đam mê cá nhân.\nVí dụ thực tế từ dữ liệu: đam mê ẩm thực truyền thống Hải Phòng, đam mê nghệ thuật chèo, đam mê vẽ tranh phong cảnh với màu rực rỡ, đam mê truyền dạy công thức gia truyền." []
+is_a: dam_me_ca_nhan
+
+[Term]
+id: muc_do_kien_tri_dam_me
+name: Mức độ kiên trì đam mê
+def: "Tính bền vững theo thời gian của đam mê — đam mê có duy trì qua các giai đoạn khó khăn, thay đổi cuộc sống hay không.\nVí dụ thực tế từ dữ liệu: giữ gìn hội hoa phượng đỏ từ những năm 90, dù nghỉ hưu vẫn tiếp tục dạy nấu ăn truyền thống." []
+is_a: dam_me_ca_nhan
+relationship: influences muc_do_cam_ket_nghe_nghiep ! củng cố
+relationship: influences muc_do_kham_pha_tu_phat ! củng cố
+
+[Term]
+id: dam_me_ben_vung_dai_han
+name: Đam mê bền vững dài hạn
+def: "Đam mê duy trì qua nhiều năm, không bị gián đoạn bởi thay đổi hoàn cảnh hay giai đoạn khó khăn trong cuộc sống.\nVí dụ thực tế: giữ gìn hội hoa phượng đỏ từ những năm 90, dù nghỉ hưu vẫn tiếp tục dạy nấu ăn truyền thống." []
+is_a: muc_do_kien_tri_dam_me
+
+[Term]
+id: dam_me_theo_giai_doan
+name: Đam mê theo giai đoạn
+def: "Đam mê xuất hiện mạnh trong một thời kỳ nhất định nhưng có thể giảm hoặc thay đổi theo biến động của cuộc sống — công việc, gia đình hoặc sức khỏe." []
+is_a: muc_do_kien_tri_dam_me
+
+[Term]
+id: hoat_dong_giai_tri_thoi_gian_ranh
+name: Hoạt động giải trí thời gian rảnh
+def: "Những việc làm cụ thể được thực hiện trong quỹ thời gian ngoài giờ làm việc hoặc học tập.\nNhằm mục đích tái tạo năng lượng thể chất, giải tỏa căng thẳng tinh thần và cân bằng cuộc sống." []
+is_a: hobbies_and_interests
+
+[Term]
+id: hoat_dong_giai_tri_cu_the
+name: Hoạt động giải trí cụ thể
+def: "Danh sách các việc làm thực tế mà cá nhân thực hiện trong thời gian rảnh để thư giãn và tái tạo năng lượng.\nVí dụ thực tế từ dữ liệu: chơi cờ tướng, uống nước đá chanh vỉa hè, đọc thơ, nghe cải lương, chèo xuồng kênh rạch chiều tà, làm bánh cống cuối tuần, nướng bánh." []
+is_a: hoat_dong_giai_tri_thoi_gian_ranh
+relationship: influences tan_suat_tiep_xuc_nghe_thuat ! định hình
+relationship: correlated_with hoat_dong_giai_tri_khi_du_lich ! tương quan với
+
+[Term]
+id: boi_canh_giai_tri
+name: Bối cảnh giải trí
+def: "Hoàn cảnh và môi trường xung quanh khi cá nhân thực hiện hoạt động giải trí: một mình hay cùng người khác, \ntại nhà hay ngoài không gian công cộng, định kỳ hay tùy hứng.\nVí dụ thực tế từ dữ liệu: kể chuyện cho con cháu đêm trăng tròn, đốt lửa quây quanh bạn bè, cùng cháu nội chơi cờ vua, \nđến công viên với nhóm khiêu vũ cuối tuần." []
+is_a: hoat_dong_giai_tri_thoi_gian_ranh
+relationship: influences boi_canh_tham_gia_the_thao ! định hình
+
+[Term]
+id: chuc_nang_giai_tri_doi_voi_ca_nhan
+name: Chức năng giải trí đối với cá nhân
+def: "Vai trò tâm lý hoặc xã hội mà hoạt động giải trí đảm nhận trong cuộc sống của cá nhân: giải tỏa stress, \nduy trì kết nối xã hội, bảo tồn văn hóa, hay đơn giản là tìm niềm vui.\nVí dụ thực tế từ dữ liệu: nhảy truyền thống để giữ sức khỏe lẫn giao lưu, nghe cải lương để hoài niệm, chăm vườn để tĩnh tâm." []
+is_a: hoat_dong_giai_tri_thoi_gian_ranh
+
+[Term]
+id: giai_tri_de_giai_toa_stress
+name: Giải trí để giải tỏa stress
+def: "Hoạt động giải trí đóng vai trò van xả, giúp cá nhân thoát khỏi áp lực công việc và căng thẳng tích tụ trong cuộc sống hàng ngày." []
+is_a: chuc_nang_giai_tri_doi_voi_ca_nhan
+
+[Term]
+id: giai_tri_de_ket_noi_xa_hoi
+name: Giải trí để kết nối xã hội
+def: "Hoạt động giải trí đóng vai trò cầu nối, giúp cá nhân duy trì và mở rộng các mối quan hệ xã hội trong cộng đồng.\nVí dụ thực tế: nhảy truyền thống để giao lưu, cùng cháu nội chơi cờ vua, đến công viên với nhóm khiêu vũ cuối tuần." []
+is_a: chuc_nang_giai_tri_doi_voi_ca_nhan
+
+[Term]
+id: giai_tri_de_bao_ton_van_hoa
+name: Giải trí để bảo tồn văn hóa
+def: "Hoạt động giải trí gắn với sứ mệnh gìn giữ và truyền dạy các giá trị văn hóa truyền thống cho thế hệ sau.\nVí dụ thực tế: nghe cải lương để hoài niệm, duy trì lớp múa quan họ sân đình, dạy làm nem cua bể cho lớp trẻ." []
+is_a: chuc_nang_giai_tri_doi_voi_ca_nhan
+
+[Term]
+id: giai_tri_don_thuan_tim_niem_vui
+name: Giải trí đơn thuần tìm niềm vui
+def: "Hoạt động giải trí không gắn với mục tiêu xã hội hay ý nghĩa lớn hơn — chỉ đơn giản vì bản thân hoạt động đó mang lại niềm vui và sự thoải mái." []
+is_a: chuc_nang_giai_tri_doi_voi_ca_nhan
+
+[Term]
+id: doan_van_ban_tu_su_phong_cach_song
+name: Đoạn văn bản tự sự phong cách sống
+def: "Hình thức kết nối các thói quen, sở thích thành một câu chuyện kể liền mạch và có văn cảnh.\nGiúp gián tiếp phác họa nên gu thẩm mỹ, thế giới quan và cá tính độc bản của người viết." []
+is_a: hobbies_and_interests
+
+[Term]
+id: hinh_anh_phong_cach_song_dac_trung
+name: Hình ảnh phong cách sống đặc trưng
+def: "Chi tiết sinh động, mang tính hình ảnh cao thể hiện nét đặc trưng trong lối sống của cá nhân.\nVí dụ thực tế từ dữ liệu: 'mỗi sáng Chủ Nhật cùng nhóm khiêu vũ truyền thống tại công viên', 'ngồi chèo xuồng kênh rạch Cần Thơ vào chiều tà', 'ngồi uống nước đá chanh vỉa hè nghe cải lương'." []
+is_a: doan_van_ban_tu_su_phong_cach_song
+relationship: influences phong_cach_dich_chuyen ! định hình
+
+[Term]
+id: gia_tri_phong_cach_song_an_hien
+name: Giá trị phong cách sống ẩn hiện
+def: "Các giá trị sống được bộc lộ gián tiếp qua cách kể chuyện về sở thích và thói quen, không được phát biểu trực tiếp nhưng có thể suy luận.\nVí dụ thực tế từ dữ liệu: trân trọng truyền thống (vẫn nấu nồi đất dù có lò vi sóng), coi trọng gia đình (kể chuyện cho con cháu nghe), gắn bó cộng đồng địa phương (duy trì hội hoa phượng đỏ)." []
+is_a: doan_van_ban_tu_su_phong_cach_song
+relationship: correlated_with muc_do_chu_tam_nghe_thuat ! tương quan với
+
+[Term]
+id: gia_tri_tran_trong_truyen_thong
+name: Giá trị trân trọng truyền thống
+def: "Giá trị sống ẩn hiện qua việc chủ động duy trì các thói quen và thực hành truyền thống dù có đủ điều kiện hiện đại hóa.\nVí dụ thực tế: vẫn nấu nồi đất dù có lò vi sóng, giữ công thức bánh đúng chuẩn dù đã nghỉ hưu." []
+is_a: gia_tri_phong_cach_song_an_hien
+
+[Term]
+id: gia_tri_coi_trong_gia_dinh
+name: Giá trị coi trọng gia đình
+def: "Giá trị sống ẩn hiện qua việc ưu tiên dành thời gian và tâm sức cho các thành viên gia đình trong các hoạt động thường ngày.\nVí dụ thực tế: kể chuyện cho con cháu nghe đêm trăng tròn, cùng cháu nội chơi cờ vua mỗi tối." []
+is_a: gia_tri_phong_cach_song_an_hien
+
+[Term]
+id: gia_tri_gan_bo_cong_dong
+name: Giá trị gắn bó cộng đồng
+def: "Giá trị sống ẩn hiện qua việc đầu tư thời gian và công sức vào các hoạt động tập thể của cộng đồng địa phương.\nVí dụ thực tế: duy trì hội hoa phượng đỏ dù đã nghỉ hưu, tổ chức đèn hoa đăng sông Cấm hàng năm." []
+is_a: gia_tri_phong_cach_song_an_hien
+
+[Term]
+id: career_goals_and_ambitions
+name: career_goals_and_ambitions
+def: "Đoạn văn bản mô tả các khát vọng nghề nghiệp, định hướng phát triển bản thân và những mục tiêu công việc dài hạn mà cá nhân hướng tới trong sự nghiệp." []
+
+[Term]
+id: khat_vong_nghe_nghiep
+name: Khát vọng nghề nghiệp
+def: "Mong muốn mãnh liệt và động lực vươn lên để đạt được những thành tựu hoặc vị trí quan trọng trong lộ trình công việc.\nLà yếu tố tinh thần thôi thúc cá nhân không ngừng nỗ lực, cống hiến và vượt qua giới hạn của bản thân." []
+is_a: career_goals_and_ambitions
+relationship: influences linh_vuc_lam_viec_chinh ! định hướng
+relationship: influences quan_niem_y_nghia_cuoc_song ! định hình
+
+[Term]
+id: muc_tieu_vi_tri_nghe_nghiep
+name: Mục tiêu vị trí nghề nghiệp
+def: "Chức danh, vai trò hoặc vị trí cụ thể mà cá nhân hướng đến trong lộ trình thăng tiến.\nVí dụ thực tế từ dữ liệu: trở thành trưởng bộ phận điều dưỡng năm 30 tuổi, thăng lên kỹ sư trưởng trong 5 năm, được phong nghệ nhân ẩm thực truyền thống." []
+is_a: khat_vong_nghe_nghiep
+relationship: influences phat_trien_su_nghiep ! thúc đẩy
+
+[Term]
+id: dong_luc_phat_trien_su_nghiep
+name: Động lực phát triển sự nghiệp
+def: "Lý do cốt lõi thôi thúc cá nhân theo đuổi và nỗ lực trong công việc, vượt qua khó khăn để tiến xa hơn.\nVí dụ thực tế từ dữ liệu: muốn xây nhà cho mẹ, muốn lo được cho gia đình, muốn truyền nghề truyền thống cho lớp trẻ, muốn đóng góp cho phát triển nông nghiệp bền vững." []
+is_a: khat_vong_nghe_nghiep
+relationship: influences muc_do_dau_tu_thoi_gian_va_nguon_luc ! thúc đẩy
+relationship: correlated_with muc_dich_thi_dau_canh_tranh ! tương quan với
+relationship: correlated_with muc_do_kien_tri_dam_me ! tương quan với
+
+[Term]
+id: dong_luc_lo_cho_gia_dinh
+name: Động lực lo cho gia đình
+def: "Mong muốn phát triển sự nghiệp xuất phát từ trách nhiệm và tình cảm với gia đình — xây nhà cho cha mẹ, lo học phí cho con, đảm bảo cuộc sống ổn định cho người thân." []
+is_a: dong_luc_phat_trien_su_nghiep
+
+[Term]
+id: dong_luc_truyen_nghe_va_bao_ton_truyen_thong
+name: Động lực truyền nghề và bảo tồn truyền thống
+def: "Mong muốn phát triển sự nghiệp để có đủ uy tín và nền tảng truyền dạy nghề truyền thống cho thế hệ sau.\nVí dụ thực tế: muốn được phong nghệ nhân để có thể mở lớp dạy nấu ăn truyền thống." []
+is_a: dong_luc_phat_trien_su_nghiep
+
+[Term]
+id: dong_luc_dong_gop_cho_xa_hoi
+name: Động lực đóng góp cho xã hội
+def: "Mong muốn công việc tạo ra giá trị vượt ra ngoài lợi ích cá nhân — đóng góp cho cộng đồng, phát triển ngành nghề hoặc giải quyết vấn đề xã hội." []
+is_a: dong_luc_phat_trien_su_nghiep
+
+[Term]
+id: dong_luc_tu_khang_dinh_ban_than
+name: Động lực tự khẳng định bản thân
+def: "Mong muốn phát triển sự nghiệp để chứng minh năng lực và giá trị của mình — vượt qua giới hạn xuất phát điểm, được công nhận và tôn trọng." []
+is_a: dong_luc_phat_trien_su_nghiep
+
+[Term]
+id: khat_vong_dong_gop_xa_hoi
+name: Khát vọng đóng góp xã hội
+def: "Mong muốn của cá nhân tạo ra giá trị hoặc tác động tích cực vượt ra ngoài lợi ích cá nhân, hướng đến cộng đồng hoặc xã hội rộng lớn hơn.\nVí dụ thực tế từ dữ liệu: truyền dạy nem cua bể đúng chuẩn cho lớp trẻ, đào tạo kỹ sư trẻ, xây dựng dự án xã hội hỗ trợ cộng đồng, đóng góp từ thiện." []
+is_a: khat_vong_nghe_nghiep
+
+[Term]
+id: dinh_huong_phat_trien_ban_than
+name: Định hướng phát triển bản thân
+def: "Lộ trình và chiến lược học tập, rèn luyện nhằm nâng cấp tư duy, kiến thức và kỹ năng của một người theo thời gian.\nGiúp tối ưu hóa năng lực tiềm ẩn và thích ứng với những thay đổi, yêu cầu mới trong công việc và cuộc sống." []
+is_a: career_goals_and_ambitions
+
+[Term]
+id: ke_hoach_hoc_tap_nang_cao
+name: Kế hoạch học tập nâng cao
+def: "Các bước cụ thể mà cá nhân dự định thực hiện để nâng cao trình độ chuyên môn hoặc mở rộng kiến thức.\nVí dụ thực tế từ dữ liệu: học chứng chỉ điều dưỡng tim mạch, học lên cao đẳng kỹ thuật, tham gia khóa học nhiếp ảnh, tham gia khóa quản lý và tổ chức sự kiện." []
+is_a: dinh_huong_phat_trien_ban_than
+relationship: influences he_thong_ky_nang_chuyen_mon_cot_loi ! củng cố
+
+[Term]
+id: ke_hoach_hoc_chung_chi_chuyen_nganh
+name: Kế hoạch học chứng chỉ chuyên ngành
+def: "Dự định theo đuổi chứng chỉ hoặc bằng cấp bổ sung trong lĩnh vực nghề nghiệp hiện tại để nâng cao năng lực và cơ hội thăng tiến.\nVí dụ thực tế: học chứng chỉ điều dưỡng tim mạch, chứng chỉ kỹ thuật nông nghiệp." []
+is_a: ke_hoach_hoc_tap_nang_cao
+
+[Term]
+id: ke_hoach_hoc_len_cap_cao_hon
+name: Kế hoạch học lên cấp cao hơn
+def: "Dự định tiếp tục học tập ở bậc học cao hơn bằng cấp hiện có — từ trung cấp lên cao đẳng, từ cao đẳng lên đại học.\nVí dụ thực tế: học lên cao đẳng kỹ thuật dù đang đi làm toàn thời gian." []
+is_a: ke_hoach_hoc_tap_nang_cao
+
+[Term]
+id: ke_hoach_hoc_ky_nang_mem
+name: Kế hoạch học kỹ năng mềm
+def: "Dự định tham gia các khóa học phát triển năng lực cá nhân không gắn với chuyên môn kỹ thuật — nhiếp ảnh, ngoại ngữ, kỹ năng giao tiếp, quản lý thời gian." []
+is_a: ke_hoach_hoc_tap_nang_cao
+
+[Term]
+id: ke_hoach_hoc_quan_ly_va_lanh_dao
+name: Kế hoạch học quản lý và lãnh đạo
+def: "Dự định trang bị kiến thức và kỹ năng quản lý để đảm nhận vai trò lãnh đạo hoặc mở rộng quy mô kinh doanh.\nVí dụ thực tế: tham gia khóa quản lý và tổ chức sự kiện, học kỹ năng quản lý nhân sự." []
+is_a: ke_hoach_hoc_tap_nang_cao
+
+[Term]
+id: nang_luc_can_phat_trien
+name: Năng lực cần phát triển
+def: "Kỹ năng hoặc kiến thức cụ thể mà cá nhân nhận ra còn thiếu và đang có kế hoạch bổ sung.\nVí dụ thực tế từ dữ liệu: muốn học thêm để phát triển bản thân dù không có học vấn, cần thêm kỹ năng quản lý để mở rộng quy mô kinh doanh, học phần mềm mới trong nghề kỹ thuật." []
+is_a: dinh_huong_phat_trien_ban_than
+relationship: correlated_with tap_hop_nang_luc ! tương quan với
+
+[Term]
+id: muc_tieu_cong_viec_dai_han
+name: Mục tiêu công việc dài hạn
+def: "Những đích đến, cột mốc thành tựu hoặc vai trò cụ thể mà cá nhân kỳ vọng sẽ chinh phục trong tương lai xa (thường từ 3 đến 5 năm trở lên).\nĐóng vai trò như kim chỉ nam định hình các kế hoạch hành động và quyết định ở hiện tại." []
+is_a: career_goals_and_ambitions
+
+[Term]
+id: muc_tieu_kinh_doanh_hoac_su_nghiep_cu_the
+name: Mục tiêu kinh doanh hoặc sự nghiệp cụ thể
+def: "Đích đến rõ ràng và có thể đo lường được trong lĩnh vực nghề nghiệp hoặc kinh doanh mà cá nhân đang hướng tới.\nVí dụ thực tế từ dữ liệu: mở siêu thị mini nhận hàng nhập khẩu, mở xưởng sửa chữa thiết bị nông nghiệp, mở rộng quy mô công việc phục vụ, duy trì cửa hàng tạp hóa gia đình." []
+is_a: muc_tieu_cong_viec_dai_han
+relationship: influences pham_vi_chuyen_mon_hoa ! định hình
+
+[Term]
+id: muc_tieu_tai_chinh_ca_nhan
+name: Mục tiêu tài chính cá nhân
+def: "Các đích đến về tài chính gắn liền với sự nghiệp mà cá nhân đặt ra như kim chỉ nam hành động.\nVí dụ thực tế từ dữ liệu: tăng thu nhập để cải thiện môi trường làm việc cho nhân viên, tích lũy đủ tiền mua căn nhà nhỏ, ổn định tài chính để chăm sóc bản thân và gia đình." []
+is_a: muc_tieu_cong_viec_dai_han
+relationship: correlated_with muc_do_dau_tu_thoi_gian_va_nguon_luc ! tương quan với
+relationship: correlated_with muc_do_dau_tu_vao_so_thich ! tương quan với
+
+[Term]
+id: muc_tieu_tai_chinh_ho_tro_nguoi_than
+name: Mục tiêu tài chính hỗ trợ người thân
+def: "Đích đến tài chính gắn với việc đảm bảo điều kiện sống tốt hơn cho gia đình — xây nhà, lo học phí, \ncải thiện điều kiện sinh hoạt cho cha mẹ hoặc con cái." []
+is_a: muc_tieu_tai_chinh_ca_nhan
+
+[Term]
+id: muc_tieu_tai_chinh_tich_luy_tai_san
+name: Mục tiêu tài chính tích lũy tài sản
+def: "Đích đến tài chính gắn với việc sở hữu tài sản cụ thể — mua nhà, mua đất, tích lũy tiết kiệm đủ để tự chủ tài chính." []
+is_a: muc_tieu_tai_chinh_ca_nhan
+
+[Term]
+id: muc_tieu_tai_chinh_on_dinh_cuoc_song
+name: Mục tiêu tài chính ổn định cuộc sống
+def: "Đích đến tài chính ở mức đủ sống ổn định và tự lo được cho bản thân — không cần giàu có nhưng không phải lo âu về chi phí hàng ngày." []
+is_a: muc_tieu_tai_chinh_ca_nhan
+
+[Term]
+id: moc_thoi_gian_muc_tieu
+name: Mốc thời gian mục tiêu
+def: "Khung thời gian cụ thể mà cá nhân gắn với các mục tiêu nghề nghiệp để tạo áp lực thực hiện.\nVí dụ thực tế từ dữ liệu: trong 3 năm tới học chứng chỉ tim mạch, đến năm 30 tuổi trở thành trưởng bộ phận, trong 5 năm tới thăng tiến lên kỹ sư trưởng." []
+is_a: muc_tieu_cong_viec_dai_han
+
+[Term]
+id: su_nghiep_ca_nhan
+name: Sự nghiệp cá nhân
+def: "Toàn bộ chuỗi hành trình làm việc, tích lũy kinh nghiệm và thăng tiến chuyên môn của một người trong suốt thời gian lao động.\nKhông chỉ là phương tiện tạo ra thu nhập mà còn là nền tảng để tự khẳng định giá trị bản thân với xã hội." []
+is_a: career_goals_and_ambitions
+
+[Term]
+id: hanh_trinh_nghe_nghiep_da_qua
+name: Hành trình nghề nghiệp đã qua
+def: "Các giai đoạn, vị trí và sự kiện quan trọng trong lịch sử làm việc của cá nhân tính đến thời điểm hiện tại.\nVí dụ thực tế từ dữ liệu: từng làm xây dựng rồi chuyển sang quản lý tài chính cá nhân, đã nghỉ hưu nhưng vẫn tiếp tục dạy nghề truyền thống, nhiều năm kinh nghiệm quản lý tiệm tạp hóa từ thời còn nhỏ." []
+is_a: su_nghiep_ca_nhan
+
+[Term]
+id: y_nghia_ca_nhan_cua_su_nghiep
+name: Ý nghĩa cá nhân của sự nghiệp
+def: "Vai trò mà công việc đảm nhận trong nhận thức của cá nhân về bản thân và cuộc sống: chỉ là phương tiện kiếm sống hay \ncòn là nguồn gốc của danh dự, bản sắc hoặc đóng góp xã hội.Ví dụ thực tế từ dữ liệu: coi nghề nấu ăn là \ncách giữ gìn văn hóa truyền thống, xem nghề điều dưỡng là ơn gọi cần học suốt đời, xem tiệm tạp hóa là tài sản gia đình cần gìn giữ." []
+is_a: su_nghiep_ca_nhan
+relationship: correlated_with ban_sac_ca_nhan ! tương quan với
+
+[Term]
+id: su_nghiep_la_phuong_tien_kiem_song
+name: Sự nghiệp là phương tiện kiếm sống
+def: "Quan niệm coi công việc chủ yếu là nguồn thu nhập để đảm bảo cuộc sống — không gắn bản sắc hay ý nghĩa sâu sắc với nghề nghiệp." []
+is_a: y_nghia_ca_nhan_cua_su_nghiep
+
+[Term]
+id: su_nghiep_la_nguon_danh_du_va_ban_sac
+name: Sự nghiệp là nguồn danh dự và bản sắc
+def: "Quan niệm coi công việc là phần cốt lõi tạo nên con người mình — nghề nghiệp gắn liền với danh dự, tự trọng và cách người khác nhìn nhận bản thân." []
+is_a: y_nghia_ca_nhan_cua_su_nghiep
+
+[Term]
+id: su_nghiep_la_dong_gop_cho_xa_hoi
+name: Sự nghiệp là đóng góp cho xã hội
+def: "Quan niệm coi công việc là phương tiện tạo ra giá trị cho cộng đồng — ý nghĩa của sự nghiệp nằm ở tác động tích cực để lại cho người khác và xã hội." []
+is_a: y_nghia_ca_nhan_cua_su_nghiep
+
+[Term]
+id: sex
+name: sex
+def: "Giới tính sinh học (Nam, Nữ)." []
+
+[Term]
+id: age
+name: age
+def: "Tuổi tính theo năm (Giới hạn từ 18 đến 90 tuổi)." []
+
+[Term]
+id: marital_status
+name: marital_status
+def: "Tình trạng mối quan hệ: Độc thân, Đã kết hôn, Góa, Ly thân" []
+
+[Term]
+id: education_level
+name: education_level
+def: "Cấp học cao nhất đã hoàn thành: Không học vấn, Tiểu học, THCS, THPT, Trung cấp / Cao đẳng, Đại học, Sau đại học." []
+
+[Term]
+id: occupation
+name: occupation
+def: "Nhóm ngành nghề; bao gồm 20 loại khác nhau, ví dụ: Buôn bán / kinh doanh, Kỹ thuật viên / kỹ sư, Công nhân / lao động phổ thông." []
+
+[Term]
+id: zone
+name: zone
+def: "Khu vực cư trú: Đô Thị, Nông Thôn." []
+
+[Term]
+id: region
+name: region
+def: "Tỉnh hoặc Thành phố trực thuộc trung ương nơi cư trú (1 trong 6 địa điểm): Thủ Đô Hà Nội, Thành Phố Hồ Chí Minh, Thành Phố Hải Phòng, Thành Phố Đà Nẵng, Thành Phố Cần Thơ, Tỉnh Đồng Nai." []
+
+[Term]
+id: country
+name: country
+def: "Quốc gia cư trú (Giá trị cố định: Việt Nam)." []
+
+

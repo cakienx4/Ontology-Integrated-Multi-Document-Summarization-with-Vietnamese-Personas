@@ -1,0 +1,79 @@
+{
+  "overlap": {
+    "Thời sự / Xã hội": {
+      "Chính trị / Pháp luật": 0.3,
+      "Quốc phòng / An ninh": 0.3,
+      "Y tế / Chăm sóc": 0.3,
+      "Môi trường": 0.3
+    },
+    "Tài chính / Kế toán": {
+      "Ngoại giao / Quan hệ quốc tế": 0.4,
+      "Chính trị / Pháp luật": 0.3,
+      "Công nghệ / Kỹ thuật số": 0.3,
+      "Thời sự / Xã hội": 0.2
+    },
+    "Công nghệ / Kỹ thuật số": {
+      "Tài chính / Kế toán": 0.3,
+      "Quốc phòng / An ninh": 0.3,
+      "Giáo dục": 0.2,
+      "Y tế / Chăm sóc": 0.2
+    },
+    "Giải trí / Văn hóa": {
+      "Du lịch": 0.4,
+      "Thời sự / Xã hội": 0.2,
+      "Giáo dục": 0.2
+    },
+    "Du lịch": {
+      "Giải trí / Văn hóa": 0.4,
+      "Môi trường": 0.3,
+      "Ngoại giao / Quan hệ quốc tế": 0.2
+    },
+    "Nấu ăn / Ẩm thực": {
+      "Y tế / Chăm sóc": 0.3,
+      "Du lịch": 0.2,
+      "Giải trí / Văn hóa": 0.2
+    },
+    "Y tế / Chăm sóc": {
+      "Thời sự / Xã hội": 0.3,
+      "Môi trường": 0.3,
+      "Nấu ăn / Ẩm thực": 0.3,
+      "Giáo dục": 0.2
+    },
+    "Thể thao": {
+      "Giải trí / Văn hóa": 0.3,
+      "Y tế / Chăm sóc": 0.2,
+      "Giáo dục": 0.2
+    },
+    "Giáo dục": {
+      "Chính trị / Pháp luật": 0.3,
+      "Thời sự / Xã hội": 0.2,
+      "Công nghệ / Kỹ thuật số": 0.2,
+      "Y tế / Chăm sóc": 0.2
+    },
+    "Chính trị / Pháp luật": {
+      "Quốc phòng / An ninh": 0.4,
+      "Ngoại giao / Quan hệ quốc tế": 0.4,
+      "Thời sự / Xã hội": 0.3,
+      "Tài chính / Kế toán": 0.3,
+      "Giáo dục": 0.3
+    },
+    "Quốc phòng / An ninh": {
+      "Ngoại giao / Quan hệ quốc tế": 0.5,
+      "Chính trị / Pháp luật": 0.4,
+      "Thời sự / Xã hội": 0.3,
+      "Công nghệ / Kỹ thuật số": 0.3
+    },
+    "Ngoại giao / Quan hệ quốc tế": {
+      "Quốc phòng / An ninh": 0.5,
+      "Tài chính / Kế toán": 0.4,
+      "Chính trị / Pháp luật": 0.4,
+      "Du lịch": 0.2
+    },
+    "Môi trường": {
+      "Y tế / Chăm sóc": 0.3,
+      "Thời sự / Xã hội": 0.3,
+      "Du lịch": 0.3
+    }
+  },
+  "nguong_lien_quan_gian_tiep": 0.3
+}

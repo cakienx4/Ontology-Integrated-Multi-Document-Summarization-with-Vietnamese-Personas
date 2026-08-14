@@ -1,0 +1,167 @@
+{
+  "ontology_score": 0.998,
+  "feature_coverage": {
+    "overall": 0.9961,
+    "total_features": 510,
+    "covered_features": 508,
+    "per_branch": {
+      "professional_persona": {
+        "features_total": 45,
+        "features_covered": 45,
+        "coverage": 1.0
+      },
+      "sports_persona": {
+        "features_total": 35,
+        "features_covered": 35,
+        "coverage": 1.0
+      },
+      "arts_persona": {
+        "features_total": 43,
+        "features_covered": 41,
+        "coverage": 0.9535
+      },
+      "travel_persona": {
+        "features_total": 40,
+        "features_covered": 40,
+        "coverage": 1.0
+      },
+      "culinary_persona": {
+        "features_total": 37,
+        "features_covered": 37,
+        "coverage": 1.0
+      },
+      "persona": {
+        "features_total": 52,
+        "features_covered": 52,
+        "coverage": 1.0
+      },
+      "cultural_background": {
+        "features_total": 75,
+        "features_covered": 75,
+        "coverage": 1.0
+      },
+      "skills_and_expertise": {
+        "features_total": 50,
+        "features_covered": 50,
+        "coverage": 1.0
+      },
+      "hobbies_and_interests": {
+        "features_total": 76,
+        "features_covered": 76,
+        "coverage": 1.0
+      },
+      "career_goals_and_ambitions": {
+        "features_total": 57,
+        "features_covered": 57,
+        "coverage": 1.0
+      }
+    }
+  },
+  "cq_coverage": {
+    "total_cq": 20,
+    "passed_cq": 20,
+    "coverage": 1.0,
+    "per_cq": [
+      {
+        "cq_id": "CQ1",
+        "verdict": "PASS",
+        "confidence": 0.95
+      },
+      {
+        "cq_id": "CQ2",
+        "verdict": "PASS",
+        "confidence": 0.95
+      },
+      {
+        "cq_id": "CQ3",
+        "verdict": "PASS",
+        "confidence": 1.0
+      },
+      {
+        "cq_id": "CQ4",
+        "verdict": "PASS",
+        "confidence": 1.0
+      },
+      {
+        "cq_id": "CQ5",
+        "verdict": "PASS",
+        "confidence": 0.95
+      },
+      {
+        "cq_id": "CQ6",
+        "verdict": "PASS",
+        "confidence": 0.9
+      },
+      {
+        "cq_id": "CQ7",
+        "verdict": "PASS",
+        "confidence": 0.95
+      },
+      {
+        "cq_id": "CQ8",
+        "verdict": "PASS",
+        "confidence": 1.0
+      },
+      {
+        "cq_id": "CQ9",
+        "verdict": "PASS",
+        "confidence": 0.95
+      },
+      {
+        "cq_id": "CQ10",
+        "verdict": "PASS",
+        "confidence": 1.0
+      },
+      {
+        "cq_id": "CQ11",
+        "verdict": "PASS",
+        "confidence": 1.0
+      },
+      {
+        "cq_id": "CQ12",
+        "verdict": "PASS",
+        "confidence": 0.95
+      },
+      {
+        "cq_id": "CQ13",
+        "verdict": "PASS",
+        "confidence": 0.95
+      },
+      {
+        "cq_id": "CQ14",
+        "verdict": "PASS",
+        "confidence": 1.0
+      },
+      {
+        "cq_id": "CQ15",
+        "verdict": "PASS",
+        "confidence": 0.95
+      },
+      {
+        "cq_id": "CQ16",
+        "verdict": "PASS",
+        "confidence": 0.95
+      },
+      {
+        "cq_id": "CQ17",
+        "verdict": "PASS",
+        "confidence": 0.95
+      },
+      {
+        "cq_id": "CQ18",
+        "verdict": "PASS",
+        "confidence": 0.95
+      },
+      {
+        "cq_id": "CQ19",
+        "verdict": "PASS",
+        "confidence": 1.0
+      },
+      {
+        "cq_id": "CQ20",
+        "verdict": "PASS",
+        "confidence": 1.0
+      }
+    ]
+  }
+}
