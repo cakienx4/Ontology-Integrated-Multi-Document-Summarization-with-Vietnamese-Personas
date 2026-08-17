@@ -9,12 +9,13 @@ ROOT_DIR = Path(__file__).resolve().parents[3]
 MD_ROOT = ROOT_DIR / "multi_document_variants"
 SHARED_ROOT = ROOT_DIR / "shared"
 
-DATA_DIR = MD_ROOT / "data" / "baochi"
+DATA_DIR = MD_ROOT / "data" / "bao_chi"
 OUTPUT_DIR = MD_ROOT / "output" / "bao_chi" / "rss_summary"
 
 from pipeline.utils import (
     retry_generate_async, OSS_MODEL_NAME, load_graph,
     tao_oss_client_async, lay_chu_de_hieu_luc, OSS_MAX_CONCURRENCY,
+    OSS_MAX_OUTPUT_TOKENS_TRAN,
 )
 from pipeline.profiles.ontology_context_state import lay_ontology_context_cho_nganh
 
@@ -51,7 +52,7 @@ CHU_DE_WEIGHT_FALLBACK = 0.3
 FILTER_TOKENS_UOC_LUONG_MOI_BAI = 30
 FILTER_MAX_TOKENS_SAN = 2048
 MAX_OUTPUT_TOKENS_SAN = 4096
-MAX_OUTPUT_TOKENS_TRAN = 65536
+MAX_OUTPUT_TOKENS_TRAN = OSS_MAX_OUTPUT_TOKENS_TRAN
 TI_LE_BAO_PHU_TOI_THIEU = 0.85
 SO_LAN_THU_LAI_TOI_DA = 1
 
@@ -829,7 +830,10 @@ async def tom_tat_rss_cho_persona(persona: dict, articles: list, client, semapho
     prompt_goc = build_rss_prompt(persona, ranked, tin_gian_tiep, bai_lien_quan)
 
     so_bai = len(ranked) + len(tin_gian_tiep)
-    max_tokens = MAX_OUTPUT_TOKENS_TRAN
+    max_tokens = min(
+        MAX_OUTPUT_TOKENS_TRAN,
+        max(MAX_OUTPUT_TOKENS_SAN, so_bai * FILTER_TOKENS_UOC_LUONG_MOI_BAI),
+    )
     so_tin_chinh = len(ranked)
 
     prompt = prompt_goc
@@ -847,13 +851,7 @@ async def tom_tat_rss_cho_persona(persona: dict, articles: list, client, semapho
         async with semaphore:
             response = await retry_generate_async(_call)
 
-        bi_cat_cut = False
-        try:
-            finish_reason = str(response.candidates[0].finish_reason)
-            if "MAX_TOKENS" in finish_reason:
-                bi_cat_cut = True
-        except (AttributeError, IndexError):
-            pass
+        bi_cat_cut = getattr(response, "finish_reason", None) == "length"
 
         summary = response.text.strip()
         so_doan_thuc_te = len([doan for doan in summary.split("\n\n") if doan.strip()])
@@ -977,7 +975,7 @@ if __name__ == "__main__":
         articles = json.load(f)
 
     ten_file_persona = f"state_profiles_{args.variant}.json" if args.variant else "state_profiles_nt_nn_tc_kn_cd_ch.json"
-    with open(DATA_DIR / "profile_variants" / ten_file_persona, encoding="utf-8") as f:
+    with open(MD_ROOT / "data" / "profile_variants" / ten_file_persona, encoding="utf-8") as f:
         personas = json.load(f)
 
     articles = gan_genre_cho_bai(articles)

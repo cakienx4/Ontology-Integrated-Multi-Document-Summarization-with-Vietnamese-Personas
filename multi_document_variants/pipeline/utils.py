@@ -12,7 +12,7 @@ OSS_MAX_CONCURRENCY = 200
 
 OSS_HOST = "https://text-sum-gpt-oss-120b-runai-text-sum.runai-inference.cyberspace.vn"
 OSS_MODEL_NAME = "gpt-oss-120b"
-
+OSS_MAX_OUTPUT_TOKENS_TRAN = 8192
 NGANH_TO_SANG_GENRE = {
     "Công chức hành chính nhà nước": ["Chính trị / Pháp luật", "Thời sự / Xã hội"],
     "Quân đội": ["Quốc phòng / An ninh", "Thời sự / Xã hội"],
@@ -88,17 +88,23 @@ def tao_oss_raw_client_async():
     )
 
 
-async def oss_generate_content_async(raw_client, model=None, contents="", config=None):
-    temperature = (config or {}).get("temperature", 0.0)
+async def oss_generate_content_async(raw_client, model=OSS_MODEL_NAME, contents="", config=None):
+    config = config or {}
+    temperature = config.get("temperature", 0.0)
+    max_tokens = min(
+        config.get("max_output_tokens", OSS_MAX_OUTPUT_TOKENS_TRAN),
+        OSS_MAX_OUTPUT_TOKENS_TRAN,
+    )
     response = await raw_client.chat.completions.create(
-        model=OSS_MODEL_NAME,
+        model=model,
         messages=[{"role": "user", "content": contents}],
         temperature=temperature,
-        max_tokens=8192,
+        max_tokens=max_tokens,
         extra_body={"reasoning_effort": "low"},
     )
     raw = response.choices[0].message.content
-    return SimpleNamespace(text=raw.strip() if raw else "")
+    finish_reason = response.choices[0].finish_reason
+    return SimpleNamespace(text=raw.strip() if raw else "", finish_reason=finish_reason)
 
 
 def tao_oss_client_async():
