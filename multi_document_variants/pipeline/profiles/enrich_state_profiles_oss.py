@@ -2,7 +2,7 @@ import random
 import json
 import re
 import asyncio
-from pipeline.utils import retry_generate_async, OSS_MODEL_NAME, tao_oss_client_async, OSS_MAX_CONCURRENCY
+from pipeline.utils_new import retry_generate_async, OSS_MODEL_NAME, tao_oss_client_async, OSS_MAX_CONCURRENCY
 from pipeline.profiles.generate_state_profiles import save_csv
 from pathlib import Path
 
@@ -26,7 +26,7 @@ def lay_chuc_danh(kinh_nghiem_text: str) -> str:
     """
     Tach chinh xac cum chuc danh tu cau kinh_nghiem, vi du:
     "...hien dang dam nhiem vi tri Truong phong." -> "Truong phong"
-    Dung chung logic voi lay_chuc_vu() trong rss_personalize.py.
+    Dung chung logic voi lay_chuc_vu() trong rss_personalize_gemini.py.
     """
     match = re.search(r"đảm nhiệm vị trí (.+?)\.", kinh_nghiem_text or "")
     return match.group(1).strip() if match else ""

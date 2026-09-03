@@ -1,14 +1,19 @@
-import os
 import json
 import re
+import asyncio
 from pathlib import Path
 
-from pipeline.utils import retry_generate, SUMMARY_MODEL_NAME, load_graph
+from pipeline.utils import (
+    retry_generate_async, OSS_MODEL_NAME, load_graph, tao_oss_client_async,
+    OSS_MAX_CONCURRENCY_SUMMARY, uoc_luong_so_token,
+)
 from pipeline.profiles.ontology_context_state import lay_ontology_context_cho_nganh
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 _ONTOLOGY_PATH = ROOT_DIR / "persona_states.ttl"
 _STATE_GRAPH = load_graph(str(_ONTOLOGY_PATH))
+HANH_CHINH_MAX_OUTPUT_TOKENS = 3000
+NGUONG_TOKEN_MOI_BATCH_MUC = 2000
 
 # ==== BƯỚC 1: XÁC ĐỊNH TẦNG ĐỘ SÂU CHO TỪNG MỤC + STYLE TOÀN BÀI ====
 
@@ -185,10 +190,37 @@ def _dinh_dang_danh_sach_muc(danh_sach_muc, style):
         )
     return ds
 
+def _chia_muc_theo_token(danh_sach_muc, style):
+    """Chia danh_sach_muc thành các batch liên tiếp, KHÔNG đảo thứ tự, sao cho tổng số token ước
+    lượng của phần nội dung mỗi batch không vượt quá NGUONG_TOKEN_MOI_BATCH_MUC. Cần chia vì đưa
+    hết văn bản hành chính dài vào 1 prompt duy nhất khiến prompt lên tới 16k+ token, vượt xa
+    ngưỡng context thực tế ~8192 token/request của endpoint OSS -> timeout/500 hàng loạt."""
+    batches = []
+    batch_hien_tai = []
+    token_hien_tai = 0
+
+    for muc in danh_sach_muc:
+        text_mục = _dinh_dang_danh_sach_muc([muc], style)
+        token_mục = uoc_luong_so_token(text_mục)
+
+        if batch_hien_tai and token_hien_tai + token_mục > NGUONG_TOKEN_MOI_BATCH_MUC:
+            batches.append(batch_hien_tai)
+            batch_hien_tai = []
+            token_hien_tai = 0
+
+        batch_hien_tai.append(muc)
+        token_hien_tai += token_mục
+
+    if batch_hien_tai:
+        batches.append(batch_hien_tai)
+
+    return batches
+
 
 def build_hanh_chinh_prompt(persona, ket_qua_extract, danh_sach_muc_voi_tang, style):
     loai_van_ban = ket_qua_extract.get("loai_van_ban", "")
     ontology_ctx = lay_ontology_context_cho_nganh(persona.get("nganh_to", ""))
+
     danh_sach_muc_text = _dinh_dang_danh_sach_muc(danh_sach_muc_voi_tang, style)
     quy_tac_gop_muc_nen = GOP_MUC_NEN_THEO_STYLE.get(
         style, GOP_MUC_NEN_THEO_STYLE["binh_thuong"]
@@ -209,10 +241,11 @@ def build_hanh_chinh_prompt(persona, ket_qua_extract, danh_sach_muc_voi_tang, st
     - Đơn vị công tác: {persona.get('to_chuc')}
     - Mô tả chung: {persona.get('mo_ta_chung')}
 
-    Dưới đây là toàn bộ nội dung văn bản, đã chia theo mục, GIỮ NGUYÊN THỨ TỰ như
-    văn bản gốc. Mỗi mục có ghi rõ yêu cầu độ chi tiết VÀ văn phong riêng - PHẢI
-    tuân thủ đúng yêu cầu đó cho TỪNG mục, không viết đều tay như nhau cho tất cả
-    các mục kể cả về độ dài lẫn cách dùng từ ngữ:
+    Dưới đây là một phần nội dung văn bản (văn bản dài nên được xử lý theo từng đợt
+    liên tiếp), đã chia theo mục, GIỮ NGUYÊN THỨ TỰ như văn bản gốc. Mỗi mục có ghi
+    rõ yêu cầu độ chi tiết VÀ văn phong riêng - PHẢI tuân thủ đúng yêu cầu đó cho 
+    TỪNG mục, không viết đều tay như nhau cho tất cả các mục kể cả về độ dài lẫn cách 
+    dùng từ ngữ:
     {danh_sach_muc_text}
 
     QUY TẮC BẮT BUỘC:
@@ -272,6 +305,10 @@ def build_hanh_chinh_prompt(persona, ket_qua_extract, danh_sach_muc_voi_tang, st
       + BẮT BUỘC mọi thuật ngữ hành chính, pháp lý hoặc chuyên ngành xuất hiện
         trong đoạn đó phải có phần giải thích ngắn gọn đi kèm NGAY TRONG CÙNG
         CÂU, không được để thuật ngữ đứng một mình không giải thích.
+      + DIỆN ÁP DỤNG BAO GỒM CẢ TỪ VIẾT TẮT/TÊN CƠ QUAN VIẾT TẮT (ví dụ:
+        "UBND", "HĐND", "UBMTTQ", "BHXH", "BHYT"...) - đây KHÔNG phải ngoại
+        lệ, phải viết ra tên đầy đủ ngay lần đầu xuất hiện trong đoạn đó,
+        cùng nguyên tắc như một thuật ngữ chuyên ngành bình thường.
       + Cách giải thích: chèn cụm giải thích ngắn ngay sau thuật ngữ, có thể
         đặt trong dấu ngoặc đơn hoặc nối bằng dấu phẩy/cụm từ giải nghĩa tự
         nhiên - miễn là người không có chuyên môn đọc vẫn hiểu được nghĩa mà
@@ -281,24 +318,26 @@ def build_hanh_chinh_prompt(persona, ket_qua_extract, danh_sach_muc_voi_tang, st
           Đúng: "Sở đứng ra tổ chức chính (chủ trì) xây dựng kế hoạch chi tiết
           (đề án) để gộp (sáp nhập) các đơn vị sự nghiệp lại với nhau."
           Sai: "UBND giao Sở Nội vụ thẩm định hồ sơ theo quy trình rút gọn."
-          Đúng: "UBND giao Sở Nội vụ kiểm tra, xét duyệt (thẩm định) hồ sơ theo
-          quy trình đơn giản, nhanh hơn bình thường (quy trình rút gọn)."
+          Đúng: "UBND (Ủy ban nhân dân) giao Sở Nội vụ kiểm tra, xét duyệt
+          (thẩm định) hồ sơ theo quy trình đơn giản, nhanh hơn bình thường
+          (quy trình rút gọn)."
       + Quy tắc này KHÔNG áp dụng cho đoạn thuộc tầng "chuyên sâu", hoặc đoạn
         tầng "nền" khi style tổng thể là "chuyen_sau" - ở các đoạn đó thuật
-        ngữ chuyên ngành được dùng tự nhiên, không cần giải thích lại.
+        ngữ chuyên ngành và từ viết tắt được dùng tự nhiên, không cần giải
+        thích lại.
       + LƯU Ý QUAN TRỌNG: "không có chuyên môn" ở đây là góc nhìn của NGƯỜI
         ĐỌC PHỔ THÔNG, không phải góc nhìn của người soạn văn bản hành chính.
         Rất nhiều từ NGHE có vẻ thông dụng trong văn bản nhà nước (ví dụ:
         "quy hoạch tổng thể", "xã hội hóa", "tinh giản biên chế", "dự án đầu
         tư công", "tài sản công", "đề án", "sáp nhập", "phân cấp", "thẩm
-        định") VẪN PHẢI giải thích ở tầng này - KHÔNG được coi là "ai cũng
-        biết rồi nên không cần giải thích". Chỉ được bỏ qua giải thích với
-        các từ thuộc vốn từ phổ thông hàng ngày (ví dụ: "báo cáo", "kế
-        hoạch", "yêu cầu", "thực hiện").
+        định", "UBND", "HĐND") VẪN PHẢI giải thích ở tầng này - KHÔNG được
+        coi là "ai cũng biết rồi nên không cần giải thích". Chỉ được bỏ qua
+        giải thích với các từ thuộc vốn từ phổ thông hàng ngày (ví dụ: "báo
+        cáo", "kế hoạch", "yêu cầu", "thực hiện").
       + Trước khi viết xong đoạn thuộc tầng này, hãy tự hỏi: "nếu một người
         chưa từng làm việc trong cơ quan nhà nước đọc câu này, họ có hiểu hết
-        từng cụm từ không?" - nếu có bất kỳ cụm nào còn nghi ngờ, PHẢI thêm
-        giải thích.
+        từng cụm từ VÀ từng từ viết tắt không?" - nếu có bất kỳ cụm hoặc từ
+        viết tắt nào còn nghi ngờ, PHẢI thêm giải thích.
 
     - TÍNH BAO QUÁT:
       + Bản tóm tắt phải phản ánh đầy đủ các nhóm nội dung chính của văn bản.
@@ -311,11 +350,12 @@ def build_hanh_chinh_prompt(persona, ket_qua_extract, danh_sach_muc_voi_tang, st
        liền mạch.
     2. Rà lại TỪNG đoạn ứng với tầng "trung bình" hoặc tầng "nền" (ở style
        "khong_chuyen_mon"/"binh_thuong") - LIỆT KÊ RA TRONG ĐẦU tất cả các
-       cụm từ mang tính hành chính/pháp lý/chuyên ngành xuất hiện trong đoạn
-       đó (kể cả các cụm nghe quen thuộc như "quy hoạch tổng thể", "xã hội
-       hóa", "tinh giản biên chế"...), sau đó kiểm tra từng cụm đã có giải
-       thích đi kèm trong câu chưa. Cụm nào còn thiếu, PHẢI bổ sung giải
-       thích ngắn gọn trước khi trả về.
+       cụm từ mang tính hành chính/pháp lý/chuyên ngành VÀ tất cả các từ viết
+       tắt (UBND, HĐND, BHXH, BHYT...) xuất hiện trong đoạn đó (kể cả các cụm
+       nghe quen thuộc như "quy hoạch tổng thể", "xã hội hóa", "tinh giản
+       biên chế"...), sau đó kiểm tra từng cụm/từ viết tắt đã có giải thích
+       đi kèm trong câu chưa. Cụm/từ nào còn thiếu, PHẢI bổ sung giải thích
+       ngắn gọn trước khi trả về.
     Chỉ trả về bản đã kiểm tra lại theo cả 2 việc trên, không trả về bản nháp.
     """.strip()
 
@@ -323,9 +363,8 @@ def build_hanh_chinh_prompt(persona, ket_qua_extract, danh_sach_muc_voi_tang, st
 
 
 # ==== BƯỚC 4: HÀM CHẠY CHÍNH CHO 1 PERSONA ====
-
-def tom_tat_hanh_chinh_cho_persona(persona, ket_qua_extract, ket_qua_khop_persona, client,
-                                   model_name=SUMMARY_MODEL_NAME):
+async def tom_tat_hanh_chinh_cho_persona(persona, ket_qua_extract, ket_qua_khop_persona, client, semaphore,
+                                         model_name=OSS_MODEL_NAME):
     danh_sach_muc = ket_qua_extract.get("danh_sach_muc", [])
 
     danh_sach_muc_voi_tang, style = gan_tang_do_sau_va_style(
@@ -335,20 +374,41 @@ def tom_tat_hanh_chinh_cho_persona(persona, ket_qua_extract, ket_qua_khop_person
     so_muc_chuyen_sau = sum(1 for m in danh_sach_muc_voi_tang if m["tang_do_sau"] == TANG_CHUYEN_SAU)
     so_muc_trung_binh = sum(1 for m in danh_sach_muc_voi_tang if m["tang_do_sau"] == TANG_TRUNG_BINH)
 
-    prompt = build_hanh_chinh_prompt(persona, ket_qua_extract, danh_sach_muc_voi_tang, style)
+    cac_batch_muc = _chia_muc_theo_token(danh_sach_muc_voi_tang, style)
 
-    def _call(prompt_hien_tai):
-        def _goi():
-            return client.models.generate_content(
+    async def _goi_1_batch(batch_muc, idx_batch):
+        prompt = build_hanh_chinh_prompt(persona, ket_qua_extract, batch_muc, style)
+        so_ky_tu = len(prompt)
+        so_token_uoc_luong = uoc_luong_so_token(prompt)
+        print(
+            f"[DEBUG] {persona.get('id')} — file {ket_qua_extract.get('file')} — "
+            f"batch {idx_batch}/{len(cac_batch_muc)} ({len(batch_muc)} mục): "
+            f"prompt {so_ky_tu} ký tự (~{so_token_uoc_luong} token ước lượng)"
+        )
+
+        async def _goi():
+            return await client.models.generate_content(
                 model=model_name,
-                contents=prompt_hien_tai,
-                config={"temperature": 0.0},
+                contents=prompt,
+                config={"temperature": 0.0, "max_output_tokens": HANH_CHINH_MAX_OUTPUT_TOKENS},
             )
 
-        return retry_generate(_goi)
+        async with semaphore:
+            try:
+                response = await retry_generate_async(_goi)
+            except Exception as loi:
+                print(
+                    f"[DEBUG-LỖI] {persona.get('id')} — file {ket_qua_extract.get('file')} — "
+                    f"batch {idx_batch}/{len(cac_batch_muc)}: gọi LLM thất bại sau hết retry ({loi}). "
+                    f"prompt {so_ky_tu} ký tự (~{so_token_uoc_luong} token ước lượng)."
+                )
+                raise
+        return response.text.strip()
 
-    response = _call(prompt)
-    summary = response.text.strip()
+    cac_doan = await asyncio.gather(
+        *[_goi_1_batch(batch, i) for i, batch in enumerate(cac_batch_muc, 1)]
+    )
+    summary = "\n\n".join(doan for doan in cac_doan if doan.strip())
 
     danh_sach_muc_luu = [
         {
@@ -367,19 +427,16 @@ def tom_tat_hanh_chinh_cho_persona(persona, ket_qua_extract, ket_qua_khop_person
         "so_muc_chuyen_sau": so_muc_chuyen_sau,
         "so_muc_trung_binh": so_muc_trung_binh,
         "so_muc_tong": len(danh_sach_muc_voi_tang),
+        "so_batch": len(cac_batch_muc),
         "danh_sach_muc_voi_tang": danh_sach_muc_luu,
     }
 
-
 if __name__ == "__main__":
     import argparse
-    from google import genai
     from pipeline.hanhchinh.hanh_chinh_extract import xu_ly_1_file
     from pipeline.hanhchinh.hanh_chinh_persona_match import (
-        chay_khop_persona_cho_van_ban, PROFILE_PATH,
+        chay_khop_persona_cho_van_ban,
     )
-
-    API_KEY = os.getenv("API_KEY")
 
     parser = argparse.ArgumentParser(description="Tom tat hanh chinh ca nhan hoa cho 1 persona")
     parser.add_argument("--file", required=True, help="duong dan file docx van ban hanh chinh")
@@ -395,16 +452,12 @@ if __name__ == "__main__":
         help="ten bien the persona, neu co se ghi vao thu muc con rieng de tranh de len du lieu persona day du truong"
     )
     args = parser.parse_args()
-    if args.den_id and not args.tu_id:
-        parser.error("--den-id phải đi kèm --tu-id")
 
     duong_dan_file = Path(args.file)
     if not duong_dan_file.exists():
         duong_dan_file = ROOT_DIR / "data" / "hanh_chinh" / duong_dan_file
     if not duong_dan_file.exists():
         raise SystemExit(f"Không tìm thấy file: {duong_dan_file}")
-
-    client = genai.Client(api_key=API_KEY)
 
     EXTRACT_CACHE_DIR = ROOT_DIR / "output" / "hanh_chinh" / "extract"
     MATCH_CACHE_DIR = ROOT_DIR / "output" / "hanh_chinh" / "persona_match"
@@ -414,8 +467,6 @@ if __name__ == "__main__":
 
     ten_file_goc = duong_dan_file.stem
 
-    # bước 1: trích xuất - dùng cache nếu đã chạy văn bản này trước đó,
-    # để không phải đọc lại docx mỗi lần đổi persona
     extract_cache_path = EXTRACT_CACHE_DIR / f"{ten_file_goc}.json"
     if extract_cache_path.exists():
         with open(extract_cache_path, encoding="utf-8") as f:
@@ -427,25 +478,10 @@ if __name__ == "__main__":
         with open(extract_cache_path, "w", encoding="utf-8") as f:
             json.dump(ket_qua_extract, f, ensure_ascii=False, indent=2)
 
-    # bước 2: khớp persona theo ngành - có gọi LLM nên cũng cache lại,
-    # để đổi persona khác trên CÙNG văn bản không phải gọi LLM lại
-    match_cache_path = MATCH_CACHE_DIR / f"{ten_file_goc}.json"
-    if match_cache_path.exists():
-        with open(match_cache_path, encoding="utf-8") as f:
-            ket_qua_khop_persona = json.load(f)
-        print(f"Đã đọc kết quả khớp persona từ cache: {match_cache_path}")
-    else:
-        print("Đang gọi LLM khớp persona theo ngành...")
-        ket_qua_khop_persona = chay_khop_persona_cho_van_ban(client, ket_qua_extract)
-        with open(match_cache_path, "w", encoding="utf-8") as f:
-            json.dump(ket_qua_khop_persona, f, ensure_ascii=False, indent=2)
-
-    # bước 3: load persona theo id
     ten_file_persona = f"state_profiles_{args.variant}.json" if args.variant else "state_profiles_nt_nn_tc_kn_cd_ch.json"
     duong_dan_persona = ROOT_DIR / "data" / "profile_variants" / ten_file_persona
     with open(duong_dan_persona, encoding="utf-8") as f:
         personas = json.load(f)
-
     if args.id:
         personas_can_chay = [p for p in personas if p.get("id") == args.id]
         if not personas_can_chay:
@@ -472,25 +508,22 @@ if __name__ == "__main__":
         out_dir = SUMMARY_DIR / ten_file_goc
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    tong = len(personas_can_chay)
-
-    for i, persona in enumerate(personas_can_chay, start=1):
-
+    async def xu_ly_mot_persona(client, semaphore, persona, ket_qua_extract, ket_qua_khop_persona, i, tong):
         out_path_json = out_dir / f"{persona['id']}.json"
         out_path_md = out_dir / f"{persona['id']}.md"
 
-        # đã chạy rồi thì bỏ qua
         if out_path_json.exists():
             print(f"[{i}/{tong}] {persona['id']} đã tồn tại -> bỏ qua")
-            continue
+            return
 
         print(f"\n[{i}/{tong}] Bắt đầu xử lý {persona['id']}...")
 
-        ket_qua = tom_tat_hanh_chinh_cho_persona(
+        ket_qua = await tom_tat_hanh_chinh_cho_persona(
             persona,
             ket_qua_extract,
             ket_qua_khop_persona,
             client,
+            semaphore,
         )
 
         with open(out_path_json, "w", encoding="utf-8") as f:
@@ -505,3 +538,27 @@ if __name__ == "__main__":
             f"TB: {ket_qua['so_muc_trung_binh']}"
         )
         print(f"Đã ghi: {out_path_json}")
+
+    async def chay():
+        client = tao_oss_client_async()
+        semaphore = asyncio.Semaphore(OSS_MAX_CONCURRENCY_SUMMARY)
+
+        match_cache_path = MATCH_CACHE_DIR / f"{ten_file_goc}.json"
+        if match_cache_path.exists():
+            with open(match_cache_path, encoding="utf-8") as f:
+                ket_qua_khop_persona = json.load(f)
+            print(f"Đã đọc kết quả khớp persona từ cache: {match_cache_path}")
+        else:
+            print("Đang gọi LLM khớp persona theo ngành...")
+            ket_qua_khop_persona = await chay_khop_persona_cho_van_ban(client, semaphore, ket_qua_extract)
+            with open(match_cache_path, "w", encoding="utf-8") as f:
+                json.dump(ket_qua_khop_persona, f, ensure_ascii=False, indent=2)
+
+        tong = len(personas_can_chay)
+        tasks = [
+            xu_ly_mot_persona(client, semaphore, persona, ket_qua_extract, ket_qua_khop_persona, i, tong)
+            for i, persona in enumerate(personas_can_chay, start=1)
+        ]
+        await asyncio.gather(*tasks)
+
+    asyncio.run(chay())

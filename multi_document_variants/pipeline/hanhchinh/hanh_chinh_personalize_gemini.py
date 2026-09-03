@@ -1,9 +1,9 @@
+import os
 import json
 import re
-import asyncio
 from pathlib import Path
 
-from pipeline.utils import retry_generate_async, OSS_MODEL_NAME, load_graph, tao_oss_client_async, OSS_MAX_CONCURRENCY
+from pipeline.utils import retry_generate, SUMMARY_MODEL_NAME, load_graph
 from pipeline.profiles.ontology_context_state import lay_ontology_context_cho_nganh
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
@@ -189,7 +189,6 @@ def _dinh_dang_danh_sach_muc(danh_sach_muc, style):
 def build_hanh_chinh_prompt(persona, ket_qua_extract, danh_sach_muc_voi_tang, style):
     loai_van_ban = ket_qua_extract.get("loai_van_ban", "")
     ontology_ctx = lay_ontology_context_cho_nganh(persona.get("nganh_to", ""))
-
     danh_sach_muc_text = _dinh_dang_danh_sach_muc(danh_sach_muc_voi_tang, style)
     quy_tac_gop_muc_nen = GOP_MUC_NEN_THEO_STYLE.get(
         style, GOP_MUC_NEN_THEO_STYLE["binh_thuong"]
@@ -325,8 +324,8 @@ def build_hanh_chinh_prompt(persona, ket_qua_extract, danh_sach_muc_voi_tang, st
 
 # ==== BƯỚC 4: HÀM CHẠY CHÍNH CHO 1 PERSONA ====
 
-async def tom_tat_hanh_chinh_cho_persona(persona, ket_qua_extract, ket_qua_khop_persona, client, semaphore,
-                                         model_name=OSS_MODEL_NAME):
+def tom_tat_hanh_chinh_cho_persona(persona, ket_qua_extract, ket_qua_khop_persona, client,
+                                   model_name=SUMMARY_MODEL_NAME):
     danh_sach_muc = ket_qua_extract.get("danh_sach_muc", [])
 
     danh_sach_muc_voi_tang, style = gan_tang_do_sau_va_style(
@@ -338,18 +337,17 @@ async def tom_tat_hanh_chinh_cho_persona(persona, ket_qua_extract, ket_qua_khop_
 
     prompt = build_hanh_chinh_prompt(persona, ket_qua_extract, danh_sach_muc_voi_tang, style)
 
-    async def _call(prompt_hien_tai):
-        async def _goi():
-            return await client.models.generate_content(
+    def _call(prompt_hien_tai):
+        def _goi():
+            return client.models.generate_content(
                 model=model_name,
                 contents=prompt_hien_tai,
                 config={"temperature": 0.0},
             )
 
-        async with semaphore:
-            return await retry_generate_async(_goi)
+        return retry_generate(_goi)
 
-    response = await _call(prompt)
+    response = _call(prompt)
     summary = response.text.strip()
 
     danh_sach_muc_luu = [
@@ -372,12 +370,16 @@ async def tom_tat_hanh_chinh_cho_persona(persona, ket_qua_extract, ket_qua_khop_
         "danh_sach_muc_voi_tang": danh_sach_muc_luu,
     }
 
+
 if __name__ == "__main__":
     import argparse
+    from google import genai
     from pipeline.hanhchinh.hanh_chinh_extract import xu_ly_1_file
-    from pipeline.hanhchinh.hanh_chinh_persona_match_oss import (
-        chay_khop_persona_cho_van_ban,
+    from pipeline.hanhchinh.hanh_chinh_persona_match import (
+        chay_khop_persona_cho_van_ban, PROFILE_PATH,
     )
+
+    API_KEY = os.getenv("API_KEY")
 
     parser = argparse.ArgumentParser(description="Tom tat hanh chinh ca nhan hoa cho 1 persona")
     parser.add_argument("--file", required=True, help="duong dan file docx van ban hanh chinh")
@@ -393,12 +395,16 @@ if __name__ == "__main__":
         help="ten bien the persona, neu co se ghi vao thu muc con rieng de tranh de len du lieu persona day du truong"
     )
     args = parser.parse_args()
+    if args.den_id and not args.tu_id:
+        parser.error("--den-id phải đi kèm --tu-id")
 
     duong_dan_file = Path(args.file)
     if not duong_dan_file.exists():
         duong_dan_file = ROOT_DIR / "data" / "hanh_chinh" / duong_dan_file
     if not duong_dan_file.exists():
         raise SystemExit(f"Không tìm thấy file: {duong_dan_file}")
+
+    client = genai.Client(api_key=API_KEY)
 
     EXTRACT_CACHE_DIR = ROOT_DIR / "output" / "hanh_chinh" / "extract"
     MATCH_CACHE_DIR = ROOT_DIR / "output" / "hanh_chinh" / "persona_match"
@@ -408,6 +414,8 @@ if __name__ == "__main__":
 
     ten_file_goc = duong_dan_file.stem
 
+    # bước 1: trích xuất - dùng cache nếu đã chạy văn bản này trước đó,
+    # để không phải đọc lại docx mỗi lần đổi persona
     extract_cache_path = EXTRACT_CACHE_DIR / f"{ten_file_goc}.json"
     if extract_cache_path.exists():
         with open(extract_cache_path, encoding="utf-8") as f:
@@ -419,10 +427,25 @@ if __name__ == "__main__":
         with open(extract_cache_path, "w", encoding="utf-8") as f:
             json.dump(ket_qua_extract, f, ensure_ascii=False, indent=2)
 
+    # bước 2: khớp persona theo ngành - có gọi LLM nên cũng cache lại,
+    # để đổi persona khác trên CÙNG văn bản không phải gọi LLM lại
+    match_cache_path = MATCH_CACHE_DIR / f"{ten_file_goc}.json"
+    if match_cache_path.exists():
+        with open(match_cache_path, encoding="utf-8") as f:
+            ket_qua_khop_persona = json.load(f)
+        print(f"Đã đọc kết quả khớp persona từ cache: {match_cache_path}")
+    else:
+        print("Đang gọi LLM khớp persona theo ngành...")
+        ket_qua_khop_persona = chay_khop_persona_cho_van_ban(client, ket_qua_extract)
+        with open(match_cache_path, "w", encoding="utf-8") as f:
+            json.dump(ket_qua_khop_persona, f, ensure_ascii=False, indent=2)
+
+    # bước 3: load persona theo id
     ten_file_persona = f"state_profiles_{args.variant}.json" if args.variant else "state_profiles_nt_nn_tc_kn_cd_ch.json"
     duong_dan_persona = ROOT_DIR / "data" / "profile_variants" / ten_file_persona
     with open(duong_dan_persona, encoding="utf-8") as f:
         personas = json.load(f)
+
     if args.id:
         personas_can_chay = [p for p in personas if p.get("id") == args.id]
         if not personas_can_chay:
@@ -449,22 +472,25 @@ if __name__ == "__main__":
         out_dir = SUMMARY_DIR / ten_file_goc
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    async def xu_ly_mot_persona(client, semaphore, persona, ket_qua_extract, ket_qua_khop_persona, i, tong):
+    tong = len(personas_can_chay)
+
+    for i, persona in enumerate(personas_can_chay, start=1):
+
         out_path_json = out_dir / f"{persona['id']}.json"
         out_path_md = out_dir / f"{persona['id']}.md"
 
+        # đã chạy rồi thì bỏ qua
         if out_path_json.exists():
             print(f"[{i}/{tong}] {persona['id']} đã tồn tại -> bỏ qua")
-            return
+            continue
 
         print(f"\n[{i}/{tong}] Bắt đầu xử lý {persona['id']}...")
 
-        ket_qua = await tom_tat_hanh_chinh_cho_persona(
+        ket_qua = tom_tat_hanh_chinh_cho_persona(
             persona,
             ket_qua_extract,
             ket_qua_khop_persona,
             client,
-            semaphore,
         )
 
         with open(out_path_json, "w", encoding="utf-8") as f:
@@ -479,27 +505,3 @@ if __name__ == "__main__":
             f"TB: {ket_qua['so_muc_trung_binh']}"
         )
         print(f"Đã ghi: {out_path_json}")
-
-    async def chay():
-        client = tao_oss_client_async()
-        semaphore = asyncio.Semaphore(OSS_MAX_CONCURRENCY)
-
-        match_cache_path = MATCH_CACHE_DIR / f"{ten_file_goc}.json"
-        if match_cache_path.exists():
-            with open(match_cache_path, encoding="utf-8") as f:
-                ket_qua_khop_persona = json.load(f)
-            print(f"Đã đọc kết quả khớp persona từ cache: {match_cache_path}")
-        else:
-            print("Đang gọi LLM khớp persona theo ngành...")
-            ket_qua_khop_persona = await chay_khop_persona_cho_van_ban(client, semaphore, ket_qua_extract)
-            with open(match_cache_path, "w", encoding="utf-8") as f:
-                json.dump(ket_qua_khop_persona, f, ensure_ascii=False, indent=2)
-
-        tong = len(personas_can_chay)
-        tasks = [
-            xu_ly_mot_persona(client, semaphore, persona, ket_qua_extract, ket_qua_khop_persona, i, tong)
-            for i, persona in enumerate(personas_can_chay, start=1)
-        ]
-        await asyncio.gather(*tasks)
-
-    asyncio.run(chay())

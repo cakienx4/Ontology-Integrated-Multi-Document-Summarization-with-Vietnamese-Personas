@@ -41,7 +41,7 @@ def lay_chuc_danh(kinh_nghiem_text: str) -> str:
     """
     Tach chinh xac cum chuc danh tu cau kinh_nghiem, vi du:
     "...hien dang dam nhiem vi tri Truong phong." -> "Truong phong"
-    Dung chung logic voi lay_chuc_vu() trong rss_personalize.py.
+    Dung chung logic voi lay_chuc_vu() trong rss_personalize_gemini.py.
     """
     match = re.search(r"đảm nhiệm vị trí (.+?)\.", kinh_nghiem_text or "")
     return match.group(1).strip() if match else ""

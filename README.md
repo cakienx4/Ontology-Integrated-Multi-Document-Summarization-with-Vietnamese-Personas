@@ -16,12 +16,12 @@ Hệ thống dựa trên ontology để mô hình hóa persona và dùng LLM (ge
 
 ### Hai pipeline song song
 
-| | Pipeline dân sự (Civilian)                                                               | Pipeline cán bộ nhà nước (RSS/State) |
-|---|------------------------------------------------------------------------------------------|---|
-| **Trạng thái** | Đã hoàn thiện phần lớn, không phát triển thêm                                            | **Đang phát triển chính** |
-| **Dữ liệu persona** | `sample50.csv` — hồ sơ suy luận từ ontology                                              | `state_profiles.json` — 1.000 persona tổng hợp (NN0001–NN1000), 12 `nganh_to` (ngành/tổ) |
-| **Ontology** | `ontology/persona_analysis_3.obo/.ttl`                                                   | `ontology/persona_states.ttl` |
-| **Đặc trưng** | Phân loại trường HARD/SOFT/GENERAL, phát hiện cộng đồng 5 chiều, suy luận "hai thế giới" | 3 nhánh nội dung song song (xem bên dưới) |
+| | Pipeline dân sự (Civilian)                                                               | Pipeline cán bộ nhà nước (RSS/State)                                                                                              |
+|---|------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| **Trạng thái** | Đã hoàn thiện phần lớn, không phát triển thêm                                            | **Đang phát triển chính**                                                                                                         |
+| **Dữ liệu persona** | `sample50.csv` — hồ sơ suy luận từ ontology                                              | `state_profiles.json` là file gốc, kết quả thực tế đang chạy trên `state_profiles_nt_nn_tc_kn_cd_ch.json`, 12 `nganh_to` (ngành/tổ) |
+| **Ontology** | `ontology/persona_analysis_3.obo/.ttl`                                                   | `ontology/persona_states.ttl`                                                                                                     |
+| **Đặc trưng** | Phân loại trường HARD/SOFT/GENERAL, phát hiện cộng đồng 5 chiều, suy luận "hai thế giới" | 3 nhánh nội dung song song (xem bên dưới)                                                                                         |
 
 Phần còn lại của README tập trung vào **pipeline RSS**, vì đây là hướng phát triển chính.
 

@@ -7,7 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from pipeline.profiles.generate_state_profiles import TAXONOMY, FIELD_ORDER, build_profile, build_mo_ta_chung
 from pipeline.profiles.enrich_state_profiles_oss import goi_llm_async, lay_chuc_danh
-from pipeline.utils import tao_oss_client_async, OSS_MAX_CONCURRENCY
+from pipeline.utils_new import tao_oss_client_async, OSS_MAX_CONCURRENCY
 
 MA_TRUONG = {
     "nganh_to": "nt", "nganh_nho": "nn", "to_chuc": "tc",

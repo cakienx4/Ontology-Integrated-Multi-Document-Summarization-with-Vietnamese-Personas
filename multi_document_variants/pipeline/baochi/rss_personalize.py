@@ -1,11 +1,11 @@
+""" Cách chạy:
+python3 -m pipeline.baochi.rss_personalize --variant nt_nn_tc_kn_cd_ch
+"""
+
 import re
 import json
-import os
 import hashlib
-from dotenv import load_dotenv
-
-load_dotenv()
-
+import asyncio
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parents[3]
@@ -16,8 +16,13 @@ SHARED_ROOT = ROOT_DIR / "shared"
 DATA_DIR = MD_ROOT / "data" / "bao_chi"
 OUTPUT_DIR = MD_ROOT / "output" / "bao_chi" / "rss_summary"
 
-from pipeline.utils import retry_generate, SUMMARY_MODEL_NAME, load_graph, lay_chu_de_hieu_luc
+from pipeline.utils import (
+    retry_generate_async, OSS_MODEL_NAME, load_graph,
+    tao_oss_client_async, lay_chu_de_hieu_luc, OSS_MAX_CONCURRENCY,
+    OSS_MAX_CONCURRENCY_SUMMARY,
+)
 from pipeline.profiles.ontology_context_state import lay_ontology_context_cho_nganh
+from pipeline.baochi.rss_tom_tat_bai import tom_tat_nhieu_bai
 
 _ONTOLOGY_PATH = MD_ROOT / "persona_states.ttl"
 _STATE_GRAPH = load_graph(str(_ONTOLOGY_PATH))
@@ -49,21 +54,29 @@ RSS_PRIORITY_TIE_MARGIN = 0.15
 CHU_DE_WEIGHTS = [1.0, 0.6, 0.4]
 CHU_DE_WEIGHT_FALLBACK = 0.3
 
-FILTER_TOKENS_UOC_LUONG_MOI_BAI = 30
-FILTER_MAX_TOKENS_SAN = 2048
-MAX_OUTPUT_TOKENS_SAN = 4096
-MAX_OUTPUT_TOKENS_TRAN = 65536
-TI_LE_BAO_PHU_TOI_THIEU = 0.85
-SO_LAN_THU_LAI_TOI_DA = 1
-
 DUONG_DAN_LOAI_BAI = ["goc-nhin", "tam-diem"]
 MAX_BAI_LIEN_QUAN_MOI_PERSONA = 2
+SO_TIN_TOI_DA_FALLBACK_MOI_NHOM = 10
+
+FILTER_MAX_TOKENS = 4096
+
+SO_TIN_MOI_BATCH = 8
+BATCH_MAX_TOKENS = 3072
+BATCH_MAX_TOKENS_MO_RONG = 6144
+
+MO_KET_MAX_TOKENS = 768
+MO_KET_MAX_TOKENS_MO_RONG = 1536
+
+LIEN_QUAN_MAX_TOKENS = 1024
+LIEN_QUAN_MAX_TOKENS_MO_RONG = 2048
+
+TI_LE_BAO_PHU_TOI_THIEU = 0.85
 
 
 def xac_dinh_loai_bai(article: dict) -> str:
     slug = (article.get("category_slug") or "").strip().lower()
     if slug in DUONG_DAN_LOAI_BAI:
-        return "bai"
+        return "bài"
     return "tin"
 
 
@@ -87,7 +100,7 @@ def tim_tin_lien_quan_gian_tiep(persona: dict, articles: list, da_chon: list) ->
     for a in articles:
         if id(a) in da_chon_id:
             continue
-        if a.get("loai_bai") == "bai":
+        if a.get("loai_bai") == "bài":
             continue
         genre = a.get("genre")
         if genre in chu_de_list:
@@ -204,7 +217,7 @@ def xep_hang_bai_cho_persona(persona: dict, articles: list) -> list:
 
     theo_chu_de = {cd: [] for cd in chu_de_list}
     for a in articles:
-        if a.get("loai_bai") == "bai":
+        if a.get("loai_bai") == "bài":
             continue
         if a.get("genre") in theo_chu_de and a.get("genre_score", 0.0) > 0.0:
             theo_chu_de[a["genre"]].append(a)
@@ -243,6 +256,15 @@ def can_van_phong_day_du(persona: dict, ranked_articles: list) -> bool:
 
     return False
 
+CHU_THICH_THUA_TU_KHOA = [
+    "(ghi chú", "(đã bỏ qua", "(lược bỏ", "(gộp vì", "được gộp vì",
+    "(tin này đã", "(lưu ý:",
+]
+
+
+def co_chu_thich_thua(text: str) -> bool:
+    text_lower = text.lower()
+    return any(tu_khoa in text_lower for tu_khoa in CHU_THICH_THUA_TU_KHOA)
 
 def _dinh_dang_danh_sach_tin(articles: list, dung_full_content: bool = True) -> str:
     ds = ""
@@ -327,28 +349,25 @@ def build_filter_prompt(persona: dict, articles: list) -> str:
     return prompt
 
 
-def loc_bai_lien_quan_persona(persona: dict, ranked_articles: list, client,
-                              model_name: str = SUMMARY_MODEL_NAME) -> tuple:
+async def loc_bai_lien_quan_persona(persona: dict, ranked_articles: list, client, semaphore,
+                                    model_name: str = OSS_MODEL_NAME) -> tuple:
     if not ranked_articles:
         return [], []
 
     prompt = build_filter_prompt(persona, ranked_articles)
-    max_tokens = min(
-        MAX_OUTPUT_TOKENS_TRAN,
-        max(FILTER_MAX_TOKENS_SAN, len(ranked_articles) * FILTER_TOKENS_UOC_LUONG_MOI_BAI),
-    )
 
-    def _call():
-        return client.models.generate_content(
+    async def _call():
+        return await client.models.generate_content(
             model=model_name,
             contents=prompt,
             config={
                 "temperature": 0.0,
-                "max_output_tokens": max_tokens,
+                "max_output_tokens": FILTER_MAX_TOKENS,
             },
         )
 
-    response = retry_generate(_call)
+    async with semaphore:
+        response = await retry_generate_async(_call)
     text = response.text.strip()
     text = text.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
 
@@ -359,15 +378,15 @@ def loc_bai_lien_quan_persona(persona: dict, ranked_articles: list, client,
     hanh_dong_theo_stt = {int(stt): hanh_dong for stt, hanh_dong in matches}
 
     if not hanh_dong_theo_stt:
-        print(f"[loc_bai_lien_quan_persona] KHONG LAY DUOC OBJECT NAO TU RESPONSE, giu nguyen tat ca.")
-        print(f"[loc_bai_lien_quan_persona] RAW RESPONSE (500 ky tu dau):\n{text[:500]}")
+        print(f"[loc_bai_lien_quan_persona] KHÔNG LẤY ĐƯỢC OBJECT NÀO TỪ RESPONSE, giữ nguyên tất cả.")
+        print(f"[loc_bai_lien_quan_persona] RAW RESPONSE (500 ký tự đầu):\n{text[:500]}")
         return ranked_articles, []
 
     if len(hanh_dong_theo_stt) < len(ranked_articles):
         print(
-            f"[loc_bai_lien_quan_persona] CANH BAO: chi lay duoc "
-            f"{len(hanh_dong_theo_stt)}/{len(ranked_articles)} tin (co the do bi cat cut), "
-            f"cac tin con lai mac dinh giu."
+            f"[loc_bai_lien_quan_persona] CẢNH BÁO: chỉ lấy được "
+            f"{len(hanh_dong_theo_stt)}/{len(ranked_articles)} tin (có thể do bị cắt cụt), "
+            f"các tin còn lại mặc định giữ."
         )
 
     bai_giu = []
@@ -435,8 +454,8 @@ def build_filter_prompt_bai(persona: dict, bai_list: list) -> str:
     return prompt
 
 
-def loc_bai_loai_bai_cho_persona(persona: dict, bai_candidates: list, client,
-                                 model_name: str = SUMMARY_MODEL_NAME) -> list:
+async def loc_bai_loai_bai_cho_persona(persona: dict, bai_candidates: list, client, semaphore,
+                                       model_name: str = OSS_MODEL_NAME) -> list:
     if not bai_candidates:
         return []
 
@@ -451,22 +470,19 @@ def loc_bai_loai_bai_cho_persona(persona: dict, bai_candidates: list, client,
         return bai_giu_cache[:MAX_BAI_LIEN_QUAN_MOI_PERSONA]
 
     prompt = build_filter_prompt_bai(persona, bai_candidates)
-    max_tokens = min(
-        MAX_OUTPUT_TOKENS_TRAN,
-        max(FILTER_MAX_TOKENS_SAN, len(bai_candidates) * FILTER_TOKENS_UOC_LUONG_MOI_BAI),
-    )
 
-    def _call():
-        return client.models.generate_content(
+    async def _call():
+        return await client.models.generate_content(
             model=model_name,
             contents=prompt,
             config={
                 "temperature": 0.0,
-                "max_output_tokens": max_tokens,
+                "max_output_tokens": FILTER_MAX_TOKENS,
             },
         )
 
-    response = retry_generate(_call)
+    async with semaphore:
+        response = await retry_generate_async(_call)
     text = response.text.strip()
     text = text.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
 
@@ -487,8 +503,8 @@ def loc_bai_loai_bai_cho_persona(persona: dict, bai_candidates: list, client,
     return bai_giu[:MAX_BAI_LIEN_QUAN_MOI_PERSONA]
 
 
-def loc_bai_lien_quan_persona_co_cache(persona: dict, ranked_articles: list, client,
-                                       model_name: str = SUMMARY_MODEL_NAME, variant: str = None) -> tuple:
+async def loc_bai_lien_quan_persona_co_cache(persona: dict, ranked_articles: list, client, semaphore,
+                                             model_name: str = OSS_MODEL_NAME, variant: str = None) -> tuple:
     thu_muc_cache = FILTER_DIR / variant if variant else FILTER_DIR
     thu_muc_cache.mkdir(parents=True, exist_ok=True)
     cache_path = thu_muc_cache / f"{persona.get('id')}.json"
@@ -501,7 +517,7 @@ def loc_bai_lien_quan_persona_co_cache(persona: dict, ranked_articles: list, cli
         bai_ha = [bai_theo_link[link] for link in cache["ha"] if link in bai_theo_link]
         return bai_giu, bai_ha
 
-    bai_giu, bai_ha = loc_bai_lien_quan_persona(persona, ranked_articles, client, model_name)
+    bai_giu, bai_ha = await loc_bai_lien_quan_persona(persona, ranked_articles, client, semaphore, model_name)
 
     with open(cache_path, "w", encoding="utf-8") as f:
         json.dump(
@@ -516,293 +532,308 @@ def loc_bai_lien_quan_persona_co_cache(persona: dict, ranked_articles: list, cli
 
     return bai_giu, bai_ha
 
+def _khoi_phuc_tin_cho_nhom_bi_ha_het(chu_de_list: list, ranked_truoc_loc: list, ranked_sau_loc: list) -> tuple:
+    link_da_giu = {a.get("link") for a in ranked_sau_loc}
+    ranked = list(ranked_sau_loc)
+    ten_cac_nhom_bi_khoi_phuc = []
 
-def build_rss_prompt(persona: dict, ranked_articles: list, tin_gian_tiep: list = None,
-                     bai_lien_quan: list = None) -> str:
-    day_du = can_van_phong_day_du(persona, ranked_articles)
-    ontology_ctx = lay_ontology_context_cho_nganh(persona.get("nganh_to", ""))
-    nhom_tin = nhom_tin_theo_chu_de(persona, ranked_articles)
-    tin_gian_tiep = tin_gian_tiep or []
-    bai_lien_quan = bai_lien_quan or []
+    for cd in chu_de_list:
+        nhom_truoc = [a for a in ranked_truoc_loc if a.get("genre") == cd]
+        if not nhom_truoc:
+            continue
+        nhom_sau = [a for a in nhom_truoc if a.get("link") in link_da_giu]
+        if nhom_sau:
+            continue
 
-    opening_style = (
-        _chon_style(persona.get("id", ""), OPENING_STYLES_MO_BAI)
-        if day_du
-        else _chon_style(persona.get("id", ""), OPENING_STYLES)
-    )
-    closing_style = _chon_style(persona.get("id", "") + "_close", CLOSING_STYLES)
+        nhom_truoc_sap_xep = sorted(nhom_truoc, key=lambda a: a.get("genre_score", 0.0), reverse=True)
+        bo_sung = nhom_truoc_sap_xep[:SO_TIN_TOI_DA_FALLBACK_MOI_NHOM]
+        ranked.extend(bo_sung)
+        link_da_giu.update(a.get("link") for a in bo_sung)
+        ten_cac_nhom_bi_khoi_phuc.append(cd)
 
-    if day_du:
-        yeu_cau_van_phong = (
-            "Bài viết PHẢI bắt đầu bằng một dòng TIÊU ĐỀ in đậm, viết hoa hoặc in đậm, "
-            "ngắn gọn, nêu khái quát chủ đề bản tin — đây là dòng đầu tiên của toàn văn bản, "
-            "đứng TRƯỚC phần thân bài. Sau tiêu đề mới đến thân bài viết theo bố cục đầy đủ, "
-            "chuyên nghiệp, gồm mở bài, thân bài và kết luận."
-        )
-    else:
-        yeu_cau_van_phong = (
-            "Bài viết KHÔNG có tiêu đề — viết thẳng vào nội dung ngay từ câu/dòng đầu tiên, "
-            "ngắn gọn, dễ đọc."
-        )
+    return ranked, ten_cac_nhom_bi_khoi_phuc
 
-    if day_du:
-        yeu_cau_bo_cuc = f"""- BỐ CỤC BẮT BUỘC gồm 3 phần rõ ràng, cách nhau bằng dấu xuống dòng:
-            1. ĐOẠN MỞ BÀI (ngay sau tiêu đề, TÁCH RIÊNG thành một đoạn độc lập, không phải đoạn
-               tóm tắt của tin nào): 2-3 câu nêu khái quát những nhóm chủ đề nổi bật sẽ được đề cập
-               trong bài, không đi vào chi tiết số liệu cụ thể của từng tin. Phong cách viết câu
-               đầu tiên: {opening_style}
-               BẮT BUỘC: đoạn này phải kết thúc và XUỐNG DÒNG TRỐNG trước khi đoạn tóm tắt tin đầu
-               tiên (thuộc THÂN BÀI) bắt đầu — hai đoạn này không được viết dính liền hoặc lồng
-               vào nhau dưới bất kỳ hình thức nào.
-            2. THÂN BÀI: các đoạn tóm tắt từng tin theo đúng nhóm chủ đề (xem chi tiết bên dưới).
-               Khi CHUYỂN từ nhóm chủ đề này sang nhóm chủ đề khác, đoạn đầu tiên của nhóm mới
-               PHẢI mở đầu bằng một câu dẫn ngắn (không quá 1 câu) báo hiệu đang chuyển sang chủ
-               đề mới, nêu tên nhóm chủ đề đó một cách tự nhiên trong câu văn — câu dẫn này nằm
-               chung trong đoạn tóm tắt tin đầu tiên của nhóm, KHÔNG tính là một đoạn riêng.
-               QUAN TRỌNG: NHÓM CHỦ ĐỀ ĐẦU TIÊN ("{nhom_tin[0]['chu_de'] if nhom_tin else ''}")
-               KHÔNG được có câu dẫn kiểu "Chuyển sang nhóm..." — nhóm này đã được đoạn mở bài
-               giới thiệu ngầm rồi, tin đầu tiên của bài viết thẳng vào nội dung. Câu dẫn CHỈ áp
-               dụng khi thực sự đổi từ nhóm chủ đề A sang nhóm chủ đề B khác — giữa các tin CÙNG
-               một nhóm (ví dụ tin thứ 2, thứ 3 trong cùng nhóm đầu tiên) TUYỆT ĐỐI KHÔNG được lặp
-               lại câu dẫn "Chuyển sang nhóm..." của nhóm đó.
-               Thứ tự các nhóm chủ đề theo đúng trình tự sau: {" -> ".join(n["chu_de"] for n in nhom_tin)}.
-               Số câu dẫn chuyển nhóm BẮT BUỘC phải có, chính xác bằng {max(0, len(nhom_tin) - 1)}
-               (bằng số nhóm trừ 1, vì nhóm đầu tiên không cần câu dẫn) — không nhiều hơn, không
-               ít hơn.
-               Ví dụ ĐÚNG (1 đoạn): "Chuyển sang nhóm Thời sự - Xã hội, Bộ Nội vụ đề xuất bỏ
-               thời hạn tối đa 12 tháng đối với văn bản ủy quyền nhận lương hưu..."
-               Ví dụ SAI: để câu "Chuyển sang nhóm Thời sự - Xã hội..." đứng một mình thành
-               một đoạn, rồi mới xuống dòng sang đoạn tóm tắt tin.
-               Ví dụ SAI khác: viết "Chuyển sang nhóm Tài chính - Kế toán" ở tin thứ 2 trong khi
-               tin thứ 1 cũng đã thuộc nhóm Tài chính - Kế toán (không có chuyển nhóm thật).
-            3. ĐOẠN KẾT LUẬN (TÁCH RIÊNG thành một đoạn độc lập, đứng sau tất cả các nhóm chủ đề
-               và tin gián tiếp, không phải đoạn tóm tắt của tin nào): 2-4 câu tổng kết lại 2-3
-               điểm quan trọng nhất trong toàn bài theo đúng thứ tự ưu tiên, diễn đạt lại ngắn gọn
-               hơn (không lặp nguyên văn câu đã viết ở thân bài). Phong cách viết câu cuối cùng:
-               {closing_style}"""
-    else:
-        chu_de_uu_tien_cao_nhat = nhom_tin[0]["chu_de"] if nhom_tin else ""
-        yeu_cau_bo_cuc = f"""
-        - Không cần bố cục mở-thân-kết tách riêng, nhưng bài viết PHẢI bắt đầu
-        bằng một DÒNG DẪN ĐỘC LẬP duy nhất theo đúng mẫu "Về {chu_de_uu_tien_cao_nhat}:" (giữ
-        nguyên tên nhóm chủ đề ưu tiên cao nhất của persona này) — dòng này đứng riêng một
-        đoạn, KHÔNG chứa nội dung tin nào, sau đó XUỐNG DÒNG TRỐNG rồi mới viết thẳng vào nội
-        dung tin theo đúng thứ tự nhóm chủ đề. Dòng dẫn này KHÔNG tính là một đoạn tin.
-        - Câu đầu tiên của ĐOẠN TIN ĐẦU TIÊN (ngay sau dòng dẫn) áp dụng phong cách:
-          {opening_style}. Câu cuối cùng của toàn bài áp dụng phong cách: {closing_style}.
-        - QUAN TRỌNG: dù không có bố cục mở-thân-kết, MỖI tin trong TẤT CẢ các nhóm chu_de —
-          kể cả nhóm ưu tiên thấp nhất — vẫn PHẢI có đoạn văn RIÊNG của mình theo đúng mục CẤU
-          TRÚC BẮT BUỘC bên dưới. Không có ngoại lệ nào cho nhóm chủ đề đứng sau.
-        - Khi chuyển từ nhóm chu_de này sang nhóm chu_de khác (KHÔNG áp dụng cho nhóm chu_de
-          đầu tiên, vì nhóm đó đã được dòng dẫn "Về {chu_de_uu_tien_cao_nhat}:" giới thiệu),
-          đoạn đầu tiên của nhóm mới PHẢI mở đầu bằng một câu dẫn ngắn (không quá 1 câu) nêu
-          tên nhóm chủ đề mới một cách tự nhiên trong câu văn, rồi nối NGAY vào nội dung của
-          chính tin đó trong CÙNG một đoạn. Ví dụ ĐÚNG (1 đoạn): "Ở lĩnh vực Tài chính - Kế
-          toán, Trung ương yêu cầu nghiên cứu lộ trình áp thuế cao hơn với đất bỏ hoang và
-          chậm đưa vào sử dụng..." — tin tiếp theo cùng nhóm Tài chính lại bắt đầu đoạn mới
-          bình thường, KHÔNG lặp lại câu dẫn.
-        - TUYỆT ĐỐI KHÔNG dùng cụm mở đầu kiểu tiêu đề "Về [chủ đề X]:" cho bất kỳ đoạn nào
-          KHÁC ngoài dòng dẫn mở đầu bài viết nói trên — kể cả khi chuyển sang nhóm chu_de
-          khác ở giữa bài (dùng đúng mẫu "Ở lĩnh vực..." như ví dụ trên); cụm "Về [chủ đề X]:",
-          "Các tin khác đáng chú ý:" CHỈ được phép xuất hiện trong phần "NHÓM TIN LIÊN QUAN
-          GIÁN TIẾP" ở cuối bài (nếu có).
-        - Không được gộp 2 tin trở lên của cùng một nhóm chu_de vào chung 1 đoạn, trừ khi
-          chúng cùng nói về MỘT SỰ KIỆN CỤ THỂ giống nhau (xem quy tắc gộp ở cuối bài)."""
+def build_batch_prompt(persona: dict, nhom_ten: str, idx_nhom: int, tong_so_nhom: int,
+                       batch_tin: list, la_batch_dau_nhom: bool, ontology_ctx: str,
+                       day_du: bool, opening_style: str = None) -> str:
 
+    so_tin = len(batch_tin)
     cam_cum_tu = ", ".join(f"'{p}'" for p in BANNED_PHRASES)
 
     ontology_section = ""
     if ontology_ctx:
-        ontology_section = f"""
-    PHẦN 1: KHUNG PHÂN TÍCH NGÀNH CÔNG VỤ (Ontology Context)
-    {ontology_ctx}
+        ontology_section = f"""KHUNG PHÂN TÍCH NGÀNH CÔNG VỤ (Ontology Context):
+{ontology_ctx}
 
-    """
+"""
 
-    khoi_tin_text = ""
-    for idx, n in enumerate(nhom_tin):
-        khuynh_huong = ""
-        if idx == 0:
-            khuynh_huong = (
-                f"\n- KHUYNH HƯỚNG PHÂN TÍCH BẮT BUỘC cho nhóm này: chủ động chọn góc nhìn, "
-                f"số liệu, hệ quả liên quan TRỰC TIẾP tới định hướng công việc sau đây, để nó "
-                f"DẪN DẮT cách bạn diễn giải các tin trong nhóm: "
-                f"\"{persona.get('cau_hoi_truoc_mat', '')}\""
+    khuynh_huong = ""
+    if idx_nhom == 0:
+        khuynh_huong = (
+            f"\n- KHUYNH HƯỚNG PHÂN TÍCH BẮT BUỘC cho nhóm này: chủ động chọn góc nhìn, số "
+            f"liệu, hệ quả liên quan TRỰC TIẾP tới định hướng công việc sau đây, để nó DẪN "
+            f"DẮT cách bạn diễn giải các tin: \"{persona.get('cau_hoi_truoc_mat', '')}\""
+        )
+
+    cau_dan_yeu_cau = ""
+    if la_batch_dau_nhom and idx_nhom > 0:
+        if day_du:
+            cau_dan_yeu_cau = (
+                f"\n- Đoạn tin ĐẦU TIÊN trong batch này PHẢI mở đầu bằng một câu dẫn ngắn "
+                f"(không quá 1 câu) báo hiệu đang chuyển sang chủ đề mới \"{nhom_ten}\", nêu "
+                f"tên nhóm một cách tự nhiên trong câu văn — câu dẫn nằm CHUNG trong đoạn tóm "
+                f"tắt tin đầu tiên, KHÔNG tính là một đoạn riêng. Ví dụ ĐÚNG (1 đoạn): "
+                f"\"Chuyển sang nhóm Thời sự - Xã hội, Bộ Nội vụ đề xuất bỏ thời hạn tối đa 12 "
+                f"tháng đối với văn bản ủy quyền nhận lương hưu...\""
             )
-        so_tin_nhom = len(n["bai"])
-        khoi_tin_text += f"""
-            NHÓM CHỦ ĐỀ "{n['chu_de']}" (ưu tiên thứ {idx + 1}, gồm {so_tin_nhom} tin):
-            {_dinh_dang_danh_sach_tin(n['bai'])}
-            Yêu cầu: {_muc_do_cho_tang(idx)}{khuynh_huong}
-            SỐ ĐOẠN BẮT BUỘC CHO NHÓM NÀY: chính xác {so_tin_nhom} đoạn văn riêng biệt — trừ khi 2 tin
-            trong nhóm này thật sự cùng nói về MỘT SỰ KIỆN CỤ THỂ giống nhau (xem quy tắc gộp ở cuối
-            bài), khi đó số đoạn có thể ít hơn {so_tin_nhom} một chút. Việc xác nhận "cùng sự kiện" CHỈ
-            diễn ra trong suy luận nội bộ của bạn — TUYỆT ĐỐI KHÔNG được viết bất kỳ câu/chú thích nào
-            trong bài giải thích rằng "tin X và tin Y được gộp vì...". Bài viết cuối cùng chỉ chứa nội
-            dung tóm tắt tự nhiên, không có bất kỳ dấu vết nào cho thấy đây là bản tóm tắt từ nhiều tin.
-            """
+        else:
+            cau_dan_yeu_cau = (
+                f"\n- Đoạn tin ĐẦU TIÊN trong batch này PHẢI mở đầu bằng một câu dẫn ngắn nêu "
+                f"tên nhóm chủ đề mới \"{nhom_ten}\" một cách tự nhiên, theo mẫu \"Ở lĩnh vực "
+                f"{nhom_ten}, ...\", rồi nối NGAY vào nội dung tin đó trong CÙNG một đoạn."
+            )
 
-    khoi_gian_tiep_text = ""
-    if tin_gian_tiep:
-        khoi_gian_tiep_text = f"""
-                NHÓM TIN LIÊN QUAN GIÁN TIẾP (ngoài chủ đề chính của người này, nhưng có liên hệ nhẹ,
-                gồm {len(tin_gian_tiep)} tin):
-                {_dinh_dang_danh_sach_tin(tin_gian_tiep, dung_full_content=False)}
-                Yêu cầu:
-            - Đây KHÔNG phải phần trọng tâm của bài — CHỈ giữ lại những tin có giá trị tham khảo
-              thực sự rõ ràng đối với công việc của người này; MẠNH DẠN bỏ hẳn những tin chỉ liên
-              quan lỏng lẻo hoặc không mang lại giá trị tham khảo cụ thể, kể cả khi phải bỏ nguyên
-              một nhóm chủ đề trong danh sách trên.
-            - Tổng độ dài của TOÀN BỘ nhóm này không vượt quá 1-2 đoạn văn ngắn cho cả bài — ưu
-              tiên SÚC TÍCH hơn là cố gắng nhắc đến nhiều nhóm chủ đề.
-            - MỖI đoạn trong nhóm này đều PHẢI bắt đầu bằng một cụm từ ngắn báo hiệu đây là tin
-              ngoài chuyên môn chính, ví dụ "Các tin khác đáng chú ý:", "Về [chủ đề X]:".
-            - Trong mỗi đoạn, mỗi tin chỉ giữ đúng ý quan trọng nhất (khoảng 1 câu/tin), không mô
-              tả chi tiết.
-            - Nếu nhiều tin nói về cùng một sự kiện hoặc cùng một chủ đề thì gộp thành một câu.
-                """
+    mo_dau_yeu_cau = ""
+    if opening_style:
+        mo_dau_yeu_cau = (
+            f"\n- Câu ĐẦU TIÊN của đoạn tin đầu tiên trong batch này áp dụng phong cách: "
+            f"{opening_style}"
+        )
 
-    khoi_bai_lien_quan_text = ""
-    if bai_lien_quan:
-        khoi_bai_lien_quan_text = f"""
-                NHÓM BÀI GÓC NHÌN/PHÂN TÍCH LIÊN QUAN (không phải tin thời sự, gồm {len(bai_lien_quan)}
-                bài):
-                {_dinh_dang_danh_sach_tin(bai_lien_quan, dung_full_content=False)}
-                Yêu cầu:
-            - Đây là phần tham khảo THÊM, KHÔNG phải phần trọng tâm — tóm tắt súc tích quan điểm/
-              góc nhìn chính của MỖI bài trong 1 đoạn ngắn riêng (không gộp nhiều bài vào 1 đoạn).
-            - CHỈ đoạn ĐẦU TIÊN của nhóm này bắt đầu bằng cụm "Góc nhìn liên quan:" để báo hiệu
-              chuyển sang nhóm. Các đoạn tiếp theo trong CÙNG nhóm này (nếu có nhiều hơn 1 bài)
-              KHÔNG được lặp lại cụm "Góc nhìn liên quan:" — viết thẳng vào nội dung.
-            - Đặt nhóm này ở CUỐI bài, sau cả nhóm tin liên quan gián tiếp (nếu có).
-                """
-
-    prompt = f"""{ontology_section}Bạn đang viết một VĂN BẢN TÓM TẮT TIN TỨC CÁ NHÂN HÓA hàng ngày cho một người có hồ sơ sau:
+    prompt = f"""{ontology_section}Bạn đang viết PHẦN THÂN BÀI của một văn bản tóm tắt tin tức cá
+        nhân hóa hàng ngày cho một người có hồ sơ sau:
 
         - Ngành/lĩnh vực: {persona.get('nganh_to')} - {persona.get('nganh_nho')}
         - Đơn vị công tác: {persona.get('to_chuc')}
         - Mô tả chung: {persona.get('mo_ta_chung')}
 
-    {khoi_tin_text}
-    {khoi_gian_tiep_text}
-    {khoi_bai_lien_quan_text}
+        Đây là NHÓM CHỦ ĐỀ "{nhom_ten}" (ưu tiên thứ {idx_nhom + 1}/{tong_so_nhom}), phần bạn cần
+        viết là {so_tin} tin sau đây (nhóm này có thể còn phần khác đã/sẽ được viết ở request
+        riêng — bạn CHỈ cần viết đúng {so_tin} tin dưới đây, không cần biết phần còn lại):
+        {_dinh_dang_danh_sach_tin(batch_tin)}
 
-    Yêu cầu bắt buộc chung cho toàn bài:
+        Yêu cầu mức độ chi tiết: {_muc_do_cho_tang(idx_nhom)}{khuynh_huong}{cau_dan_yeu_cau}{mo_dau_yeu_cau}
 
-    - {yeu_cau_bo_cuc}
+        CẤU TRÚC BẮT BUỘC: MỖI TIN viết thành MỘT ĐOẠN VĂN RIÊNG BIỆT, xuống dòng giữa các đoạn.
+        SỐ ĐOẠN BẮT BUỘC: chính xác {so_tin} đoạn — trừ khi 2 tin trong batch này thật sự cùng nói
+        về MỘT SỰ KIỆN CỤ THỂ giống nhau (trùng tên riêng/đơn vị/địa điểm, trùng mốc thời gian,
+        trùng hành động/quyết định), khi đó được GỘP thành 1 đoạn duy nhất, tổng hợp đầy đủ chi
+        tiết từ cả hai, không lặp thông tin trùng nhau. Nếu 2 tin CÙNG chủ đề nhưng là HAI SỰ KIỆN
+        KHÁC NHAU thì TUYỆT ĐỐI KHÔNG gộp — mỗi tin vẫn phải có đoạn riêng. Việc xác nhận "cùng sự
+        kiện" CHỈ diễn ra trong suy luận nội bộ — TUYỆT ĐỐI KHÔNG viết câu/chú thích kiểu "tin X và
+        tin Y được gộp vì...", "(Ghi chú: ...)" trong bài. Bài chỉ chứa nội dung tóm tắt tự nhiên.
 
-    - {yeu_cau_van_phong}
+        KHÔNG đặt tiêu đề kiểu "Tin 1:", KHÔNG gạch đầu dòng. KHÔNG viết các đoạn theo cùng một
+        khuôn mẫu số câu hay cấu trúc câu lặp lại — mỗi đoạn có độ dài và cách triển khai khác
+        nhau, phản ánh đúng lượng thông tin thật có trong tin đó (có tin 1 câu, có tin 4-5 câu).
 
-    - CẤU TRÚC BẮT BUỘC: MỖI TIN được viết thành MỘT ĐOẠN VĂN RIÊNG BIỆT, xuống dòng giữa các
-      đoạn (mỗi đoạn tương ứng đúng 1 tin trong danh sách trên). KHÔNG gộp 2 tin trở lên vào
-      cùng 1 đoạn. KHÔNG đặt tiêu đề kiểu "Tin 1:", KHÔNG gạch đầu dòng — đoạn văn tự nhiên,
-      chỉ là xuống dòng phân tách rõ ràng giữa các tin để dễ quan sát. NGOẠI LỆ DUY NHẤT: câu
-      dẫn chuyển nhóm chủ đề (xem mục BỐ CỤC) viết dính liền đầu đoạn tin đầu tiên của nhóm
-      mới, không xuống dòng riêng, không tính là một đoạn/tin.
+        TUYỆT ĐỐI KHÔNG dùng các cụm sau: {cam_cum_tu}. Không tự suy luận, đánh giá hoặc rút ra bài
+        học nếu bài báo không nêu (không thêm "cho thấy", "phản ánh", "là lời cảnh báo", "minh
+        chứng", "bài học", "gợi mở" trừ khi ý đó xuất hiện rõ trong bài gốc).
 
-    - Trong CÙNG một nhóm chủ đề, các đoạn tin không bắt buộc phải liền mạch với nhau như
-      một bài luận — ưu tiên tóm tắt đầy đủ, rõ ràng từng tin hơn là ưu tiên chuyển ý mượt
-      giữa các tin trong cùng nhóm. Câu dẫn chuyển ý CHỈ bắt buộc khi chuyển sang nhóm chủ đề
-      mới.
-
-    - KHÔNG viết các đoạn tin theo cùng một khuôn mẫu số câu hay cấu trúc câu lặp lại (ví dụ:
-      luôn đúng 2 câu, luôn theo mẫu "câu 1 nêu sự kiện — câu 2 nêu hệ quả/lo ngại"). Mỗi đoạn
-      cần có độ dài và cách triển khai câu khác nhau, phản ánh đúng lượng và tính chất thông
-      tin của tin đó — có tin chỉ cần 1 câu, có tin cần 4-5 câu nếu nội dung phong phú.
-
-    - TUYỆT ĐỐI KHÔNG dùng các cụm sau ở bất kỳ đâu trong bài: {cam_cum_tu}.
-
-    - Không dùng quá 2 lần bất kỳ cụm chuyển đoạn nào trong toàn bài.
-
-    - Đề cập nhóm ưu tiên cao trước, mức độ chi tiết giảm dần đúng theo thứ tự nhóm ở trên
-      (mức độ chi tiết ở đây là ĐỘ SÂU/ĐỘ DÀI của từng đoạn — KHÔNG được gộp nhiều tin lại
-      thành ít đoạn hơn ở bất kỳ nhóm chủ đề chính nào, kể cả nhóm ưu tiên thấp nhất); nhóm
-      tin liên quan gián tiếp (nếu có) luôn đặt ở cuối bài, sau tất cả nhóm chủ đề chính.
-
-    - Đối với các tin thuộc chủ đề quan tâm:
-        - Tin ảnh hưởng tới chính sách, pháp luật, kinh tế vĩ mô, ngân sách,
-        quản lý nhà nước hoặc công việc hiện tại:
-            -> tóm tắt đầy đủ.
-        - Tin doanh nghiệp hoặc thị trường chỉ có ý nghĩa tham khảo:
-            -> ngắn hơn.
-        - Tin mang tính đời sống, giải trí hoặc cá nhân:
-            -> chỉ giữ nếu có giá trị đặc biệt; nếu không thì bỏ.
-
-    - ƯU TIÊN giữ lại các tin có giá trị thông tin cao. Chỉ được phép GỘP 2 tin trong CÙNG một
-      nhóm chu_de chính vào chung 1 đoạn khi cả 2 tin cùng nói về MỘT SỰ KIỆN CỤ THỂ giống nhau —
-      nghĩa là trùng tên riêng/đơn vị/địa điểm liên quan, trùng mốc thời gian, trùng hành động
-      hoặc quyết định đang được đề cập, tức tin này chỉ đưa thêm chi tiết/góc nhìn khác cho CÙNG
-      một sự việc đã có ở tin kia. Khi đó, viết GỘP thành 1 đoạn duy nhất, tổng hợp đầy đủ chi
-      tiết từ cả hai nguồn, không lặp lại phần thông tin trùng nhau giữa 2 tin.
-
-    - Nếu 2 tin CÙNG thể loại/chủ đề nhưng là HAI SỰ KIỆN KHÁC NHAU (khác chủ thể, khác thời
-      điểm, khác nội dung cụ thể dù cùng lĩnh vực) thì TUYỆT ĐỐI KHÔNG được gộp hoặc lược bỏ —
-      mỗi tin vẫn phải có đoạn riêng như quy định ở mục CẤU TRÚC BẮT BUỘC. "Trùng chủ đề" hoặc
-      "mức độ quan trọng thấp hơn tin khác" KHÔNG bao giờ là lý do đủ để gộp/bỏ một tin trong
-      nhóm chu_de chính — chỉ "trùng sự kiện cụ thể" mới đủ.
-
-    - Cố gắng bao quát các tin trong danh sách.  Nếu nhiều tin trùng chủ đề hoặc mức độ quan trọng thấp, được phép gộp hoặc lược bỏ các chi tiết phụ.
-
-    - Không tự suy luận, đánh giá hoặc rút ra bài học nếu bài báo không nêu. Không thêm các nhận định như:
-        - cho thấy
-        - phản ánh
-        - là lời cảnh báo
-        - minh chứng
-        - bài học
-        - gợi mở
-    trừ khi ý đó xuất hiện rõ trong bài gốc.
-
-    - BƯỚC TỰ KIỂM TRA BẮT BUỘC TRƯỚC KHI TRẢ LỜI (chỉ thực hiện trong suy luận nội bộ, KHÔNG in
-      ra kết quả trung gian): sau khi viết xong toàn bộ bài, quay lại đếm số đoạn văn bạn vừa
-      viết cho TỪNG nhóm chủ đề, đối chiếu với "SỐ ĐOẠN BẮT BUỘC CHO NHÓM NÀY" đã cho ở từng
-      nhóm bên trên. Nếu nhóm nào có số đoạn ít hơn yêu cầu mà KHÔNG phải do gộp hợp lệ (trùng
-      sự kiện cụ thể, đã nêu rõ lý do), bạn PHẢI viết lại đúng nhóm đó, tách lại cho đủ số đoạn
-      quy định, rồi mới đưa ra câu trả lời cuối cùng. Không được bỏ qua bước này chỉ vì nhóm đó
-      có nhiều tin hoặc là nhóm ưu tiên thấp.
-    - TUYỆT ĐỐI KHÔNG được chèn bất kỳ câu/cụm mang tính chú thích, ghi chú, giải thích về quá
-      trình viết bài vào bài (ví dụ: "(Tin 2 và tin 3 được gộp vì...)", "(Ghi chú: ...)", "(Đã bỏ
-      qua tin về...)"). Toàn bộ nội dung trả về CHỈ là văn bản tóm tắt tự nhiên như một bài viết
-      hoàn chỉnh, không có bất kỳ dấu ngoặc đơn nào chứa lời giải thích nội bộ.
-
-    - Chỉ trả về nội dung văn bản, không thêm lời dẫn kiểu "Dưới đây là...".
-    """.strip()
+        Chỉ trả về nội dung các đoạn thân bài, không thêm lời dẫn, không thêm tiêu đề, không thêm
+        mở bài hay kết luận — phần đó được viết riêng ở bước khác.
+        """.strip()
 
     return prompt
 
 
-def _kiem_tra_do_bao_phu_theo_nhom(summary: str, nhom_tin: list, so_bai_lien_quan: int = 0) -> list:
-    doan_list = [d.strip() for d in summary.split("\n\n") if d.strip()]
-    if so_bai_lien_quan > 0:
-        doan_list = doan_list[:-so_bai_lien_quan]
-    doan_loi = [
-        d for d in doan_list
-        if not re.match(r"^Về .{1,60}:", d)
-        and not d.startswith("Các tin khác đáng chú ý:")
-        and not d.startswith("Góc nhìn liên quan:")
-    ]
+async def viet_mot_batch(persona: dict, nhom_ten: str, idx_nhom: int, tong_so_nhom: int,
+                         batch_tin: list, la_batch_dau_nhom: bool, ontology_ctx: str,
+                         day_du: bool, opening_style: str, client, semaphore_summary,
+                         model_name: str = OSS_MODEL_NAME) -> tuple:
+    """Viết thân bài cho 1 batch, trả về (text, bi_cat_cut)."""
+    prompt = build_batch_prompt(
+        persona, nhom_ten, idx_nhom, tong_so_nhom, batch_tin, la_batch_dau_nhom,
+        ontology_ctx, day_du, opening_style,
+    )
 
-    chi_so_bat_dau_nhom = [0]
-    for i, d in enumerate(doan_loi):
-        if i > 0 and d.startswith("Ở lĩnh vực "):
-            chi_so_bat_dau_nhom.append(i)
-    chi_so_bat_dau_nhom.append(len(doan_loi))
+    async def _goi(mt):
+        async def _call():
+            return await client.models.generate_content(
+                model=model_name,
+                contents=prompt,
+                config={"temperature": 0.0, "max_output_tokens": mt},
+            )
 
-    nhom_thieu = []
-    for idx, n in enumerate(nhom_tin):
-        so_tin_ky_vong = len(n["bai"])
-        if idx >= len(chi_so_bat_dau_nhom) - 1:
-            nhom_thieu.append({"chu_de": n["chu_de"], "ky_vong": so_tin_ky_vong, "thuc_te": 0})
-            continue
-        so_doan_thuc_te_nhom = chi_so_bat_dau_nhom[idx + 1] - chi_so_bat_dau_nhom[idx]
-        if so_doan_thuc_te_nhom < so_tin_ky_vong - 1:  # cho phép dư 1 đoạn do gộp hợp lệ
-            nhom_thieu.append({
-                "chu_de": n["chu_de"], "ky_vong": so_tin_ky_vong, "thuc_te": so_doan_thuc_te_nhom
-            })
-    return nhom_thieu
+        async with semaphore_summary:
+            return await retry_generate_async(_call)
+
+    response = await _goi(BATCH_MAX_TOKENS)
+    bi_cat_cut = getattr(response, "finish_reason", None) == "length"
+    if bi_cat_cut:
+        response = await _goi(BATCH_MAX_TOKENS_MO_RONG)
+        bi_cat_cut = getattr(response, "finish_reason", None) == "length"
+
+    return response.text.strip(), bi_cat_cut
 
 
-def tom_tat_rss_cho_persona(persona: dict, articles: list, client,
-                            model_name: str = SUMMARY_MODEL_NAME, variant: str = None) -> dict:
+def build_mo_ket_prompt(persona: dict, day_du: bool, ten_cac_nhom: list, tin_hang_dau: list,
+                        closing_style: str, opening_style: str = None) -> str:
+    """Prompt viết TIÊU ĐỀ + ĐOẠN MỞ BÀI (chỉ khi day_du=True) + ĐOẠN KẾT LUẬN — dựa trên nội
+    dung đã cô đọng (tầng 1) của 2-3 tin ưu tiên cao nhất, KHÔNG dùng lại toàn bộ thân bài đã
+    viết (tránh input phình to lại, đây chính là nguyên nhân gây lỗi 500/timeout ở bản gốc)."""
+    ds_tin_hang_dau = _dinh_dang_danh_sach_tin(tin_hang_dau)
+    thu_tu_nhom = " -> ".join(ten_cac_nhom)
+
+    if day_du:
+        yeu_cau = f"""Bạn cần viết 3 phần cho một văn bản tóm tắt tin tức cá nhân hóa:
+
+        1. TIÊU ĐỀ: một dòng ngắn gọn, nêu khái quát chủ đề bản tin.
+        2. MỞ BÀI (2-3 câu): nêu khái quát các nhóm chủ đề sẽ đề cập theo đúng thứ tự ưu tiên
+           sau: {thu_tu_nhom}. KHÔNG đi vào số liệu cụ thể của từng tin. Phong cách câu đầu
+           tiên: {opening_style}
+        3. KẾT LUẬN (2-4 câu): tổng kết lại 2-3 điểm quan trọng nhất, dựa trên các tin ưu tiên
+           cao nhất dưới đây, diễn đạt ngắn gọn, không lặp nguyên văn. Phong cách câu cuối
+           cùng: {closing_style}
+
+        Tham khảo nội dung các tin ưu tiên cao nhất (chỉ để nắm ý chính, KHÔNG cần nhắc chi
+        tiết số liệu):
+        {ds_tin_hang_dau}
+
+        Trả về ĐÚNG định dạng (mỗi phần viết liền thành đoạn văn, không tự xuống dòng giữa
+        chừng trong cùng 1 phần):
+        TIÊU ĐỀ: <tiêu đề>
+        MỞ BÀI: <đoạn mở bài>
+        KẾT LUẬN: <đoạn kết luận>
+        Không thêm chữ nào khác ngoài 3 dòng trên."""
+    else:
+        yeu_cau = f"""Bạn cần viết ĐOẠN KẾT LUẬN (2-4 câu) cho một văn bản tóm tắt tin tức cá
+        nhân hóa, tổng kết lại 2-3 điểm quan trọng nhất, dựa trên các tin ưu tiên cao nhất dưới
+        đây, diễn đạt ngắn gọn, không lặp nguyên văn. Phong cách câu cuối cùng: {closing_style}
+
+        Tham khảo nội dung các tin ưu tiên cao nhất:
+        {ds_tin_hang_dau}
+
+        Trả về ĐÚNG định dạng:
+        KẾT LUẬN: <đoạn kết luận>
+        Không thêm chữ nào khác."""
+
+    prompt = f"""Hồ sơ người đọc:
+        - Ngành/lĩnh vực: {persona.get('nganh_to')} - {persona.get('nganh_nho')}
+        - Đơn vị công tác: {persona.get('to_chuc')}
+
+        {yeu_cau}
+
+        TUYỆT ĐỐI KHÔNG lặp lại nguyên văn câu đã có trong nội dung tin tham khảo ở trên — phải
+        diễn đạt lại. Không tự suy luận, đánh giá nếu tin không nêu rõ.
+        """.strip()
+
+    return prompt
+
+
+async def viet_mo_ket(persona: dict, day_du: bool, ten_cac_nhom: list, tin_hang_dau: list,
+                      opening_style: str, closing_style: str, client, semaphore_summary,
+                      model_name: str = OSS_MODEL_NAME) -> tuple:
+    """Trả về (tieu_de, mo_bai, ket_luan, bi_cat_cut). tieu_de/mo_bai rỗng khi day_du=False."""
+    prompt = build_mo_ket_prompt(persona, day_du, ten_cac_nhom, tin_hang_dau, closing_style,
+                                 opening_style)
+
+    async def _goi(mt):
+        async def _call():
+            return await client.models.generate_content(
+                model=model_name,
+                contents=prompt,
+                config={"temperature": 0.0, "max_output_tokens": mt},
+            )
+
+        async with semaphore_summary:
+            return await retry_generate_async(_call)
+
+    response = await _goi(MO_KET_MAX_TOKENS)
+    bi_cat_cut = getattr(response, "finish_reason", None) == "length"
+    if bi_cat_cut:
+        response = await _goi(MO_KET_MAX_TOKENS_MO_RONG)
+        bi_cat_cut = getattr(response, "finish_reason", None) == "length"
+
+    text = response.text.strip()
+
+    def _trich(nhan: str) -> str:
+        m = re.search(rf"{nhan}\s*:\s*(.+?)(?=\n[A-ZÀ-Ỹ ]{{2,}}:|\Z)", text, re.DOTALL)
+        return m.group(1).strip() if m else ""
+
+    tieu_de = _trich("TIÊU ĐỀ")
+    mo_bai = _trich("MỞ BÀI")
+    ket_luan = _trich("KẾT LUẬN")
+
+    return tieu_de, mo_bai, ket_luan, bi_cat_cut
+
+
+def build_lien_quan_prompt(persona: dict, tin_gian_tiep: list, bai_lien_quan: list) -> str:
+    khoi_gian_tiep_text = ""
+    if tin_gian_tiep:
+        khoi_gian_tiep_text = f"""
+        NHÓM TIN LIÊN QUAN GIÁN TIẾP (ngoài chủ đề chính, nhưng có liên hệ nhẹ, gồm
+        {len(tin_gian_tiep)} tin):
+        {_dinh_dang_danh_sach_tin(tin_gian_tiep, dung_full_content=False)}
+        Yêu cầu:
+        - CHỈ giữ lại tin có giá trị tham khảo thực sự rõ ràng; MẠNH DẠN bỏ hẳn tin liên quan
+          lỏng lẻo, kể cả khi phải bỏ nguyên một nhóm chủ đề trong danh sách trên.
+        - Tổng độ dài KHÔNG vượt quá 1-2 đoạn văn ngắn — ưu tiên súc tích.
+        - MỖI đoạn PHẢI bắt đầu bằng cụm báo hiệu tin ngoài chuyên môn chính, ví dụ "Các tin
+          khác đáng chú ý:", "Về [chủ đề X]:".
+        - Mỗi tin chỉ giữ đúng ý quan trọng nhất (khoảng 1 câu/tin), không mô tả chi tiết.
+        - Nếu nhiều tin cùng sự kiện/chủ đề thì gộp thành một câu.
+        """
+
+    khoi_bai_text = ""
+    if bai_lien_quan:
+        khoi_bai_text = f"""
+        NHÓM BÀI GÓC NHÌN/PHÂN TÍCH LIÊN QUAN (không phải tin thời sự, gồm {len(bai_lien_quan)}
+        bài):
+        {_dinh_dang_danh_sach_tin(bai_lien_quan, dung_full_content=False)}
+        Yêu cầu:
+        - Tóm tắt súc tích quan điểm/góc nhìn chính của MỖI bài trong 1 đoạn ngắn riêng.
+        - CHỈ đoạn ĐẦU TIÊN của nhóm này bắt đầu bằng cụm "Góc nhìn liên quan:" — các đoạn tiếp
+          theo trong CÙNG nhóm KHÔNG lặp lại cụm này.
+        """
+
+    prompt = f"""Bạn đang viết PHẦN CUỐI (phụ, không phải trọng tâm) của một văn bản tóm tắt tin
+        tức cá nhân hóa cho một người thuộc ngành {persona.get('nganh_to')} - {persona.get('nganh_nho')}.
+        {khoi_gian_tiep_text}
+        {khoi_bai_text}
+        Đặt nhóm tin liên quan gián tiếp trước, nhóm bài góc nhìn sau (nếu có cả 2). Chỉ trả về
+        nội dung các đoạn văn, không thêm lời dẫn, không thêm tiêu đề.
+        """.strip()
+
+    return prompt
+
+
+async def viet_phan_lien_quan(persona: dict, tin_gian_tiep: list, bai_lien_quan: list,
+                              client, semaphore_summary, model_name: str = OSS_MODEL_NAME) -> tuple:
+    if not tin_gian_tiep and not bai_lien_quan:
+        return "", False
+
+    prompt = build_lien_quan_prompt(persona, tin_gian_tiep, bai_lien_quan)
+
+    async def _goi(mt):
+        async def _call():
+            return await client.models.generate_content(
+                model=model_name,
+                contents=prompt,
+                config={"temperature": 0.0, "max_output_tokens": mt},
+            )
+
+        async with semaphore_summary:
+            return await retry_generate_async(_call)
+
+    response = await _goi(LIEN_QUAN_MAX_TOKENS)
+    bi_cat_cut = getattr(response, "finish_reason", None) == "length"
+    if bi_cat_cut:
+        response = await _goi(LIEN_QUAN_MAX_TOKENS_MO_RONG)
+        bi_cat_cut = getattr(response, "finish_reason", None) == "length"
+
+    return response.text.strip(), bi_cat_cut
+
+
+def _chia_batch(danh_sach: list, kich_thuoc: int) -> list:
+    """Chia 1 danh sách thành các batch con liên tiếp, mỗi batch tối đa kich_thuoc phần tử."""
+    return [danh_sach[i:i + kich_thuoc] for i in range(0, len(danh_sach), kich_thuoc)]
+
+
+async def tom_tat_rss_cho_persona(persona: dict, articles: list, client, semaphore, semaphore_summary,
+                                  model_name: str = OSS_MODEL_NAME, variant: str = None,
+                                  bai_candidates_da_tom_tat: list = None) -> dict:
     ranked_truoc_loc = xep_hang_bai_cho_persona(persona, articles)
 
     if not ranked_truoc_loc:
@@ -813,105 +844,151 @@ def tom_tat_rss_cho_persona(persona: dict, articles: list, client,
             "note": "Không có tin nào khớp chu_de của persona này.",
         }
 
-    ranked, bai_bi_ha = loc_bai_lien_quan_persona_co_cache(persona, ranked_truoc_loc, client, variant=variant)
+    ranked, bai_bi_ha = await loc_bai_lien_quan_persona_co_cache(
+        persona, ranked_truoc_loc, client, semaphore, variant=variant
+    )
 
-    khong_co_tin_huu_ich = not ranked and not bai_bi_ha
+    ranked, ten_cac_nhom_bi_khoi_phuc = _khoi_phuc_tin_cho_nhom_bi_ha_het(
+        lay_chu_de_hieu_luc(persona), ranked_truoc_loc, ranked
+    )
+    if ten_cac_nhom_bi_khoi_phuc:
+        print(
+            f"[tom_tat_rss_cho_persona] [{persona.get('id')}] CẢNH BÁO: "
+            f"{len(ten_cac_nhom_bi_khoi_phuc)} nhóm chủ đề bị bước lọc giu/ha đánh 'ha' HẾT toàn bộ "
+            f"tin ({', '.join(ten_cac_nhom_bi_khoi_phuc)}) -> mỗi nhóm đó chỉ lấy lại tối đa "
+            f"{SO_TIN_TOI_DA_FALLBACK_MOI_NHOM} tin điểm cao nhất, KHÔNG lấy lại toàn bộ danh sách "
+            f"ban đầu."
+        )
+        link_da_giu = {a.get("link") for a in ranked}
+        bai_bi_ha = [a for a in bai_bi_ha if a.get("link") not in link_da_giu]
+
+    khong_co_tin_huu_ich = not ranked
     if khong_co_tin_huu_ich:
+        print(
+            f"[tom_tat_rss_cho_persona] [{persona.get('id')}] CẢNH BÁO: bước lọc giu/ha đánh "
+            f"'ha' cho TOÀN BỘ {len(ranked_truoc_loc)} tin khớp chủ đề chính -> fallback dùng "
+            f"lại danh sách trước khi lọc để tránh mất sạch nội dung nhóm chủ đề chính."
+        )
         ranked = ranked_truoc_loc
         bai_bi_ha = []
+
+    tom_tat_map = await tom_tat_nhieu_bai(ranked, client, semaphore)
+    ranked = [
+        {**a, "content": tom_tat_map.get(a.get("link"), a.get("summary", ""))}
+        for a in ranked
+    ]
 
     nhom_tin = nhom_tin_theo_chu_de(persona, ranked)
     so_bai_moi_nhom = [{"chu_de": n["chu_de"], "so_bai": len(n["bai"])} for n in nhom_tin]
     tin_gian_tiep = bai_bi_ha + tim_tin_lien_quan_gian_tiep(persona, articles, ranked)
 
-    bai_candidates = [a for a in articles if a.get("loai_bai") == "bai"]
-    bai_lien_quan = loc_bai_loai_bai_cho_persona(persona, bai_candidates, client)
-
-    prompt_goc = build_rss_prompt(persona, ranked, tin_gian_tiep, bai_lien_quan)
+    if bai_candidates_da_tom_tat is None:
+        bai_candidates = [a for a in articles if a.get("loai_bai") == "bài"]
+        tom_tat_map_bai = await tom_tat_nhieu_bai(bai_candidates, client, semaphore)
+        bai_candidates_da_tom_tat = [
+            {**a, "content": tom_tat_map_bai.get(a.get("link"), a.get("summary", ""))}
+            for a in bai_candidates
+        ]
+    bai_lien_quan = await loc_bai_loai_bai_cho_persona(persona, bai_candidates_da_tom_tat, client, semaphore)
 
     so_bai = len(ranked) + len(tin_gian_tiep)
-    max_tokens = MAX_OUTPUT_TOKENS_TRAN
     so_tin_chinh = len(ranked)
+    print(f"[tom_tat_rss_cho_persona] [{persona.get('id')}] so_bai={so_bai}, "
+          f"so_tin_chinh={so_tin_chinh}, so_nhom={len(nhom_tin)}")
 
-    prompt = prompt_goc
-    for lan_thu in range(SO_LAN_THU_LAI_TOI_DA + 1):
-        def _call():
-            return client.models.generate_content(
-                model=model_name,
-                contents=prompt,
-                config={
-                    "temperature": 0.0,
-                    "max_output_tokens": max_tokens,
-                },
-            )
+    day_du = can_van_phong_day_du(persona, ranked)
+    ontology_ctx = lay_ontology_context_cho_nganh(persona.get("nganh_to", ""))
+    opening_style = (
+        _chon_style(persona.get("id", ""), OPENING_STYLES_MO_BAI)
+        if day_du
+        else _chon_style(persona.get("id", ""), OPENING_STYLES)
+    )
+    closing_style = _chon_style(persona.get("id", "") + "_close", CLOSING_STYLES)
 
-        response = retry_generate(_call)
+    viec_can_lam = []
+    for idx_nhom, n in enumerate(nhom_tin):
+        cac_batch_cua_nhom = _chia_batch(n["bai"], SO_TIN_MOI_BATCH)
+        for idx_batch, batch_tin in enumerate(cac_batch_cua_nhom):
+            viec_can_lam.append({
+                "idx_nhom": idx_nhom,
+                "idx_batch": idx_batch,
+                "nhom_ten": n["chu_de"],
+                "batch_tin": batch_tin,
+                "la_batch_dau_nhom": idx_batch == 0,
+                "la_batch_dau_toan_bai": idx_nhom == 0 and idx_batch == 0,
+            })
 
-        bi_cat_cut = False
-        try:
-            finish_reason = str(response.candidates[0].finish_reason)
-            if "MAX_TOKENS" in finish_reason:
-                bi_cat_cut = True
-        except (AttributeError, IndexError):
-            pass
-
-        summary = response.text.strip()
-        so_doan_thuc_te = len([doan for doan in summary.split("\n\n") if doan.strip()])
-        ti_le_bao_phu = so_doan_thuc_te / so_tin_chinh if so_tin_chinh else 0.0
-
-        nhom_thieu = _kiem_tra_do_bao_phu_theo_nhom(summary, nhom_tin, len(bai_lien_quan))
-        co_chu_thich_thua = bool(re.search(
-            r"\(\s*(?:Tin\s*\d|Ghi chú|Đã gộp|Gộp\b|Lược bỏ)", summary, re.IGNORECASE
-        ))
-
-        dat_yeu_cau = (
-                ti_le_bao_phu >= TI_LE_BAO_PHU_TOI_THIEU
-                and not bi_cat_cut
-                and not nhom_thieu
-                and not co_chu_thich_thua
+    async def _xu_ly_1_viec(viec):
+        text, bi_cat = await viet_mot_batch(
+            persona, viec["nhom_ten"], viec["idx_nhom"], len(nhom_tin), viec["batch_tin"],
+            viec["la_batch_dau_nhom"], ontology_ctx, day_du,
+            opening_style if viec["la_batch_dau_toan_bai"] else None,
+            client, semaphore_summary, model_name,
         )
-        if dat_yeu_cau or lan_thu == SO_LAN_THU_LAI_TOI_DA:
-            break
+        return {**viec, "text": text, "bi_cat_cut": bi_cat}
 
-        ly_do_thu_lai = []
-        if ti_le_bao_phu < TI_LE_BAO_PHU_TOI_THIEU or bi_cat_cut:
-            ly_do_thu_lai.append(
-                f"chỉ có {so_doan_thuc_te}/{so_tin_chinh} đoạn (tỉ lệ {ti_le_bao_phu:.2f}) hoặc bị cắt cụt"
-            )
-        for nt in nhom_thieu:
-            ly_do_thu_lai.append(
-                f"nhóm \"{nt['chu_de']}\" chỉ có {nt['thuc_te']}/{nt['ky_vong']} đoạn"
-            )
-        if co_chu_thich_thua:
-            ly_do_thu_lai.append("bài có chứa câu chú thích/giải thích quá trình viết (không hợp lệ)")
+    ket_qua_batch = await asyncio.gather(*[_xu_ly_1_viec(v) for v in viec_can_lam])
+    ket_qua_batch.sort(key=lambda r: (r["idx_nhom"], r["idx_batch"]))
 
-        print(f"[tom_tat_rss_cho_persona] [{persona.get('id')}] lần {lan_thu + 1} chưa đạt: "
-              f"{'; '.join(ly_do_thu_lai)}. Thử lại lần {lan_thu + 2}...")
+    than_bai_doan = [r["text"] for r in ket_qua_batch if r["text"]]
+    bi_cat_cut_batch = any(r["bi_cat_cut"] for r in ket_qua_batch)
 
-        prompt = prompt_goc + f"""
+    if not day_du and nhom_tin:
+        than_bai_doan = [f"Về {nhom_tin[0]['chu_de']}:"] + than_bai_doan
 
-        LƯU Ý QUAN TRỌNG - LẦN VIẾT TRƯỚC CHƯA ĐẠT: {'; '.join(ly_do_thu_lai)}. Hãy viết lại TOÀN BỘ bài
-        từ đầu, đối chiếu kỹ "SỐ ĐOẠN BẮT BUỘC" ở từng nhóm chủ đề, đảm bảo KHÔNG bỏ sót tin nào trong
-        nhóm chính, và KHÔNG được viết bất kỳ câu chú thích/giải thích nào về việc gộp hay bỏ tin — bài
-        trả về chỉ là văn bản tóm tắt tự nhiên."""
+    ten_cac_nhom = [n["chu_de"] for n in nhom_tin]
+    tin_hang_dau = ranked[:3]
+    tieu_de, mo_bai, ket_luan, bi_cat_cut_mo_ket = await viet_mo_ket(
+        persona, day_du, ten_cac_nhom, tin_hang_dau, opening_style, closing_style,
+        client, semaphore_summary, model_name,
+    )
+
+    doan_lien_quan, bi_cat_cut_lien_quan = await viet_phan_lien_quan(
+        persona, tin_gian_tiep, bai_lien_quan, client, semaphore_summary, model_name,
+    )
+
+    cac_phan = []
+    if day_du and tieu_de:
+        cac_phan.append(tieu_de)
+    if day_du and mo_bai:
+        cac_phan.append(mo_bai)
+    cac_phan.extend(than_bai_doan)
+    if doan_lien_quan:
+        cac_phan.append(doan_lien_quan)
+    if ket_luan:
+        cac_phan.append(ket_luan)
+
+    summary = "\n\n".join(doan for doan in cac_phan if doan.strip())
+
+    bi_cat_cut = bi_cat_cut_batch or bi_cat_cut_mo_ket or bi_cat_cut_lien_quan
+    so_doan_thuc_te = len([doan for doan in summary.split("\n\n") if doan.strip()])
+    ti_le_bao_phu = so_doan_thuc_te / so_tin_chinh if so_tin_chinh else 0.0
 
     notes = []
-    if not nhom_tin or nhom_tin[0]["chu_de"] != lay_chu_de_hieu_luc(persona)[0]:
+    if not nhom_tin:
+        notes.append(
+            f"Nhóm chủ đề chính rỗng sau khi lọc giu/ha (có thể do bước lọc đánh 'ha' cho toàn bộ "
+            f"tin, xem log CẢNH BÁO fallback ở trên nếu có), hoặc thực sự không có tin khớp chu_de."
+        )
+    elif nhom_tin[0]["chu_de"] != lay_chu_de_hieu_luc(persona)[0]:
         notes.append(
             f"Không có tin nào khớp đúng chủ đề chuyên môn chính "
             f"(\"{lay_chu_de_hieu_luc(persona)[0]}\") trong đợt tin này."
         )
     if bi_cat_cut:
         notes.append(
-            f"CẢNH BÁO: bản tóm tắt có thể bị CẮT CỤT do chạm giới hạn "
-            f"{max_tokens} token (ước lượng từ {so_bai} tin) — cần chạy lại persona này "
-            f"riêng với TOKENS_UOC_LUONG_MOI_BAI hoặc MAX_OUTPUT_TOKENS_TRAN cao hơn."
+            "CẢNH BÁO: có ít nhất 1 phần (batch thân bài / mở-kết / tin liên quan) có thể bị "
+            "CẮT CỤT dù đã thử lại với max_tokens cao hơn — cần xem lại persona này riêng."
         )
     if ti_le_bao_phu < TI_LE_BAO_PHU_TOI_THIEU:
         notes.append(
-            f"CẢNH BÁO: bài viết chỉ có {so_doan_thuc_te} đoạn, trong khi nhóm tin chính "
-            f"(bắt buộc mỗi tin 1 đoạn riêng) có {so_tin_chinh} tin — có khả năng model đã "
-            f"tự gộp hoặc bỏ bớt tin chính dù prompt cấm điều này."
+            f"CẢNH BÁO: bài viết chỉ có {so_doan_thuc_te} đoạn, trong khi nhóm tin chính có "
+            f"{so_tin_chinh} tin — có khả năng model đã tự gộp hoặc bỏ bớt tin."
+        )
+    if co_chu_thich_thua(summary):
+        notes.append(
+            "CẢNH BÁO: bài viết có thể chứa chú thích/ghi chú thừa về quá trình viết bài "
+            "(vd: '(Ghi chú: ...)', '(đã gộp tin...)') — cần xem lại thủ công."
         )
     if khong_co_tin_huu_ich:
         notes.append(
@@ -923,12 +1000,21 @@ def tom_tat_rss_cho_persona(persona: dict, articles: list, client,
     ket_qua = {
         "id": persona.get("id"),
         "summary": summary,
+        "day_du": day_du,
         "so_luong_tin_da_dua_vao": so_bai,
         "so_nhom_chu_de": len(nhom_tin),
         "so_bai_moi_nhom": so_bai_moi_nhom,
-        "do_dai_prompt_ky_tu": len(prompt_goc),
+        "so_batch_tang_2": len(viec_can_lam),
         "so_doan_thuc_te": so_doan_thuc_te,
         "ti_le_bao_phu": round(ti_le_bao_phu, 2),
+        "than_bai_theo_batch": [
+            {
+                "nhom_chu_de": r["nhom_ten"],
+                "tin_links": [a.get("link") for a in r["batch_tin"]],
+                "text": r["text"],
+            }
+            for r in ket_qua_batch if r["text"]
+        ],
         "ranked_articles": [
             {"title": a["title"], "genre": a["genre"], "genre_score": a["genre_score"], "link": a.get("link")}
             for a in ranked
@@ -950,29 +1036,26 @@ def tom_tat_rss_cho_persona(persona: dict, articles: list, client,
 if __name__ == "__main__":
     import argparse
     import time
-    from google import genai
 
-    API_KEY = os.getenv("GEMINI_API_KEY")
-
-    parser = argparse.ArgumentParser(description="Tom tat RSS ca nhan hoa")
+    parser = argparse.ArgumentParser(description="Tóm tắt RSS cá nhân hóa")
 
     parser.add_argument(
         "--id",
         type=str,
-        help="id cua persona, vi du NN0001"
+        help="id của persona, ví dụ NN0001"
     )
 
     parser.add_argument(
         "-n", "--so-luong",
         type=int,
-        help="Chi duyet N persona dau tien"
+        help="Chỉ duyệt N persona đầu tiên"
     )
 
     parser.add_argument(
         "--variant",
         type=str,
         default=None,
-        help="ten bien the persona (vd nt_nn_tc_kn_cd), neu co se ghi vao thu muc con rieng de tranh de len du lieu persona day du truong"
+        help="tên biến thể persona (vd nt_nn_tc_kn_cd), nếu có sẽ ghi vào thư mục con riêng để tránh đè lên dữ liệu persona đầy đủ trường"
     )
     args = parser.parse_args()
 
@@ -985,8 +1068,6 @@ if __name__ == "__main__":
 
     articles = gan_genre_cho_bai(articles)
 
-    client = genai.Client(api_key=API_KEY)
-
     if args.variant:
         JSON_DIR = OUTPUT_DIR / "json" / args.variant
         MD_DIR = OUTPUT_DIR / "md" / args.variant
@@ -996,55 +1077,76 @@ if __name__ == "__main__":
     JSON_DIR.mkdir(parents=True, exist_ok=True)
     MD_DIR.mkdir(parents=True, exist_ok=True)
 
-    if args.id:
-        persona = next((p for p in personas if p.get("id") == args.id), None)
-        if persona is None:
-            raise SystemExit(f"Không tìm thấy persona có id = {args.id}")
-        print(f"[{persona['id']}] bắt đầu xử lý...")
+
+    async def xu_ly_mot_persona(client, semaphore, semaphore_summary, persona, bai_candidates_da_tom_tat):
+        persona_id = persona["id"]
+        out_path_json = JSON_DIR / f"{persona_id}.json"
+        if out_path_json.exists():
+            print(f"[{persona_id}] đã có kết quả rồi, bỏ qua.")
+            return
+
+        print(f"[{persona_id}] bắt đầu xử lý...")
         t0 = time.time()
 
-        ket_qua = tom_tat_rss_cho_persona(persona, articles, client, variant=args.variant)
+        try:
+            ket_qua = await tom_tat_rss_cho_persona(
+                persona, articles, client, semaphore, semaphore_summary,
+                variant=args.variant, bai_candidates_da_tom_tat=bai_candidates_da_tom_tat,
+            )
+        except Exception as e:
+            print(f"[{persona_id}] LỖI, bỏ qua persona này: {e}")
+            return
 
-        out_path_json = JSON_DIR / f"{persona['id']}.json"
         with open(out_path_json, "w", encoding="utf-8") as f:
             json.dump(ket_qua, f, ensure_ascii=False, indent=2)
 
-        out_path_md = MD_DIR / f"{persona['id']}.md"
+        out_path_md = MD_DIR / f"{persona_id}.md"
         with open(out_path_md, "w", encoding="utf-8") as f:
             f.write(ket_qua["summary"])
 
-        print(f"[{persona['id']}] xong, mất {time.time() - t0:.1f}s")
-        print(f"Đã ghi json: {out_path_json}")
-        print(f"Đã ghi md:   {out_path_md}")
-    else:
-        danh_sach_persona = personas
-        if args.so_luong:
-            danh_sach_persona = danh_sach_persona[:args.so_luong]
-        print("Tổng số persona cần duyệt:", len(danh_sach_persona))
-        t_bat_dau = time.time()
+        print(f"[{persona_id}] xong, mất {time.time() - t0:.1f}s")
 
-        for persona in danh_sach_persona:
-            persona_id = persona["id"]
-            out_path_json = JSON_DIR / f"{persona_id}.json"
-            if out_path_json.exists():
-                print(f"[{persona_id}] đã có kết quả rồi, bỏ qua.")
-                continue
-            print(f"[{persona_id}] bắt đầu xử lý...")
-            t0 = time.time()
 
-            ket_qua = tom_tat_rss_cho_persona(persona, articles, client, variant=args.variant)
-            with open(out_path_json, "w", encoding="utf-8") as f:
-                json.dump(ket_qua, f, ensure_ascii=False, indent=2)
+    async def chay():
+        client = tao_oss_client_async()
+        semaphore = asyncio.Semaphore(OSS_MAX_CONCURRENCY)
+        semaphore_summary = asyncio.Semaphore(OSS_MAX_CONCURRENCY_SUMMARY)
 
-            out_path_md = MD_DIR / f"{persona_id}.md"
-            with open(out_path_md, "w", encoding="utf-8") as f:
-                f.write(ket_qua["summary"])
+        print("Tóm tắt trước 1 lần cho toàn bộ 'bài' góc nhìn (dùng chung cho mọi persona)...")
+        bai_candidates = [a for a in articles if a.get("loai_bai") == "bài"]
+        tom_tat_map_bai = await tom_tat_nhieu_bai(bai_candidates, client, semaphore)
+        bai_candidates_da_tom_tat = [
+            {**a, "content": tom_tat_map_bai.get(a.get("link"), a.get("summary", ""))}
+            for a in bai_candidates
+        ]
+        print(f"Đã tóm tắt xong {len(bai_candidates_da_tom_tat)} bài, bắt đầu xử lý từng persona.")
 
-            print(f"[{persona_id}] xong, mất {time.time() - t0:.1f}s")
-            print("=================================")
-            time.sleep(12)
-        print(
-            "\nXONG HẾT. Tổng thời gian:",
-            round((time.time() - t_bat_dau) / 60, 1),
-            "phút"
-        )
+        if args.id:
+            persona = next((p for p in personas if p.get("id") == args.id), None)
+            if persona is None:
+                raise SystemExit(f"Không tìm thấy persona có id = {args.id}")
+
+            await xu_ly_mot_persona(client, semaphore, semaphore_summary, persona, bai_candidates_da_tom_tat)
+
+            print(f"Đã ghi json: {JSON_DIR / f'{persona['id']}.json'}")
+            print(f"Đã ghi md:   {MD_DIR / f'{persona['id']}.md'}")
+        else:
+            danh_sach_persona = personas
+            if args.so_luong:
+                danh_sach_persona = danh_sach_persona[:args.so_luong]
+            print("Tổng số persona cần duyệt:", len(danh_sach_persona))
+            t_bat_dau = time.time()
+
+            tasks = [
+                xu_ly_mot_persona(client, semaphore, semaphore_summary, p, bai_candidates_da_tom_tat)
+                for p in danh_sach_persona
+            ]
+            await asyncio.gather(*tasks)
+
+            print(
+                "\nXONG HẾT. Tổng thời gian:",
+                round((time.time() - t_bat_dau) / 60, 1),
+                "phút"
+            )
+
+    asyncio.run(chay())

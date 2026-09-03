@@ -1,10 +1,14 @@
 import json
+import os
 import re
 import time
-import asyncio
 from pathlib import Path
 
-from pipeline.utils import retry_generate_async, OSS_MODEL_NAME, tao_oss_client_async, OSS_MAX_CONCURRENCY
+from dotenv import load_dotenv
+
+load_dotenv()
+
+from pipeline.utils_new import retry_generate, SUMMARY_MODEL_NAME
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 
@@ -263,7 +267,7 @@ thêm ngoài JSON:
 
 # ==== BƯỚC 5: GỌI LLM CHẤM + HẬU KIỂM ====
 
-async def cham_1_ban_tom_tat(persona, ket_qua_tom_tat, client, semaphore, model_name=OSS_MODEL_NAME):
+def cham_1_ban_tom_tat(persona, ket_qua_tom_tat, client, model_name=SUMMARY_MODEL_NAME):
     danh_sach_muc_goc = ket_qua_tom_tat.get("danh_sach_muc_voi_tang", [])
     danh_sach_muc_loc = loc_muc_hop_le(danh_sach_muc_goc)
 
@@ -297,8 +301,8 @@ async def cham_1_ban_tom_tat(persona, ket_qua_tom_tat, client, semaphore, model_
 
     prompt = build_judge_prompt(persona, ket_qua_tom_tat, danh_sach_muc_loc)
 
-    async def _call():
-        return await client.models.generate_content(
+    def _call():
+        return client.models.generate_content(
             model=model_name,
             contents=prompt,
             config={
@@ -307,8 +311,7 @@ async def cham_1_ban_tom_tat(persona, ket_qua_tom_tat, client, semaphore, model_
             },
         )
 
-    async with semaphore:
-        response = await retry_generate_async(_call)
+    response = retry_generate(_call)
 
     raw = response.text.strip()
     raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
@@ -319,6 +322,15 @@ async def cham_1_ban_tom_tat(persona, ket_qua_tom_tat, client, semaphore, model_
         return {
             "id": persona.get("id"),
             "note": "LỖI: không parse được JSON từ model, xem raw_response.",
+            "raw_response": raw,
+        }
+    if not isinstance(cham, dict):
+        return {
+            "id": persona.get("id"),
+            "note": (
+                "LỖI: judge trả về JSON không đúng dạng object (nhận được "
+                f"{type(cham).__name__} thay vì dict) - xem raw_response."
+            ),
             "raw_response": raw,
         }
 
@@ -372,6 +384,9 @@ def in_ket_qua_cham(persona_id, cham):
 
 if __name__ == "__main__":
     import argparse
+    from google import genai
+
+    API_KEY = os.getenv("GEMINI_API_KEY")
 
     parser = argparse.ArgumentParser(description="Đánh giá bản tóm tắt hành chính bằng LLM Judge")
     parser.add_argument("--file", required=True, help="tên file docx văn bản hành chính (không cần đường dẫn đầy đủ)")
@@ -408,61 +423,50 @@ if __name__ == "__main__":
     else:
         personas_can_cham = [p["id"] for p in personas[:args.so_luong]]
 
+    client = genai.Client(api_key=API_KEY)
 
-    async def xu_ly_mot_persona(client, semaphore, persona_id, i, tong, ket_qua_tong):
+    tong = len(personas_can_cham)
+    t_bat_dau = time.time()
+    thong_ke_dat = 0
+    thong_ke_khong_dat = 0
+    thong_ke_bo_qua = 0
+
+    for i, persona_id in enumerate(personas_can_cham, start=1):
         out_path = EVAL_DIR / f"{persona_id}.json"
         if out_path.exists():
             print(f"[{i}/{tong}] {persona_id} đã chấm rồi -> bỏ qua")
-            return
+            continue
 
         summary_path = SUMMARY_DIR / f"{persona_id}.json"
         if not summary_path.exists():
             print(f"[{i}/{tong}] {persona_id} chưa có file summary -> bỏ qua")
-            ket_qua_tong["bo_qua"] += 1
-            return
+            thong_ke_bo_qua += 1
+            continue
 
         persona = persona_index.get(persona_id)
         if persona is None:
             print(f"[{i}/{tong}] {persona_id} không tìm thấy trong profile -> bỏ qua")
-            ket_qua_tong["bo_qua"] += 1
-            return
+            thong_ke_bo_qua += 1
+            continue
 
         with open(summary_path, encoding="utf-8") as f:
             ket_qua_tom_tat = json.load(f)
 
         print(f"[{i}/{tong}] {persona_id} đang chấm...")
-        cham = await cham_1_ban_tom_tat(persona, ket_qua_tom_tat, client, semaphore)
+        cham = cham_1_ban_tom_tat(persona, ket_qua_tom_tat, client)
 
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(cham, f, ensure_ascii=False, indent=2)
 
         in_ket_qua_cham(persona_id, cham)
         if cham.get("verdict_cuoi") == "DAT":
-            ket_qua_tong["dat"] += 1
+            thong_ke_dat += 1
         elif cham.get("verdict_cuoi") == "KHONG_DAT":
-            ket_qua_tong["khong_dat"] += 1
+            thong_ke_khong_dat += 1
         else:
-            ket_qua_tong["bo_qua"] += 1
-
-
-    async def chay():
-        client = tao_oss_client_async()
-        semaphore = asyncio.Semaphore(OSS_MAX_CONCURRENCY)
-        tong = len(personas_can_cham)
-        ket_qua_tong = {"dat": 0, "khong_dat": 0, "bo_qua": 0}
-
-        tasks = [
-            xu_ly_mot_persona(client, semaphore, persona_id, i, tong, ket_qua_tong)
-            for i, persona_id in enumerate(personas_can_cham, start=1)
-        ]
-        await asyncio.gather(*tasks)
-        return ket_qua_tong
-
-
-    t_bat_dau = time.time()
-    ket_qua_tong = asyncio.run(chay())
+            thong_ke_bo_qua += 1
 
     print("\nXONG HẾT. Tổng thời gian:", round((time.time() - t_bat_dau) / 60, 1), "phút")
-    print(f"ĐẠT cả 6 tiêu chí: {ket_qua_tong['dat']}")
-    print(f"KHÔNG ĐẠT: {ket_qua_tong['khong_dat']}")
-    print(f"Bỏ qua: {ket_qua_tong['bo_qua']}")
+    print(f"ĐẠT cả 6 tiêu chí: {thong_ke_dat}")
+    print(f"KHÔNG ĐẠT: {thong_ke_khong_dat}")
+    print(f"Bỏ qua: {thong_ke_bo_qua}")

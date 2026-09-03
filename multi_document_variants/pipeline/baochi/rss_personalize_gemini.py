@@ -1,7 +1,11 @@
 import re
 import json
+import os
 import hashlib
-import asyncio
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parents[3]
@@ -12,11 +16,7 @@ SHARED_ROOT = ROOT_DIR / "shared"
 DATA_DIR = MD_ROOT / "data" / "bao_chi"
 OUTPUT_DIR = MD_ROOT / "output" / "bao_chi" / "rss_summary"
 
-from pipeline.utils import (
-    retry_generate_async, OSS_MODEL_NAME, load_graph,
-    tao_oss_client_async, lay_chu_de_hieu_luc, OSS_MAX_CONCURRENCY,
-    OSS_MAX_OUTPUT_TOKENS_TRAN,
-)
+from pipeline.utils import retry_generate, SUMMARY_MODEL_NAME, load_graph, lay_chu_de_hieu_luc
 from pipeline.profiles.ontology_context_state import lay_ontology_context_cho_nganh
 
 _ONTOLOGY_PATH = MD_ROOT / "persona_states.ttl"
@@ -35,7 +35,7 @@ with open(_OVERLAP_PATH, encoding="utf-8") as f:
     _OVERLAP_DATA = json.load(f)
 
 CACHE_BAI_LIEN_QUAN_PATH = (
-    OUTPUT_DIR / "lien_quan" / "rss_filter" / "bai_lien_quan_theo_nganh_to_old.json"
+    OUTPUT_DIR / "lien_quan" / "rss_filter" / "bai_lien_quan_theo_nganh_to.json"
 )
 
 FILTER_DIR = MD_ROOT / "output" / "bao_chi" / "rss_filter"
@@ -52,7 +52,7 @@ CHU_DE_WEIGHT_FALLBACK = 0.3
 FILTER_TOKENS_UOC_LUONG_MOI_BAI = 30
 FILTER_MAX_TOKENS_SAN = 2048
 MAX_OUTPUT_TOKENS_SAN = 4096
-MAX_OUTPUT_TOKENS_TRAN = OSS_MAX_OUTPUT_TOKENS_TRAN
+MAX_OUTPUT_TOKENS_TRAN = 65536
 TI_LE_BAO_PHU_TOI_THIEU = 0.85
 SO_LAN_THU_LAI_TOI_DA = 1
 
@@ -327,8 +327,8 @@ def build_filter_prompt(persona: dict, articles: list) -> str:
     return prompt
 
 
-async def loc_bai_lien_quan_persona(persona: dict, ranked_articles: list, client, semaphore,
-                                    model_name: str = OSS_MODEL_NAME) -> tuple:
+def loc_bai_lien_quan_persona(persona: dict, ranked_articles: list, client,
+                              model_name: str = SUMMARY_MODEL_NAME) -> tuple:
     if not ranked_articles:
         return [], []
 
@@ -338,8 +338,8 @@ async def loc_bai_lien_quan_persona(persona: dict, ranked_articles: list, client
         max(FILTER_MAX_TOKENS_SAN, len(ranked_articles) * FILTER_TOKENS_UOC_LUONG_MOI_BAI),
     )
 
-    async def _call():
-        return await client.models.generate_content(
+    def _call():
+        return client.models.generate_content(
             model=model_name,
             contents=prompt,
             config={
@@ -348,8 +348,7 @@ async def loc_bai_lien_quan_persona(persona: dict, ranked_articles: list, client
             },
         )
 
-    async with semaphore:
-        response = await retry_generate_async(_call)
+    response = retry_generate(_call)
     text = response.text.strip()
     text = text.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
 
@@ -436,8 +435,8 @@ def build_filter_prompt_bai(persona: dict, bai_list: list) -> str:
     return prompt
 
 
-async def loc_bai_loai_bai_cho_persona(persona: dict, bai_candidates: list, client, semaphore,
-                                       model_name: str = OSS_MODEL_NAME) -> list:
+def loc_bai_loai_bai_cho_persona(persona: dict, bai_candidates: list, client,
+                                 model_name: str = SUMMARY_MODEL_NAME) -> list:
     if not bai_candidates:
         return []
 
@@ -457,8 +456,8 @@ async def loc_bai_loai_bai_cho_persona(persona: dict, bai_candidates: list, clie
         max(FILTER_MAX_TOKENS_SAN, len(bai_candidates) * FILTER_TOKENS_UOC_LUONG_MOI_BAI),
     )
 
-    async def _call():
-        return await client.models.generate_content(
+    def _call():
+        return client.models.generate_content(
             model=model_name,
             contents=prompt,
             config={
@@ -467,8 +466,7 @@ async def loc_bai_loai_bai_cho_persona(persona: dict, bai_candidates: list, clie
             },
         )
 
-    async with semaphore:
-        response = await retry_generate_async(_call)
+    response = retry_generate(_call)
     text = response.text.strip()
     text = text.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
 
@@ -489,8 +487,8 @@ async def loc_bai_loai_bai_cho_persona(persona: dict, bai_candidates: list, clie
     return bai_giu[:MAX_BAI_LIEN_QUAN_MOI_PERSONA]
 
 
-async def loc_bai_lien_quan_persona_co_cache(persona: dict, ranked_articles: list, client, semaphore,
-                                             model_name: str = OSS_MODEL_NAME, variant: str = None) -> tuple:
+def loc_bai_lien_quan_persona_co_cache(persona: dict, ranked_articles: list, client,
+                                       model_name: str = SUMMARY_MODEL_NAME, variant: str = None) -> tuple:
     thu_muc_cache = FILTER_DIR / variant if variant else FILTER_DIR
     thu_muc_cache.mkdir(parents=True, exist_ok=True)
     cache_path = thu_muc_cache / f"{persona.get('id')}.json"
@@ -503,7 +501,7 @@ async def loc_bai_lien_quan_persona_co_cache(persona: dict, ranked_articles: lis
         bai_ha = [bai_theo_link[link] for link in cache["ha"] if link in bai_theo_link]
         return bai_giu, bai_ha
 
-    bai_giu, bai_ha = await loc_bai_lien_quan_persona(persona, ranked_articles, client, semaphore, model_name)
+    bai_giu, bai_ha = loc_bai_lien_quan_persona(persona, ranked_articles, client, model_name)
 
     with open(cache_path, "w", encoding="utf-8") as f:
         json.dump(
@@ -523,7 +521,6 @@ def build_rss_prompt(persona: dict, ranked_articles: list, tin_gian_tiep: list =
                      bai_lien_quan: list = None) -> str:
     day_du = can_van_phong_day_du(persona, ranked_articles)
     ontology_ctx = lay_ontology_context_cho_nganh(persona.get("nganh_to", ""))
-
     nhom_tin = nhom_tin_theo_chu_de(persona, ranked_articles)
     tin_gian_tiep = tin_gian_tiep or []
     bai_lien_quan = bai_lien_quan or []
@@ -804,16 +801,19 @@ def _kiem_tra_do_bao_phu_theo_nhom(summary: str, nhom_tin: list, so_bai_lien_qua
     return nhom_thieu
 
 
-async def tom_tat_rss_cho_persona(persona: dict, articles: list, client, semaphore,
-                                  model_name: str = OSS_MODEL_NAME, variant: str = None) -> dict:
+def tom_tat_rss_cho_persona(persona: dict, articles: list, client,
+                            model_name: str = SUMMARY_MODEL_NAME, variant: str = None) -> dict:
     ranked_truoc_loc = xep_hang_bai_cho_persona(persona, articles)
 
     if not ranked_truoc_loc:
-        return {...}
+        return {
+            "id": persona.get("id"),
+            "summary": "",
+            "ranked_articles": [],
+            "note": "Không có tin nào khớp chu_de của persona này.",
+        }
 
-    ranked, bai_bi_ha = await loc_bai_lien_quan_persona_co_cache(
-        persona, ranked_truoc_loc, client, semaphore, variant=variant
-    )
+    ranked, bai_bi_ha = loc_bai_lien_quan_persona_co_cache(persona, ranked_truoc_loc, client, variant=variant)
 
     khong_co_tin_huu_ich = not ranked and not bai_bi_ha
     if khong_co_tin_huu_ich:
@@ -825,21 +825,18 @@ async def tom_tat_rss_cho_persona(persona: dict, articles: list, client, semapho
     tin_gian_tiep = bai_bi_ha + tim_tin_lien_quan_gian_tiep(persona, articles, ranked)
 
     bai_candidates = [a for a in articles if a.get("loai_bai") == "bai"]
-    bai_lien_quan = await loc_bai_loai_bai_cho_persona(persona, bai_candidates, client, semaphore)
+    bai_lien_quan = loc_bai_loai_bai_cho_persona(persona, bai_candidates, client)
 
     prompt_goc = build_rss_prompt(persona, ranked, tin_gian_tiep, bai_lien_quan)
 
     so_bai = len(ranked) + len(tin_gian_tiep)
-    max_tokens = min(
-        MAX_OUTPUT_TOKENS_TRAN,
-        max(MAX_OUTPUT_TOKENS_SAN, so_bai * FILTER_TOKENS_UOC_LUONG_MOI_BAI),
-    )
+    max_tokens = MAX_OUTPUT_TOKENS_TRAN
     so_tin_chinh = len(ranked)
 
     prompt = prompt_goc
     for lan_thu in range(SO_LAN_THU_LAI_TOI_DA + 1):
-        async def _call():
-            return await client.models.generate_content(
+        def _call():
+            return client.models.generate_content(
                 model=model_name,
                 contents=prompt,
                 config={
@@ -848,10 +845,15 @@ async def tom_tat_rss_cho_persona(persona: dict, articles: list, client, semapho
                 },
             )
 
-        async with semaphore:
-            response = await retry_generate_async(_call)
+        response = retry_generate(_call)
 
-        bi_cat_cut = getattr(response, "finish_reason", None) == "length"
+        bi_cat_cut = False
+        try:
+            finish_reason = str(response.candidates[0].finish_reason)
+            if "MAX_TOKENS" in finish_reason:
+                bi_cat_cut = True
+        except (AttributeError, IndexError):
+            pass
 
         summary = response.text.strip()
         so_doan_thuc_te = len([doan for doan in summary.split("\n\n") if doan.strip()])
@@ -948,6 +950,9 @@ async def tom_tat_rss_cho_persona(persona: dict, articles: list, client, semapho
 if __name__ == "__main__":
     import argparse
     import time
+    from google import genai
+
+    API_KEY = os.getenv("GEMINI_API_KEY")
 
     parser = argparse.ArgumentParser(description="Tom tat RSS ca nhan hoa")
 
@@ -980,6 +985,8 @@ if __name__ == "__main__":
 
     articles = gan_genre_cho_bai(articles)
 
+    client = genai.Client(api_key=API_KEY)
+
     if args.variant:
         JSON_DIR = OUTPUT_DIR / "json" / args.variant
         MD_DIR = OUTPUT_DIR / "md" / args.variant
@@ -989,54 +996,55 @@ if __name__ == "__main__":
     JSON_DIR.mkdir(parents=True, exist_ok=True)
     MD_DIR.mkdir(parents=True, exist_ok=True)
 
-    async def xu_ly_mot_persona(client, semaphore, persona):
-        persona_id = persona["id"]
-        out_path_json = JSON_DIR / f"{persona_id}.json"
-        if out_path_json.exists():
-            print(f"[{persona_id}] đã có kết quả rồi, bỏ qua.")
-            return
-
-        print(f"[{persona_id}] bắt đầu xử lý...")
+    if args.id:
+        persona = next((p for p in personas if p.get("id") == args.id), None)
+        if persona is None:
+            raise SystemExit(f"Không tìm thấy persona có id = {args.id}")
+        print(f"[{persona['id']}] bắt đầu xử lý...")
         t0 = time.time()
 
-        ket_qua = await tom_tat_rss_cho_persona(persona, articles, client, semaphore, variant=args.variant)
+        ket_qua = tom_tat_rss_cho_persona(persona, articles, client, variant=args.variant)
 
+        out_path_json = JSON_DIR / f"{persona['id']}.json"
         with open(out_path_json, "w", encoding="utf-8") as f:
             json.dump(ket_qua, f, ensure_ascii=False, indent=2)
 
-        out_path_md = MD_DIR / f"{persona_id}.md"
+        out_path_md = MD_DIR / f"{persona['id']}.md"
         with open(out_path_md, "w", encoding="utf-8") as f:
             f.write(ket_qua["summary"])
 
-        print(f"[{persona_id}] xong, mất {time.time() - t0:.1f}s")
+        print(f"[{persona['id']}] xong, mất {time.time() - t0:.1f}s")
+        print(f"Đã ghi json: {out_path_json}")
+        print(f"Đã ghi md:   {out_path_md}")
+    else:
+        danh_sach_persona = personas
+        if args.so_luong:
+            danh_sach_persona = danh_sach_persona[:args.so_luong]
+        print("Tổng số persona cần duyệt:", len(danh_sach_persona))
+        t_bat_dau = time.time()
 
-    async def chay():
-        client = tao_oss_client_async()
-        semaphore = asyncio.Semaphore(OSS_MAX_CONCURRENCY)
+        for persona in danh_sach_persona:
+            persona_id = persona["id"]
+            out_path_json = JSON_DIR / f"{persona_id}.json"
+            if out_path_json.exists():
+                print(f"[{persona_id}] đã có kết quả rồi, bỏ qua.")
+                continue
+            print(f"[{persona_id}] bắt đầu xử lý...")
+            t0 = time.time()
 
-        if args.id:
-            persona = next((p for p in personas if p.get("id") == args.id), None)
-            if persona is None:
-                raise SystemExit(f"Không tìm thấy persona có id = {args.id}")
+            ket_qua = tom_tat_rss_cho_persona(persona, articles, client, variant=args.variant)
+            with open(out_path_json, "w", encoding="utf-8") as f:
+                json.dump(ket_qua, f, ensure_ascii=False, indent=2)
 
-            await xu_ly_mot_persona(client, semaphore, persona)
+            out_path_md = MD_DIR / f"{persona_id}.md"
+            with open(out_path_md, "w", encoding="utf-8") as f:
+                f.write(ket_qua["summary"])
 
-            print(f"Đã ghi json: {JSON_DIR / f'{persona['id']}.json'}")
-            print(f"Đã ghi md:   {MD_DIR / f'{persona['id']}.md'}")
-        else:
-            danh_sach_persona = personas
-            if args.so_luong:
-                danh_sach_persona = danh_sach_persona[:args.so_luong]
-            print("Tổng số persona cần duyệt:", len(danh_sach_persona))
-            t_bat_dau = time.time()
-
-            tasks = [xu_ly_mot_persona(client, semaphore, p) for p in danh_sach_persona]
-            await asyncio.gather(*tasks)
-
-            print(
-                "\nXONG HẾT. Tổng thời gian:",
-                round((time.time() - t_bat_dau) / 60, 1),
-                "phút"
-            )
-
-    asyncio.run(chay())
+            print(f"[{persona_id}] xong, mất {time.time() - t0:.1f}s")
+            print("=================================")
+            time.sleep(12)
+        print(
+            "\nXONG HẾT. Tổng thời gian:",
+            round((time.time() - t_bat_dau) / 60, 1),
+            "phút"
+        )

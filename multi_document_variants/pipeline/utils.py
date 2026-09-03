@@ -9,10 +9,11 @@ from openai import AsyncOpenAI
 
 MAX_RETRY_ATTEMPTS = 5
 OSS_MAX_CONCURRENCY = 200
+OSS_MAX_CONCURRENCY_SUMMARY = 15
 
 OSS_HOST = "https://text-sum-gpt-oss-120b-runai-text-sum.runai-inference.cyberspace.vn"
 OSS_MODEL_NAME = "gpt-oss-120b"
-OSS_MAX_OUTPUT_TOKENS_TRAN = 8192
+OSS_MAX_OUTPUT_TOKENS_TRAN = 16384
 NGANH_TO_SANG_GENRE = {
     "Công chức hành chính nhà nước": ["Chính trị / Pháp luật", "Thời sự / Xã hội"],
     "Quân đội": ["Quốc phòng / An ninh", "Thời sự / Xã hội"],
@@ -66,10 +67,15 @@ async def retry_generate_async(func, *args, **kwargs):
                 print(f"\n429 quota. Đợi {wait:.1f}s... (lần {attempt}/{MAX_RETRY_ATTEMPTS})")
                 await asyncio.sleep(wait)
                 continue
-
             elif "503" in msg or "UNAVAILABLE" in msg:
                 wait = 20
                 print(f"\nServer bận. Đợi {wait}s... (lần {attempt}/{MAX_RETRY_ATTEMPTS})")
+                await asyncio.sleep(wait)
+                continue
+
+            elif "timeout" in msg.lower() or "InternalServerError" in msg or "500" in msg:
+                wait = 30
+                print(f"\nServer timeout/lỗi 500. Đợi {wait}s... (lần {attempt}/{MAX_RETRY_ATTEMPTS})")
                 await asyncio.sleep(wait)
                 continue
 
@@ -114,3 +120,7 @@ def tao_oss_client_async():
             oss_generate_content_async(raw_client, model, contents, config)
     )
     return SimpleNamespace(models=models_gia_lap)
+
+
+def uoc_luong_so_token(text: str) -> int:
+    return len(text) // 3

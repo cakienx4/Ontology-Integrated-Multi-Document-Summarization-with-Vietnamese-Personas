@@ -1,23 +1,10 @@
-"""
-pipeline/rss/chinhluan/chinh_luan_phan_tich_lap_luan.py
-
-Phan tich cau truc lap luan cua 1 bai chinh luan (Van de -> Luan diem -> Luan cu -> Ket luan),
-dua tren noi_dung_da_danh_so ([DOAN N]) da tach o chinh_luan_extract.py.
-
-Ket qua duoc dung o buoc personalize de bat buoc giu du luan diem cot loi
-va khong lam sai lech ket luan/loi keu goi cua tac gia.
-"""
-
 import json
 import argparse
 import os
+import asyncio
 from pathlib import Path
-from dotenv import load_dotenv
 
-load_dotenv()
-
-from pipeline.utils import retry_generate, SUMMARY_MODEL_NAME
-from google import genai
+from pipeline.utils import retry_generate_async, OSS_MODEL_NAME, tao_oss_client_async, OSS_MAX_CONCURRENCY
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 
@@ -68,11 +55,7 @@ LOAI_CHINH_LUAN_HIEN_THI = {
 }
 
 
-def goi_llm_phan_tich(client, bai_da_tach_doan: dict, model: str = SUMMARY_MODEL_NAME) -> dict:
-    """
-    Goi LLM phan tich cau truc lap luan cho 1 bai da tach doan.
-    Tra ve dict rong ("") neu bai khong co noi dung de phan tich.
-    """
+async def goi_llm_phan_tich_async(client, semaphore, bai_da_tach_doan: dict, model: str = OSS_MODEL_NAME) -> dict:
     noi_dung_da_danh_so = bai_da_tach_doan.get("noi_dung_da_danh_so", "")
     if not noi_dung_da_danh_so.strip():
         print(f"Bài {bai_da_tach_doan.get('id')} không có nội dung đã đánh số, bỏ qua.")
@@ -84,8 +67,8 @@ def goi_llm_phan_tich(client, bai_da_tach_doan: dict, model: str = SUMMARY_MODEL
         noi_dung_da_danh_so=noi_dung_da_danh_so,
     )
 
-    def _call():
-        return client.models.generate_content(
+    async def _call():
+        return await client.models.generate_content(
             model=model,
             contents=prompt,
             config={
@@ -94,7 +77,8 @@ def goi_llm_phan_tich(client, bai_da_tach_doan: dict, model: str = SUMMARY_MODEL
             },
         )
 
-    response = retry_generate(_call)
+    async with semaphore:
+        response = await retry_generate_async(_call)
 
     raw = response.text.strip()
     raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
@@ -106,29 +90,31 @@ def goi_llm_phan_tich(client, bai_da_tach_doan: dict, model: str = SUMMARY_MODEL
         return {"loi_parse": True, "raw_text": raw}
 
 
-def xu_ly_toan_bo_file(duong_dan_input: str, duong_dan_output: str, id_loc: str = None, model: str = SUMMARY_MODEL_NAME):
+async def xu_ly_mot_bai(client, semaphore, bai, model):
+    phan_tich = await goi_llm_phan_tich_async(client, semaphore, bai, model=model)
+    bai_moi = dict(bai)
+    bai_moi["phan_tich_lap_luan"] = phan_tich
+    so_luan_diem = len(phan_tich.get("danh_sach_luan_diem", []))
+    print(f"Đã phân tích bài {bai.get('id')} — {so_luan_diem} luận điểm.")
+    return bai_moi
+
+
+async def xu_ly_toan_bo_file_async(duong_dan_input: str, duong_dan_output: str, id_loc: str = None, model: str = OSS_MODEL_NAME):
     with open(duong_dan_input, "r", encoding="utf-8") as f:
         danh_sach_bai = json.load(f)
 
-    API_KEY = os.getenv("API_KEY")
-    client = genai.Client(api_key=API_KEY)
+    if id_loc:
+        danh_sach_bai = [b for b in danh_sach_bai if b.get("id") == id_loc]
 
-    ket_qua = []
-    for bai in danh_sach_bai:
-        if id_loc and bai.get("id") != id_loc:
-            continue
-
-        phan_tich = goi_llm_phan_tich(client, bai, model=model)
-        bai_moi = dict(bai)
-        bai_moi["phan_tich_lap_luan"] = phan_tich
-        ket_qua.append(bai_moi)
-
-        so_luan_diem = len(phan_tich.get("danh_sach_luan_diem", []))
-        print(f"Đã phân tích bài {bai.get('id')} — {so_luan_diem} luận điểm.")
-
-    if id_loc and not ket_qua:
+    if id_loc and not danh_sach_bai:
         print(f"Không tìm thấy bài có id = {id_loc}.")
         return
+
+    client = tao_oss_client_async()
+    semaphore = asyncio.Semaphore(OSS_MAX_CONCURRENCY)
+
+    tasks = [xu_ly_mot_bai(client, semaphore, bai, model) for bai in danh_sach_bai]
+    ket_qua = await asyncio.gather(*tasks)
 
     os.makedirs(os.path.dirname(duong_dan_output), exist_ok=True)
     with open(duong_dan_output, "w", encoding="utf-8") as f:
@@ -142,10 +128,10 @@ def main():
     parser.add_argument("--input", default=DUONG_DAN_INPUT_MAC_DINH)
     parser.add_argument("--output", default=DUONG_DAN_OUTPUT_MAC_DINH)
     parser.add_argument("--id", default=None, help="Chỉ xử lý 1 bài theo id (để test nhanh)")
-    parser.add_argument("--model", default=SUMMARY_MODEL_NAME)
+    parser.add_argument("--model", default=OSS_MODEL_NAME)
     args = parser.parse_args()
 
-    xu_ly_toan_bo_file(args.input, args.output, args.id, args.model)
+    asyncio.run(xu_ly_toan_bo_file_async(args.input, args.output, args.id, args.model))
 
 
 if __name__ == "__main__":

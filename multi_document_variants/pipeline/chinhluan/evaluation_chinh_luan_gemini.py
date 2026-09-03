@@ -7,15 +7,20 @@ Khung đánh giá gồm 7 tiêu chí:
 5. Giữ tính thuyết phục
 6. Cá nhân hóa đúng cách - trọng tâm/chi tiết/diễn đạt + mức độ chuyên môn
 7. Mạch lạc, tự nhiên
+
 """
 
+import os
 import json
 import argparse
-import asyncio
 from pathlib import Path
+from dotenv import load_dotenv
 
-from pipeline.utils import retry_generate_async, OSS_MODEL_NAME, tao_oss_client_async, OSS_MAX_CONCURRENCY
-from pipeline.chinhluan.chinh_luan_personalize import _dinh_dang_danh_sach_luan_diem
+load_dotenv()
+
+from pipeline.utils_new import retry_generate, SUMMARY_MODEL_NAME
+from pipeline.chinhluan.chinh_luan_personalize_gemini import _dinh_dang_danh_sach_luan_diem
+from google import genai
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 
@@ -124,11 +129,11 @@ def build_prompt_danh_gia(bai: dict, ket_qua_ca_nhan_hoa: dict) -> str:
     ).strip()
 
 
-async def goi_llm_danh_gia(client, semaphore, bai: dict, ket_qua_ca_nhan_hoa: dict, model: str = OSS_MODEL_NAME) -> dict:
+def goi_llm_danh_gia(client, bai: dict, ket_qua_ca_nhan_hoa: dict, model: str = SUMMARY_MODEL_NAME) -> dict:
     prompt = build_prompt_danh_gia(bai, ket_qua_ca_nhan_hoa)
 
-    async def _call():
-        return await client.models.generate_content(
+    def _call():
+        return client.models.generate_content(
             model=model,
             contents=prompt,
             config={
@@ -137,8 +142,7 @@ async def goi_llm_danh_gia(client, semaphore, bai: dict, ket_qua_ca_nhan_hoa: di
             },
         )
 
-    async with semaphore:
-        response = await retry_generate_async(_call)
+    response = retry_generate(_call)
     raw = response.text.strip()
     raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
 
@@ -149,8 +153,9 @@ async def goi_llm_danh_gia(client, semaphore, bai: dict, ket_qua_ca_nhan_hoa: di
         return {"loi_parse": True, "raw_text": raw}
 
 
-# ==== HẬU KIỂM: Đối chiếu với can_soat_tay từ bước personalize ====
-# CHỈ để báo hiệu thêm, KHÔNG tự động đảo ngược verdict của judge - dùng nguyên tắc "hau_kiem_fail_reasons".
+# ==== HAU KIEM: doi chieu voi can_soat_tay tu buoc personalize ====
+# CHI de bao hieu them, KHONG tu dong dao nguoc verdict cua judge - dung
+# nguyen tac "hau_kiem_fail_reasons" da dung ben hanh_chinh.
 
 def hau_kiem(danh_gia: dict, ket_qua_ca_nhan_hoa: dict, so_luan_diem_goc: int) -> list:
     ly_do_can_soat_tay = []
@@ -192,10 +197,11 @@ def tinh_ket_qua_chung(danh_gia: dict) -> bool:
         for i in range(1, 8)
     )
 
+
 # ==== CLI ====
 
-async def chay_danh_gia(client, semaphore, bai_id: str, persona_id: str, duong_dan_bai: str,
-                        duong_dan_summary: str, duong_dan_output: str, model: str = OSS_MODEL_NAME):
+def chay_danh_gia(bai_id: str, persona_id: str, duong_dan_bai: str, duong_dan_summary: str,
+                   duong_dan_output: str, model: str = SUMMARY_MODEL_NAME):
     duong_dan_bai_dir = ROOT_DIR / duong_dan_bai if not Path(duong_dan_bai).is_absolute() else Path(duong_dan_bai)
     duong_dan_bai_file = duong_dan_bai_dir / f"{bai_id}.json"
     if not duong_dan_bai_file.exists():
@@ -212,7 +218,10 @@ async def chay_danh_gia(client, semaphore, bai_id: str, persona_id: str, duong_d
     if ket_qua_ca_nhan_hoa.get("loi"):
         raise SystemExit(f"Bản tóm tắt {duong_dan_summary_file} bị lỗi từ bước personalize: {ket_qua_ca_nhan_hoa['loi']}")
 
-    danh_gia = await goi_llm_danh_gia(client, semaphore, bai, ket_qua_ca_nhan_hoa, model=model)
+    API_KEY = os.getenv("API_KEY")
+    client = genai.Client(api_key=API_KEY)
+
+    danh_gia = goi_llm_danh_gia(client, bai, ket_qua_ca_nhan_hoa, model=model)
 
     so_luan_diem_goc = len(bai.get("phan_tich_lap_luan", {}).get("danh_sach_luan_diem", []))
     ly_do_can_soat_tay = hau_kiem(danh_gia, ket_qua_ca_nhan_hoa, so_luan_diem_goc)
@@ -245,23 +254,15 @@ async def chay_danh_gia(client, semaphore, bai_id: str, persona_id: str, duong_d
         print(f"  {trang_thai} Tiêu chí {i}: {TEN_TIEU_CHI[i]}")
     print(f"Đã ghi: {out_file}")
 
-async def _chay_danh_gia_1_persona(client, semaphore, bai_id, persona_id, duong_dan_bai,
-                                   duong_dan_summary, duong_dan_output, model, i, tong, out_file, bo_qua_da_co):
-    if bo_qua_da_co and out_file.exists():
-        print(f"[{i}/{tong}] {persona_id} đã có kết quả đánh giá -> bỏ qua")
-        return
-
-    print(f"\n[{i}/{tong}] Đang đánh giá persona {persona_id}...")
-    try:
-        await chay_danh_gia(client, semaphore, bai_id, persona_id, duong_dan_bai,
-                            duong_dan_summary, duong_dan_output, model)
-    except SystemExit as loi:
-        print(f"Bỏ qua {persona_id} do lỗi: {loi}")
-
-
-async def chay_danh_gia_toan_bo_bai(client, semaphore, bai_id: str, duong_dan_bai: str, duong_dan_summary: str,
-                                    duong_dan_output: str, model: str = OSS_MODEL_NAME,
-                                    bo_qua_da_co: bool = True):
+def chay_danh_gia_toan_bo_bai(bai_id: str, duong_dan_bai: str, duong_dan_summary: str,
+                               duong_dan_output: str, model: str = SUMMARY_MODEL_NAME,
+                               bo_qua_da_co: bool = True):
+    """
+    Quet toan bo file <persona_id>.json da co san trong summary/<bai_id>/, chay
+    danh gia cho tung persona. Bo qua persona da co ket qua danh gia truoc do
+    (giong pattern "da ton tai -> bo qua" o CLI cua personalize), tru khi
+    bo_qua_da_co=False.
+    """
     duong_dan_summary_dir = ROOT_DIR / duong_dan_summary / bai_id
     if not duong_dan_summary_dir.exists():
         raise SystemExit(f"Không tìm thấy thư mục tóm tắt {duong_dan_summary_dir}")
@@ -274,28 +275,32 @@ async def chay_danh_gia_toan_bo_bai(client, semaphore, bai_id: str, duong_dan_ba
     duong_dan_out_dir.mkdir(parents=True, exist_ok=True)
 
     tong = len(file_summary_list)
-    tasks = []
     for i, file_summary in enumerate(file_summary_list, start=1):
         persona_id = file_summary.stem
         out_file = duong_dan_out_dir / f"{persona_id}.json"
-        tasks.append(_chay_danh_gia_1_persona(
-            client, semaphore, bai_id, persona_id, duong_dan_bai, duong_dan_summary,
-            duong_dan_output, model, i, tong, out_file, bo_qua_da_co,
-        ))
 
-    await asyncio.gather(*tasks)
+        if bo_qua_da_co and out_file.exists():
+            print(f"[{i}/{tong}] {persona_id} đã có kết quả đánh giá -> bỏ qua")
+            continue
+
+        print(f"\n[{i}/{tong}] Đang đánh giá persona {persona_id}...")
+        try:
+            chay_danh_gia(bai_id, persona_id, duong_dan_bai, duong_dan_summary, duong_dan_output, model)
+        except SystemExit as loi:
+            print(f"Bỏ qua {persona_id} do lỗi: {loi}")
+            continue
 
 def main():
     parser = argparse.ArgumentParser(description="Đánh giá bản tóm tắt cá nhân hóa chính luận theo 7 tiêu chí")
     parser.add_argument("--bai-id", required=True, help="id bài chính luận, ví dụ CL0075")
     parser.add_argument(
-        "--persona-id", default=None,
-        help="..."
+        "--id", default=None,
+        help="id của 1 persona cụ thể, ví dụ NN007. Nếu không truyền, mặc định đánh giá toàn bộ persona đã có file tóm tắt trong summary/<bai_id>/"
     )
     parser.add_argument("--bai-input", default=DUONG_DAN_BAI_MAC_DINH)
     parser.add_argument("--summary-input", default=DUONG_DAN_SUMMARY_MAC_DINH)
     parser.add_argument("--output-dir", default=DUONG_DAN_OUTPUT_MAC_DINH)
-    parser.add_argument("--model", default=OSS_MODEL_NAME)
+    parser.add_argument("--model", default=SUMMARY_MODEL_NAME)
     parser.add_argument("--variant", type=str, default=None, help="ten bien the persona")
     args = parser.parse_args()
 
@@ -303,24 +308,19 @@ def main():
         args.summary_input = f"{args.summary_input}/{args.variant}"
         args.output_dir = f"{args.output_dir}/{args.variant}"
 
-    async def chay():
-        client = tao_oss_client_async()
-        semaphore = asyncio.Semaphore(OSS_MAX_CONCURRENCY)
+    if args.persona_id:
+        chay_danh_gia(
+            args.bai_id, args.persona_id,
+            args.bai_input, args.summary_input, args.output_dir,
+            args.model,
+        )
+    else:
+        chay_danh_gia_toan_bo_bai(
+            args.bai_id,
+            args.bai_input, args.summary_input, args.output_dir,
+            args.model,
+        )
 
-        if args.persona_id:
-            await chay_danh_gia(
-                client, semaphore, args.bai_id, args.persona_id,
-                args.bai_input, args.summary_input, args.output_dir,
-                args.model,
-            )
-        else:
-            await chay_danh_gia_toan_bo_bai(
-                client, semaphore, args.bai_id,
-                args.bai_input, args.summary_input, args.output_dir,
-                args.model,
-            )
-
-    asyncio.run(chay())
 
 if __name__ == "__main__":
     main()

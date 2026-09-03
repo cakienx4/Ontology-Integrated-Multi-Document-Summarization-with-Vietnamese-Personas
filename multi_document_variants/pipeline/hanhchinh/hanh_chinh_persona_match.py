@@ -6,7 +6,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from google import genai
 
-from pipeline.utils import retry_generate
+from pipeline.utils_new import retry_generate
 from pipeline.hanhchinh.hanh_chinh_extract import xu_ly_1_file
 
 load_dotenv()

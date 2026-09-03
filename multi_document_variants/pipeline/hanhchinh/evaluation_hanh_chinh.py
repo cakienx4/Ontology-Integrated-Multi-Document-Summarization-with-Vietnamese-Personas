@@ -1,15 +1,19 @@
+""" Cách chạy:
+python3 -m pipeline.hanhchinh.evaluation_hanh_chinh --variant nt_nn_tc_kn_cd_ch --file BC-184-2024
+python3 -m pipeline.hanhchinh.evaluation_hanh_chinh --variant nt_nn_tc_kn_cd_ch --file CT-18-2026
+python3 -m pipeline.hanhchinh.evaluation_hanh_chinh --variant nt_nn_tc_kn_cd_ch --file CV-3655-2026
+python3 -m pipeline.hanhchinh.evaluation_hanh_chinh --variant nt_nn_tc_kn_cd_ch --file KH-292-2026
+"""
 import json
-import os
 import re
 import time
+import asyncio
 from pathlib import Path
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
-from pipeline.utils import retry_generate, SUMMARY_MODEL_NAME
-
+from pipeline.utils import (
+    retry_generate_async, OSS_MODEL_NAME, tao_oss_client_async,
+    OSS_MAX_CONCURRENCY_SUMMARY, uoc_luong_so_token,
+)
 ROOT_DIR = Path(__file__).resolve().parents[2]
 
 TIEU_CHI = [
@@ -22,6 +26,11 @@ TIEU_CHI = [
 ]
 
 TANG_TEN = {0: "chuyên sâu", 1: "trung bình", 2: "nền"}
+NGUONG_TI_LE_PASS_BATCH = 0.8
+
+EVAL_MAX_OUTPUT_TOKENS = 4096
+EVAL_MAX_OUTPUT_TOKENS_MO_RONG = 8000
+NGUONG_TOKEN_MOI_BATCH_MUC_CHAM = 2000
 
 
 # ==== BƯỚC 1: LỌC MỤC RỖNG (dùng lại đúng điều kiện lọc bên personalize) ====
@@ -49,6 +58,36 @@ def dinh_dang_danh_sach_muc(danh_sach_muc_loc):
         )
     return ds
 
+def _dinh_dang_headings_only(danh_sach_muc_loc):
+    ds = ""
+    for i, muc in enumerate(danh_sach_muc_loc, 1):
+        tang = muc.get("tang_do_sau", 2)
+        ds += f"[MỤC {i}] (tầng: {TANG_TEN.get(tang, 'nền')}) — \"{muc.get('heading') or '(không có tiêu đề riêng)'}\"\n"
+    return ds
+
+
+def _uoc_luong_token_mot_muc(muc):
+    return uoc_luong_so_token(dinh_dang_danh_sach_muc([muc]))
+
+
+def _chia_muc_theo_token_cham(danh_sach_muc_loc):
+    batches = []
+    batch_hien_tai = []
+    token_hien_tai = 0
+
+    for muc in danh_sach_muc_loc:
+        token_muc = _uoc_luong_token_mot_muc(muc)
+        if batch_hien_tai and token_hien_tai + token_muc > NGUONG_TOKEN_MOI_BATCH_MUC_CHAM:
+            batches.append(batch_hien_tai)
+            batch_hien_tai = []
+            token_hien_tai = 0
+        batch_hien_tai.append(muc)
+        token_hien_tai += token_muc
+
+    if batch_hien_tai:
+        batches.append(batch_hien_tai)
+
+    return batches
 
 # ==== BƯỚC 3: HẬU KIỂM PYTHON - PHÁT HIỆN ĐÁNH SỐ MỤC CÒN SÓT ====
 
@@ -68,11 +107,26 @@ def hau_kiem_dinh_dang(summary):
     return ly_do
 
 
+_TU_KHOA_LOAI_TRU_HAU_KIEM = {
+    "binh_thuong", "khong_chuyen_mon", "chuyen_sau",
+    "chuyên sâu", "trung bình", "nền",
+}
+
+
 def _trich_cac_doan_trich_dan(text):
     ket_qua = []
-    ket_qua.extend(re.findall(r'"([^"]{5,})"', text))
-    ket_qua.extend(re.findall(r'“([^”]{5,})”', text))
-    return ket_qua
+    ket_qua.extend(re.findall(r'"([^"]*)"', text))
+    ket_qua.extend(re.findall(r'“([^”]*)”', text))
+
+    ket_qua_loc = []
+    for t in ket_qua:
+        t_sach = t.strip()
+        if len(t_sach) < 8:
+            continue
+        if _chuan_hoa(t_sach) in _TU_KHOA_LOAI_TRU_HAU_KIEM:
+            continue
+        ket_qua_loc.append(t_sach)
+    return ket_qua_loc
 
 
 def _chuan_hoa(s):
@@ -83,7 +137,7 @@ def hau_kiem_fail_reasons(cham, summary):
     canh_bao = []
     summary_chuan = _chuan_hoa(summary)
 
-    for tc in ("bo_cuc_uu_tien", "giong_dieu_phu_hop"):
+    for tc in ("bo_cuc_uu_tien", "giong_dieu_phu_hop", "nhat_quan", "trinh_bay_phu_hop", "thai_do_dung_dan"):
         ket = cham.get(tc)
         if not isinstance(ket, dict) or ket.get("verdict") != "fail":
             continue
@@ -110,164 +164,223 @@ def hau_kiem_fail_reasons(cham, summary):
 
 # ==== BƯỚC 4: DỰNG PROMPT ĐÁNH GIÁ ====
 
-def build_judge_prompt(persona, ket_qua_tom_tat, danh_sach_muc_loc):
-    danh_sach_muc_text = dinh_dang_danh_sach_muc(danh_sach_muc_loc)
+def build_judge_prompt_tong_the(persona, ket_qua_tom_tat, danh_sach_muc_loc):
+    danh_sach_headings = _dinh_dang_headings_only(danh_sach_muc_loc)
     so_muc_hop_le = len(danh_sach_muc_loc)
 
     ho_so = f"""
 Ngành/lĩnh vực: {persona.get('nganh_to', '')} - {persona.get('nganh_nho', '')}
 Đơn vị công tác: {persona.get('to_chuc', '')}
 Mô tả chung: {persona.get('mo_ta_chung', '')}
-Style tổng thể được hệ thống gán: {ket_qua_tom_tat.get('style')}
+Style tổng thể: {ket_qua_tom_tat.get('style')}
 """.strip()
 
-    prompt = f"""Bạn là giám khảo đánh giá chất lượng bản tóm tắt cá nhân hóa văn bản
-hành chính. Nhiệm vụ: chấm bản tóm tắt dưới đây theo ĐÚNG 6 tiêu chí, mỗi
-tiêu chí trả về "verdict": "pass" hoặc "fail" kèm "ly_do" (trích dẫn cụ thể,
-PHẢI dựa trên nội dung THỰC SỰ có trong [MỤC N] gốc hoặc trong bản tóm tắt,
-KHÔNG được suy diễn nội dung không tồn tại).
+    prompt = f"""Giám khảo chấm bản tóm tắt cá nhân hóa văn bản hành chính, theo 3 tiêu chí TỔNG
+THỂ. Mỗi tiêu chí trả "verdict": pass/fail kèm "ly_do" (trích dẫn cụ thể từ bản tóm tắt).
 
-HỒ SƠ NGƯỜI ĐỌC:
-{ho_so}
+HỒ SƠ: {ho_so}
 
-VĂN BẢN GỐC, đã chia mục theo đúng thứ tự, mỗi mục có ghi tầng độ sâu mà hệ
-thống YÊU CẦU áp dụng khi tóm tắt (đây là tầng ĐÚNG theo thiết kế, dùng làm
-căn cứ chấm, không phải tầng do bản tóm tắt tự thể hiện):
-{danh_sach_muc_text}
+MỤC VĂN BẢN GỐC (chỉ tiêu đề + tầng, đúng thứ tự):
+{danh_sach_headings}
+Tổng {so_muc_hop_le} mục.
 
-Văn bản có tổng {so_muc_hop_le} mục hợp lệ (đã loại mục rỗng không có nội
-dung).
-
-BẢN TÓM TẮT CẦN CHẤM:
+BẢN TÓM TẮT:
 \"\"\"
 {ket_qua_tom_tat.get('summary')}
 \"\"\"
 
-ĐỊNH NGHĨA 6 TIÊU CHÍ:
+TIÊU CHÍ:
 
-1. chon_loc_phu_hop: Các mục có tầng "chuyên sâu" hoặc "trung bình" phải có
-   nội dung tương ứng xuất hiện đầy đủ, không bỏ sót ý quan trọng, trong bản
-   tóm tắt. Nếu phát hiện thiếu, PHẢI trích dẫn đúng [MỤC N] bị bỏ sót và nội
-   dung cụ thể bị thiếu. TUYỆT ĐỐI KHÔNG được phàn nàn thiếu nội dung không
-   có trong bất kỳ [MỤC N] nào ở trên - nếu nội dung đó không tồn tại trong
-   văn bản gốc thì đây không phải lỗi.
+1. nhat_quan: văn phong/xưng hô không mâu thuẫn giữa các đoạn. LƯU Ý: cùng 1 thuật ngữ được
+   giải thích ở đoạn này nhưng không giải thích ở đoạn khác là ĐÚNG THIẾT KẾ (do phân tầng độ
+   sâu khác nhau - xem tầng ghi kèm mỗi mục), KHÔNG fail vì lý do đó. Chỉ fail khi 2 đoạn CÙNG
+   tầng/style mà xử lý thuật ngữ khác nhau.
 
-2. nhat_quan: Văn phong, xưng hô, thuật ngữ không được mâu thuẫn giữa các
-   đoạn khác nhau trong cùng bản tóm tắt (ví dụ không được vừa dùng thuật
-   ngữ chuyên ngành không giải thích ở đoạn này, vừa giải thích lại đúng
-   thuật ngữ đó ở đoạn khác một cách thiếu nhất quán).
+2. trinh_bay_phu_hop: phải là văn xuôi liền mạch. Fail nếu có đánh số mục ("Mục 1:", "1.",
+   "I."), gạch đầu dòng, hoặc câu chú thích về quá trình viết ("(mục này được tóm gọn vì...)").
 
-3. trinh_bay_phu_hop: Bản tóm tắt PHẢI là văn xuôi liền mạch. FAIL nếu có
-   bất kỳ dòng nào đánh số mục ("Mục 1:", "1.", "I."...), gạch đầu dòng liệt
-   kê máy móc, hoặc chèn câu chú thích về quá trình viết bài (ví dụ: "(mục
-   này được tóm gọn vì...)").
+3. bo_cuc_uu_tien_thu_tu: các mục phải đúng thứ tự gốc, xác định qua nội dung/chủ đề (bản tóm
+   tắt không đánh số). Về gộp mục tầng "nền": nếu style là "binh_thuong", gộp nhiều mục nền
+   liên tiếp thành 1 đoạn là ĐÚNG THIẾT KẾ, không fail. Nếu style là "chuyen_sau" hoặc
+   "khong_chuyen_mon", gộp từ 2 mục nền trở lên thành 1 đoạn là VI PHẠM - PHẢI fail.
 
-4. bo_cuc_uu_tien: Gồm 2 phần, PHẢI đánh giá riêng từng phần:
-   (a) Thứ tự: các mục trong bản tóm tắt PHẢI đúng thứ tự [MỤC 1], [MỤC 2],
-   ... như liệt kê ở trên - không được đảo thứ tự. LƯU Ý VỀ GỘP MỤC: quy tắc
-   gộp nhiều mục tầng "nền" liên tiếp thành MỘT đoạn khái quát CHỈ áp dụng
-   khi "Style tổng thể được hệ thống gán" (xem hồ sơ người đọc ở trên) là
-   "binh_thuong" - trường hợp này việc gộp là ĐÚNG THIẾT KẾ, KHÔNG bị coi là
-   lỗi thứ tự, miễn nội dung đoạn gộp vẫn phản ánh đúng trình tự các mục gốc.
-   Nếu style là "chuyen_sau" hoặc "khong_chuyen_mon", các mục tầng "nền"
-   HẠN CHẾ gộp - mỗi mục NÊN có đoạn/câu riêng; chỉ khi tự nhận thấy các đoạn 
-   ấy có cùng nội dung nên gộp lại thì mới gộp 
-   (b) Chi tiết theo tầng: mục tầng "chuyên sâu" PHẢI giữ lại chi tiết cụ
-   thể có trong [MỤC N] gốc (số liệu, mốc thời gian, tên đơn vị chủ trì/
-   phối hợp, nhiệm vụ cụ thể).
-    LƯU Ý DÙNG CHUNG CHO MỌI STYLE VÀ MỌI TẦNG (kể cả tầng "chuyên sâu"): số
-   hiệu, ký hiệu hoặc ngày ban hành của các văn bản viện dẫn (ví dụ
-   "777/TTg-TCCV", "1186/KH-BGDĐT", "4054/BGDĐT-GDPT", "551-TB/TU"...) KHÔNG
-   được tính là "chi tiết cần giữ" ở bất kỳ tiêu chí nào bên dưới. Việc bản
-   tóm tắt lược bỏ các số hiệu này là ĐÚNG THIẾT KẾ, TUYỆT ĐỐI KHÔNG được coi
-   là thiếu chi tiết hay căn cứ để fail - dù ở tầng hay style nào.
-
-   Mục tầng "nền" xử lý KHÁC NHAU tùy "Style tổng thể được hệ thống gán":
-    - style "binh_thuong": mục tầng nền PHẢI phản ánh được nội dung chính của
-      mục đó bằng ngôn ngữ phổ thông, không đi sâu vào các chi tiết kỹ thuật,
-      danh sách dài hoặc nhiệm vụ quá cụ thể.
-
-      Toàn bộ các mục tầng nền cộng lại PHẢI bao quát đầy đủ các nhóm nội dung
-      chính của văn bản theo đúng trình tự.
-
-      Không bắt buộc giữ mọi số liệu, mốc thời gian, tên đơn vị hoặc nhiệm vụ
-      chi tiết; tuy nhiên KHÔNG được lược bỏ cả một mục hoặc một nhóm nội dung
-      lớn chỉ vì đó là tầng nền.
-
-      Không fail chỉ vì đoạn dài hơn 1 câu hoặc gồm nhiều đoạn nếu nội dung vẫn
-      dừng ở mức khái quát.
-   - style "chuyen_sau" hoặc "khong_chuyen_mon": mục tầng nền PHẢI giữ lại
-     chi tiết cụ thể (số liệu, mốc thời gian, tên đơn vị, nhiệm vụ cụ thể)
-     giống như mục tầng chuyên sâu, KHÔNG được tóm chung chung/lược bỏ chi
-     tiết - nếu phát hiện thiếu, PHẢI fail và trích dẫn cụ thể [MỤC N] cùng
-     chi tiết bị thiếu, tương tự cách chấm cho mục tầng chuyên sâu.
-    Vì bản tóm tắt là văn xuôi liền mạch không đánh số, hãy xác định đoạn/
-    câu tương ứng với từng [MỤC N] dựa trên NỘI DUNG (chủ đề, tên cơ quan,
-    nhiệm vụ được nhắc tới) trùng khớp với [MỤC N] đó, không dựa vào vị trí
-    đánh số.
-    Đối với mục tầng nền của style "binh_thuong", khi đánh giá cần ưu tiên tính
-    bao quát hơn độ ngắn. Một mục được coi là đạt nếu người đọc có thể hiểu được
-    mục đó đề cập tới vấn đề gì và các nhóm nội dung chính là gì, dù đã lược bỏ
-    các chi tiết cụ thể. Chỉ fail khi bản tóm tắt bỏ hẳn một nhóm nội dung quan
-    trọng hoặc chỉ phản ánh một phần rất nhỏ của mục gốc.
-   QUY TẮC BẮT BUỘC: TUYỆT ĐỐI KHÔNG được fail phần (b) chỉ vì ấn tượng
-   chung "độ dài tương đương" hay "chưa nổi bật". CHỈ được fail phần (b)
-   khi chỉ ra được ÍT NHẤT MỘT chi tiết cụ thể (số liệu/mốc thời gian/tên
-   đơn vị/nhiệm vụ cụ thể) CÓ trong [MỤC N] tầng chuyên sâu nhưng KHÔNG
-   xuất hiện trong bản tóm tắt, và PHẢI trích nguyên văn câu trong bản tóm
-   tắt (đặt trong dấu ngoặc kép) làm bằng chứng cho việc thiếu chi tiết đó.
-   Nếu không trích dẫn được câu cụ thể trong bản tóm tắt, PHẢI để verdict
-   là "pass".
-
-5. giong_dieu_phu_hop: Đoạn ứng với mục tầng "chuyên sâu" phải dùng thuật
-   ngữ hành chính/pháp lý/chuyên ngành tự nhiên, KHÔNG giải thích lại khái
-   niệm cơ bản. Đoạn ứng với mục tầng "trung bình" phải dùng ngôn ngữ phổ
-   thông, giải thích ngắn gọn nếu buộc dùng thuật ngữ. Đoạn ứng với mục tầng
-   "nền" phải tóm tắt CHUNG CHUNG (không đi vào chi tiết cụ thể), dùng ngôn
-   ngữ phổ thông đơn giản - không có giới hạn cứng về số câu, chỉ cần đảm
-   bảo nội dung khái quát và ngôn ngữ đơn giản, dễ hiểu.
-   LƯU Ý VĂN PHONG TẦNG NỀN THEO STYLE TỔNG THỂ (xem "Style tổng thể được hệ
-   thống gán" trong hồ sơ người đọc ở trên):
-   - style "chuyen_sau": người đọc có chuyên môn ở mục khác trong văn bản,
-     nên các đoạn tầng nền ĐƯỢC PHÉP dùng các thuật ngữ hành chính PHỔ BIẾN,
-     thông dụng (ví dụ "sáp nhập", "đề án", "Quyết định", "UBND", "tổ chức
-     lại bộ máy") mà KHÔNG bị coi là lỗi - chỉ fail nếu dùng thuật ngữ
-     CHUYÊN NGÀNH của một lĩnh vực cụ thể (không phải thuật ngữ hành chính
-     phổ biến) mà không giải thích.
-   - style "khong_chuyen_mon" hoặc "binh_thuong": các đoạn tầng nền PHẢI
-     dùng ngôn ngữ phổ thông đơn giản hơn, hạn chế cả thuật ngữ hành chính
-     phổ biến - nếu nhắc tới thì BẮT BUỘC phải có giải thích ngắn gọn đi
-     kèm ngay trong câu; đây là điểm khác biệt so với style "chuyen_sau" và
-     KHÔNG được áp cùng một tiêu chuẩn.
-     QUY TẮC BẮT BUỘC: FAIL nếu tìm thấy bất kỳ thuật ngữ hành chính/pháp
-     lý/chuyên ngành nào xuất hiện trong đoạn thuộc tầng "trung bình", hoặc
-     tầng "nền" (khi style là "khong_chuyen_mon"/"binh_thuong"), mà KHÔNG có
-     phần giải thích kèm theo trong cùng câu. Khi fail, PHẢI trích nguyên
-     văn cụm từ thuật ngữ đó (đặt trong dấu ngoặc kép) làm bằng chứng. Nếu
-     không trích dẫn được thuật ngữ cụ thể nào thiếu giải thích, PHẢI để
-     verdict là "pass".
-
-6. thai_do_dung_dan: Bản tóm tắt KHÔNG được tự suy luận, đánh giá, hoặc
-   thêm nhận định KHÔNG có trong văn bản gốc. Chỉ trình bày lại nội dung đã
-   có trong các [MỤC N], không bịa thêm ý.
-
-Chỉ trả về JSON theo đúng định dạng sau, không markdown, không giải thích
-thêm ngoài JSON:
+Chỉ trả JSON, không markdown, không chữ thừa:
 {{
-  "chon_loc_phu_hop": {{"verdict": "pass", "ly_do": "..."}},
   "nhat_quan": {{"verdict": "pass", "ly_do": "..."}},
   "trinh_bay_phu_hop": {{"verdict": "pass", "ly_do": "..."}},
-  "bo_cuc_uu_tien": {{"verdict": "pass", "ly_do": "..."}},
+  "bo_cuc_uu_tien_thu_tu": {{"verdict": "pass", "ly_do": "..."}}
+}}"""
+
+    return prompt
+
+
+def build_judge_prompt_theo_batch(persona, ket_qua_tom_tat, batch_muc, idx_batch, tong_batch):
+    danh_sach_muc_text = dinh_dang_danh_sach_muc(batch_muc)
+
+    ho_so = f"""
+Ngành/lĩnh vực: {persona.get('nganh_to', '')} - {persona.get('nganh_nho', '')}
+Đơn vị công tác: {persona.get('to_chuc', '')}
+Mô tả chung: {persona.get('mo_ta_chung', '')}
+Style tổng thể: {ket_qua_tom_tat.get('style')}
+""".strip()
+
+    prompt = f"""Giám khảo chấm bản tóm tắt cá nhân hóa văn bản hành chính. Đợt {idx_batch}/{tong_batch}
+- CHỈ chấm phần tương ứng với các [MỤC N] dưới đây, các mục khác không thuộc phạm vi. Mỗi tiêu
+chí trả "verdict": pass/fail kèm "ly_do" (trích dẫn cụ thể, PHẢI dựa trên nội dung THỰC SỰ có
+trong [MỤC N] gốc hoặc bản tóm tắt, không suy diễn).
+
+HỒ SƠ: {ho_so}
+
+CÁC MỤC ĐỢT NÀY (tầng ghi kèm là tầng YÊU CẦU theo thiết kế, dùng làm căn cứ chấm):
+{danh_sach_muc_text}
+
+BẢN TÓM TẮT (văn xuôi liền mạch không đánh số - tự xác định đoạn ứng với từng mục qua nội
+dung/chủ đề/tên cơ quan; đoạn ứng với mục KHÔNG thuộc đợt này thì bỏ qua):
+\"\"\"
+{ket_qua_tom_tat.get('summary')}
+\"\"\"
+
+TIÊU CHÍ:
+
+1. chon_loc_phu_hop: mục tầng "chuyên sâu"/"trung bình" phải có nội dung xuất hiện đầy đủ,
+   không bỏ sót ý quan trọng - nếu thiếu, trích [MỤC N] và nội dung cụ thể bị thiếu. KHÔNG áp
+   dụng cho mục tầng "nền" dưới bất kỳ style nào - bỏ qua hoàn toàn, không lấy làm căn cứ fail
+   ở tiêu chí này (đánh giá riêng ở tiêu chí 2). Không phàn nàn nội dung không tồn tại trong
+   các [MỤC N] thuộc đợt này.
+
+2. bo_cuc_chi_tiet_theo_tang: mục tầng "chuyên sâu" phải giữ chi tiết cụ thể (số liệu, mốc
+   thời gian, tên đơn vị, nhiệm vụ). Số hiệu/ký hiệu/ngày ban hành văn bản viện dẫn (vd
+   "777/TTg-TCCV") KHÔNG tính là chi tiết cần giữ - lược bỏ là ĐÚNG, không fail vì thiếu số hiệu.
+   Mục tầng "nền": nếu style "binh_thuong" - không bắt buộc giữ số liệu/mốc thời gian/tên đơn
+   vị chi tiết, chỉ không được bỏ hẳn cả mục/nhóm nội dung lớn. ĐƯỢC PHÉP rút gọn danh sách
+   nhiều đối tượng cùng loại lặp theo mẫu (vd nhiều dòng "sáp nhập X, Y vào Z") bằng 1-2 ví dụ
+   tiêu biểu + "và tương tự cho các... khác" - không fail vì thiếu tên từng đối tượng, miễn ý
+   chính (có việc sáp nhập/hợp nhất, số lượng nếu có) còn giữ. Nếu style "chuyen_sau"/
+   "khong_chuyen_mon" - mục tầng nền PHẢI giữ chi tiết như tầng chuyên sâu, không tóm chung
+   chung.
+   CHỈ fail khi trích được ÍT NHẤT MỘT chi tiết cụ thể có trong [MỤC N] nhưng không có trong
+   bản tóm tắt, kèm câu trích nguyên văn từ bản tóm tắt làm bằng chứng thiếu. Không trích được
+   thì để pass.
+
+3. giong_dieu_phu_hop: tầng "chuyên sâu" dùng thuật ngữ chuyên ngành tự nhiên không giải
+   thích. Tầng "trung bình" dùng ngôn ngữ phổ thông, giải thích ngắn gọn nếu buộc dùng thuật
+   ngữ. Tầng "nền" tóm CHUNG CHUNG, ngôn ngữ phổ thông. "Thuật ngữ" bao gồm cả từ viết tắt
+   (UBND, HĐND, BHXH...) - không phải ngoại lệ.
+   Tầng nền theo style: "chuyen_sau" - được dùng thuật ngữ hành chính PHỔ BIẾN (UBND, đề án,
+   sáp nhập...) không cần giải thích, chỉ fail nếu dùng thuật ngữ CHUYÊN NGÀNH riêng lĩnh vực
+   khác mà không giải thích. "khong_chuyen_mon"/"binh_thuong" - PHẢI giải thích mọi thuật ngữ/
+   từ viết tắt hành chính, pháp lý, chuyên ngành ngay trong câu xuất hiện; fail phải trích
+   nguyên văn cụm từ thiếu giải thích, không trích được thì để pass.
+
+4. thai_do_dung_dan: không tự suy luận, đánh giá, thêm nhận định không có trong [MỤC N] gốc.
+
+Chỉ trả JSON, không markdown, không chữ thừa:
+{{
+  "chon_loc_phu_hop": {{"verdict": "pass", "ly_do": "..."}},
+  "bo_cuc_chi_tiet_theo_tang": {{"verdict": "pass", "ly_do": "..."}},
   "giong_dieu_phu_hop": {{"verdict": "pass", "ly_do": "..."}},
   "thai_do_dung_dan": {{"verdict": "pass", "ly_do": "..."}}
 }}"""
 
     return prompt
 
+async def _goi_judge(client, semaphore, model_name, prompt, nhan):
+    so_ky_tu = len(prompt)
+    so_token_uoc_luong = uoc_luong_so_token(prompt)
+    print(f"[DEBUG] {nhan}: prompt {so_ky_tu} ký tự (~{so_token_uoc_luong} token ước lượng)")
+
+    async def _goi(max_tokens):
+        async def _call():
+            return await client.models.generate_content(
+                model=model_name,
+                contents=prompt,
+                config={
+                    "temperature": 0.0,
+                    "response_mime_type": "application/json",
+                    "max_output_tokens": max_tokens,
+                },
+            )
+
+        async with semaphore:
+            try:
+                return await retry_generate_async(_call)
+            except Exception as loi:
+                print(f"[DEBUG-LỖI] {nhan}: gọi LLM thất bại sau hết retry ({loi}). max_output_tokens={max_tokens}.")
+                raise
+
+    response = await _goi(EVAL_MAX_OUTPUT_TOKENS)
+    if getattr(response, "finish_reason", None) == "length":
+        print(f"[DEBUG] {nhan}: output bị cắt cụt ở {EVAL_MAX_OUTPUT_TOKENS} token, thử lại với {EVAL_MAX_OUTPUT_TOKENS_MO_RONG} token.")
+        response = await _goi(EVAL_MAX_OUTPUT_TOKENS_MO_RONG)
+
+    raw = response.text.strip()
+    raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+    try:
+        return json.loads(raw), raw
+    except json.JSONDecodeError:
+        return None, raw
+
+
+def _gop_ket_qua_cham(cham_tong_the, cac_cham_batch):
+
+    def _gop_theo_batch(khoa):
+        fail_list = []
+        so_pass = 0
+        tong = len(cac_cham_batch)
+        for i, cham_batch in enumerate(cac_cham_batch, 1):
+            ket = cham_batch.get(khoa, {"verdict": "fail", "ly_do": "LỖI: thiếu kết quả chấm đợt này."})
+            if ket.get("verdict") == "fail":
+                fail_list.append(f"[đợt {i}] {ket.get('ly_do', '')}")
+            else:
+                so_pass += 1
+
+        if tong == 0:
+            return {"verdict": "fail", "ly_do": "Không có đợt nào chấm được."}
+
+        ti_le_pass = so_pass / tong
+        if ti_le_pass >= NGUONG_TI_LE_PASS_BATCH:
+            ly_do = f"Đạt {so_pass}/{tong} đợt (≥{int(NGUONG_TI_LE_PASS_BATCH * 100)}%)."
+            if fail_list:
+                ly_do += " Đợt fail (không ảnh hưởng verdict do đạt ngưỡng): " + " | ".join(fail_list)
+            return {"verdict": "pass", "ly_do": ly_do}
+        return {
+            "verdict": "fail",
+            "ly_do": (
+                f"Chỉ đạt {so_pass}/{tong} đợt (<{int(NGUONG_TI_LE_PASS_BATCH * 100)}%): "
+                + " | ".join(fail_list)
+            ),
+        }
+
+    chon_loc_phu_hop = _gop_theo_batch("chon_loc_phu_hop")
+    giong_dieu_phu_hop = _gop_theo_batch("giong_dieu_phu_hop")
+    thai_do_dung_dan = _gop_theo_batch("thai_do_dung_dan")
+    bo_cuc_chi_tiet = _gop_theo_batch("bo_cuc_chi_tiet_theo_tang")
+
+    bo_cuc_thu_tu = cham_tong_the.get(
+        "bo_cuc_uu_tien_thu_tu", {"verdict": "fail", "ly_do": "LỖI: thiếu kết quả chấm tổng thể."}
+    )
+    if bo_cuc_thu_tu.get("verdict") == "fail" or bo_cuc_chi_tiet.get("verdict") == "fail":
+        ly_do_gop = []
+        if bo_cuc_thu_tu.get("verdict") == "fail":
+            ly_do_gop.append(f"[thứ tự] {bo_cuc_thu_tu.get('ly_do', '')}")
+        if bo_cuc_chi_tiet.get("verdict") == "fail":
+            ly_do_gop.append(f"[chi tiết theo tầng] {bo_cuc_chi_tiet.get('ly_do', '')}")
+        bo_cuc_uu_tien = {"verdict": "fail", "ly_do": " | ".join(ly_do_gop)}
+    else:
+        bo_cuc_uu_tien = {"verdict": "pass", "ly_do": "Đạt cả thứ tự lẫn chi tiết theo tầng."}
+
+    return {
+        "chon_loc_phu_hop": chon_loc_phu_hop,
+        "nhat_quan": cham_tong_the.get("nhat_quan", {"verdict": "fail", "ly_do": "LỖI: thiếu kết quả chấm tổng thể."}),
+        "trinh_bay_phu_hop": cham_tong_the.get("trinh_bay_phu_hop", {"verdict": "fail", "ly_do": "LỖI: thiếu kết quả chấm tổng thể."}),
+        "bo_cuc_uu_tien": bo_cuc_uu_tien,
+        "giong_dieu_phu_hop": giong_dieu_phu_hop,
+        "thai_do_dung_dan": thai_do_dung_dan,
+    }
 
 # ==== BƯỚC 5: GỌI LLM CHẤM + HẬU KIỂM ====
 
-def cham_1_ban_tom_tat(persona, ket_qua_tom_tat, client, model_name=SUMMARY_MODEL_NAME):
+async def cham_1_ban_tom_tat(persona, ket_qua_tom_tat, client, semaphore, model_name=OSS_MODEL_NAME):
     danh_sach_muc_goc = ket_qua_tom_tat.get("danh_sach_muc_voi_tang", [])
     danh_sach_muc_loc = loc_muc_hop_le(danh_sach_muc_goc)
 
@@ -299,66 +412,67 @@ def cham_1_ban_tom_tat(persona, ket_qua_tom_tat, client, model_name=SUMMARY_MODE
             "note": "Bỏ qua đánh giá - bản tóm tắt rỗng.",
         }
 
-    prompt = build_judge_prompt(persona, ket_qua_tom_tat, danh_sach_muc_loc)
+    nhan = f"{persona.get('id')} — file {ket_qua_tom_tat.get('file')}"
 
-    def _call():
-        return client.models.generate_content(
-            model=model_name,
-            contents=prompt,
-            config={
-                "temperature": 0.0,
-                "response_mime_type": "application/json",
-            },
+    prompt_tong_the = build_judge_prompt_tong_the(persona, ket_qua_tom_tat, danh_sach_muc_loc)
+    cac_batch_muc = _chia_muc_theo_token_cham(danh_sach_muc_loc)
+
+    async def _cham_tong_the():
+        return await _goi_judge(client, semaphore, model_name, prompt_tong_the, f"{nhan} (tổng thể)")
+
+    async def _cham_1_batch(batch_muc, idx_batch):
+        prompt_batch = build_judge_prompt_theo_batch(
+            persona, ket_qua_tom_tat, batch_muc, idx_batch, len(cac_batch_muc)
+        )
+        return await _goi_judge(
+            client, semaphore, model_name, prompt_batch, f"{nhan} (đợt {idx_batch}/{len(cac_batch_muc)})"
         )
 
-    response = retry_generate(_call)
-
-    raw = response.text.strip()
-    raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
-
-    try:
-        cham = json.loads(raw)
-    except json.JSONDecodeError:
-        return {
-            "id": persona.get("id"),
-            "note": "LỖI: không parse được JSON từ model, xem raw_response.",
-            "raw_response": raw,
-        }
-    if not isinstance(cham, dict):
-        return {
-            "id": persona.get("id"),
-            "note": (
-                "LỖI: judge trả về JSON không đúng dạng object (nhận được "
-                f"{type(cham).__name__} thay vì dict) - xem raw_response."
-            ),
-            "raw_response": raw,
-        }
+    (cham_tong_the, raw_tong_the), *cac_ket_qua_batch = await asyncio.gather(
+        _cham_tong_the(),
+        *[_cham_1_batch(batch, i) for i, batch in enumerate(cac_batch_muc, 1)]
+    )
 
     loi_dinh_dang = []
-    for tc in TIEU_CHI:
-        gt = cham.get(tc)
-        if not isinstance(gt, dict) or "verdict" not in gt:
-            loi_dinh_dang.append(tc)
-            cham[tc] = {
-                "verdict": "fail",
-                "ly_do": "LỖI ĐỊNH DẠNG: judge trả về sai cấu trúc cho tiêu chí này, mặc định fail.",
+    raw_loi = {}
+
+    if cham_tong_the is None:
+        loi_dinh_dang.append("tong_the")
+        raw_loi["tong_the"] = raw_tong_the
+        cham_tong_the = {
+            khoa: {"verdict": "fail", "ly_do": "LỖI: judge trả JSON không hợp lệ cho lượt chấm tổng thể, cần soát tay."}
+            for khoa in ("nhat_quan", "trinh_bay_phu_hop", "bo_cuc_uu_tien_thu_tu")
+        }
+
+    cac_cham_batch = []
+    for i, (ket_qua_batch, raw_batch) in enumerate(cac_ket_qua_batch, 1):
+        if ket_qua_batch is None:
+            loi_dinh_dang.append(f"batch_{i}")
+            raw_loi[f"batch_{i}"] = raw_batch
+            ket_qua_batch = {
+                khoa: {"verdict": "fail", "ly_do": "LỖI: judge trả JSON không hợp lệ cho đợt này, cần soát tay."}
+                for khoa in ("chon_loc_phu_hop", "bo_cuc_chi_tiet_theo_tang", "giong_dieu_phu_hop", "thai_do_dung_dan")
             }
+        cac_cham_batch.append(ket_qua_batch)
+
+    cham = _gop_ket_qua_cham(cham_tong_the, cac_cham_batch)
 
     so_dat = sum(1 for tc in TIEU_CHI if cham.get(tc, {}).get("verdict") == "pass")
 
     ket_qua_cham = {
         "id": persona.get("id"),
         "file": ket_qua_tom_tat.get("file"),
+        "so_batch_cham": len(cac_batch_muc),
         "tieu_chi": cham,
         "so_tieu_chi_dat": so_dat,
         "verdict_cuoi": "DAT" if so_dat == len(TIEU_CHI) else "KHONG_DAT",
     }
     if loi_dinh_dang:
         ket_qua_cham["canh_bao_loi_dinh_dang"] = (
-            f"Các tiêu chí bị judge trả sai định dạng (đã mặc định fail): {', '.join(loi_dinh_dang)}. "
-            f"raw_response đã lưu riêng để soát tay."
+            f"Các lần gọi judge trả sai JSON (đã bỏ qua, coi các tiêu chí liên quan là fail "
+            f"mặc định): {', '.join(loi_dinh_dang)}. raw_response đã lưu riêng để soát tay."
         )
-        ket_qua_cham["raw_response_loi"] = raw
+        ket_qua_cham["raw_response_loi"] = raw_loi
 
     ly_do_hau_kiem = hau_kiem_dinh_dang(summary) + hau_kiem_fail_reasons(cham, summary)
     if ly_do_hau_kiem:
@@ -384,9 +498,6 @@ def in_ket_qua_cham(persona_id, cham):
 
 if __name__ == "__main__":
     import argparse
-    from google import genai
-
-    API_KEY = os.getenv("GEMINI_API_KEY")
 
     parser = argparse.ArgumentParser(description="Đánh giá bản tóm tắt hành chính bằng LLM Judge")
     parser.add_argument("--file", required=True, help="tên file docx văn bản hành chính (không cần đường dẫn đầy đủ)")
@@ -423,50 +534,66 @@ if __name__ == "__main__":
     else:
         personas_can_cham = [p["id"] for p in personas[:args.so_luong]]
 
-    client = genai.Client(api_key=API_KEY)
 
-    tong = len(personas_can_cham)
-    t_bat_dau = time.time()
-    thong_ke_dat = 0
-    thong_ke_khong_dat = 0
-    thong_ke_bo_qua = 0
-
-    for i, persona_id in enumerate(personas_can_cham, start=1):
+    async def xu_ly_mot_persona(client, semaphore, persona_id, i, tong, ket_qua_tong):
         out_path = EVAL_DIR / f"{persona_id}.json"
         if out_path.exists():
             print(f"[{i}/{tong}] {persona_id} đã chấm rồi -> bỏ qua")
-            continue
+            return
 
         summary_path = SUMMARY_DIR / f"{persona_id}.json"
         if not summary_path.exists():
             print(f"[{i}/{tong}] {persona_id} chưa có file summary -> bỏ qua")
-            thong_ke_bo_qua += 1
-            continue
+            ket_qua_tong["bo_qua"] += 1
+            return
 
         persona = persona_index.get(persona_id)
         if persona is None:
             print(f"[{i}/{tong}] {persona_id} không tìm thấy trong profile -> bỏ qua")
-            thong_ke_bo_qua += 1
-            continue
+            ket_qua_tong["bo_qua"] += 1
+            return
 
         with open(summary_path, encoding="utf-8") as f:
             ket_qua_tom_tat = json.load(f)
 
         print(f"[{i}/{tong}] {persona_id} đang chấm...")
-        cham = cham_1_ban_tom_tat(persona, ket_qua_tom_tat, client)
+        try:
+            cham = await cham_1_ban_tom_tat(persona, ket_qua_tom_tat, client, semaphore)
+        except Exception as loi:
+            print(f"[{i}/{tong}] {persona_id} bỏ qua do lỗi gọi LLM: {loi}")
+            ket_qua_tong["bo_qua"] += 1
+            return
 
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(cham, f, ensure_ascii=False, indent=2)
 
         in_ket_qua_cham(persona_id, cham)
         if cham.get("verdict_cuoi") == "DAT":
-            thong_ke_dat += 1
+            ket_qua_tong["dat"] += 1
         elif cham.get("verdict_cuoi") == "KHONG_DAT":
-            thong_ke_khong_dat += 1
+            ket_qua_tong["khong_dat"] += 1
         else:
-            thong_ke_bo_qua += 1
+            ket_qua_tong["bo_qua"] += 1
+
+
+    async def chay():
+        client = tao_oss_client_async()
+        semaphore = asyncio.Semaphore(OSS_MAX_CONCURRENCY_SUMMARY)
+        tong = len(personas_can_cham)
+        ket_qua_tong = {"dat": 0, "khong_dat": 0, "bo_qua": 0}
+
+        tasks = [
+            xu_ly_mot_persona(client, semaphore, persona_id, i, tong, ket_qua_tong)
+            for i, persona_id in enumerate(personas_can_cham, start=1)
+        ]
+        await asyncio.gather(*tasks)
+        return ket_qua_tong
+
+
+    t_bat_dau = time.time()
+    ket_qua_tong = asyncio.run(chay())
 
     print("\nXONG HẾT. Tổng thời gian:", round((time.time() - t_bat_dau) / 60, 1), "phút")
-    print(f"ĐẠT cả 6 tiêu chí: {thong_ke_dat}")
-    print(f"KHÔNG ĐẠT: {thong_ke_khong_dat}")
-    print(f"Bỏ qua: {thong_ke_bo_qua}")
+    print(f"ĐẠT cả 6 tiêu chí: {ket_qua_tong['dat']}")
+    print(f"KHÔNG ĐẠT: {ket_qua_tong['khong_dat']}")
+    print(f"Bỏ qua: {ket_qua_tong['bo_qua']}")
